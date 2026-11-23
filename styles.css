@@ -946,3 +946,65 @@ body { background:#080606; color:#f2e8df; }
   -webkit-hyphens: auto;
   overflow-wrap: normal;
 }
+
+/* Small 3D camera shift: the photo, touch targets and foreground copy sit on
+   separate planes so each scene responds like a physical point of view. */
+.campaign-opening,
+.cinematic-story {
+  perspective: 1200px;
+  perspective-origin: 52% 44%;
+  transform-style: preserve-3d;
+}
+.campaign-opening > .opening__visual {
+  transform: perspective(1100px) rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg)) scale(1.025);
+  transform-origin: 58% 44%;
+  transform-style: preserve-3d;
+  transition: transform 850ms cubic-bezier(.2,.75,.2,1);
+  will-change: transform;
+}
+.campaign-opening .opening__copy { transform: translateZ(22px); }
+.cinematic-story .story__image-wrap,
+.cinematic-story .story__hotspots {
+  transform: perspective(1100px) rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg));
+  transform-origin: 50% 48%;
+  transform-style: preserve-3d;
+  transition: transform 520ms cubic-bezier(.2,.75,.2,1);
+}
+.cinematic-story .story__content { transform: translateZ(20px); }
+.cinematic-story .story__image-wrap.is-disturbed .story__image { transform: translateZ(10px); }
+body:is(.view-immersive) .campaign-opening > .opening__visual,
+body:is(.view-immersive) .cinematic-story .story__image-wrap,
+body:is(.view-immersive) .cinematic-story .story__hotspots { transition-duration: 1.1s; }
+.language-toggle {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 9px;
+  border: 1px solid rgba(242,232,223,.4);
+  background: rgba(10,7,7,.78);
+  color: #f3d8c0;
+  font: 700 .68rem/1 Consolas,monospace;
+  letter-spacing: .08em;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.language-toggle:hover { border-color: #e32127; color: white; }
+.language-toggle:focus-visible { outline: 3px solid #f3d8c0; outline-offset: 3px; }
+@media (max-width: 680px) {
+  .topbar { gap: 6px; padding-inline: max(11px,env(safe-area-inset-left)) max(11px,env(safe-area-inset-right)); }
+  .wordmark { gap: 7px; font-size: .57rem; letter-spacing: .08em; white-space: nowrap; }
+  .topbar__identity { min-width: 0; }
+  .language-toggle { min-width: 38px; min-height: 42px; padding-inline: 6px; }
+  .sound-control--header { min-height: 42px; padding-inline: 8px; gap: 5px; font-size: .69rem; }
+  .campaign-opening > .opening__visual { transform: perspective(1400px) rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg)) translateY(14%) scale(1.025); }
+  .campaign-opening .opening__copy,
+  .cinematic-story .story__content { transform: none; }
+  .cinematic-story .story__image-wrap,
+  .cinematic-story .story__hotspots { transform: perspective(1400px) rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .campaign-opening > .opening__visual,
+  .cinematic-story .story__image-wrap,
+  .cinematic-story .story__hotspots { transition: none; transform: none; }
+  .campaign-opening .opening__copy,
+  .cinematic-story .story__content { transform: none; }
+}

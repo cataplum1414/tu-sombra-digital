@@ -8,6 +8,8 @@ Experiencia interactiva de suspense sobre el artículo 12 de la Declaración Uni
 - La historia avanza desde la Casa Natal de Cervantes, en Calle Mayor, hasta Plaza de Cervantes; la ruta de riesgo continúa hacia Sandoval y Rojas.
 - La tercera escena ocurre en Plaza de Cervantes: primero se ve la cafetería desde fuera; entrar lleva al interior y tomar el atajo lleva a un portal de Cardenal Sandoval y Rojas.
 - Los personajes y objetos de cada fotografía son zonas táctiles invisibles: cada toque repite su sonido y vibración compatible con el dispositivo.
+- La perspectiva 3D CSS hace que la fotografía y la capa de interacción respondan suavemente al cursor o al toque; respeta la preferencia de movimiento reducido.
+- El recorrido está disponible en español e inglés desde el control ES/EN de la cabecera. El idioma no se guarda.
 - La ambientación distingue calle nocturna de cafetería. Una base musical suave se mezcla con una capa de tensión generada en el navegador: sube con elecciones de riesgo y se retira con decisiones seguras. Cada efecto corresponde a la acción visible: obturador, pasos, mensaje, risa o respiración del Cartógrafo, campanilla, taza o puerta. La mezcla baja el ambiente durante cada efecto para que se entienda en el móvil. Las decisiones de enviar mensajes no suenan como alertas entrantes; la respiración del Cartógrafo subraya su inmovilidad frente al portal. Los efectos al tocar siguen activos aunque se apague la música.
 - La historia no solicita permisos de cámara o ubicación ni guarda elecciones. Las fotografías son recreaciones ficticias, no pruebas documentales.
 - El final resume el artículo 12, ofrece consejos breves de privacidad y enlaza el texto oficial y ATLAS ONU.
@@ -17,6 +19,7 @@ Experiencia interactiva de suspense sobre el artículo 12 de la Declaración Uni
 - `index.html`: portada, escenas y contenido sobre el derecho.
 - `styles.css`: dirección visual y adaptación a pantallas pequeñas.
 - `script.js`: decisiones, escenas, efectos de audio y desenlaces.
+- `language.js`: textos de interfaz en español e inglés.
 - `motion.js`: transiciones visuales.
 - `assets/story/`: imágenes WebP de las escenas.
 - `assets/audio/`: ambientes y efectos de sonido. Consulta `assets/audio/FUENTES.md` para créditos y licencias.

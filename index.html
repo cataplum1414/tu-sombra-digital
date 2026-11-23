@@ -7,30 +7,31 @@
   <meta name="description" content="Una historia interactiva de suspense en Alcalá de Henares sobre el artículo 12 y el derecho a la intimidad.">
   <title>Tu sombra digital — Artículo 12</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=justif-texto-20261123">
-  <script type="module" src="script.js?v=justif-texto-20261123"></script>
+  <link rel="stylesheet" href="styles.css?v=depth-language-20261123">
+  <script type="module" src="script.js?v=depth-language-20261123"></script>
   <script src="visit-counter.js?v=counter-20261123" defer></script>
   <script type="module" src="motion.js?v=alcala-audio-adaptativo-20261123"></script>
 </head>
 <body>
   <header class="topbar">
     <div class="topbar__identity">
-      <a class="wordmark" href="#inicio" aria-label="Tu sombra digital, inicio">
+      <a class="wordmark" href="#inicio" aria-label="Tu sombra digital, inicio" data-i18n-aria="brandAria">
         <span class="wordmark__mark" aria-hidden="true"></span>
-        <span>tu sombra digital</span>
+        <span data-i18n="brand">tu sombra digital</span>
       </a>
-      <p class="visit-counter" id="visit-counter" hidden aria-live="polite" aria-label="Visitas a la página">
+      <p class="visit-counter" id="visit-counter" hidden aria-live="polite" aria-label="Visitas a la página" data-i18n-aria="visitsAria">
         <span class="visit-counter__value" id="visit-count">—</span>
-        <span>visitas</span>
+        <span data-i18n="visits">visitas</span>
       </p>
     </div>
-    <button class="screen-mode-shortcut" id="screen-mode-shortcut" type="button" aria-pressed="false" aria-label="Activar modo más inmersivo; gira el teléfono">
+    <button class="language-toggle" id="language-toggle" type="button" aria-label="Switch to English">EN</button>
+    <button class="screen-mode-shortcut" id="screen-mode-shortcut" type="button" aria-pressed="false" aria-label="Activar modo más inmersivo; gira el teléfono" data-i18n-aria="rotatePrompt">
       <span class="screen-mode-shortcut__icon" aria-hidden="true">⤢</span>
-      <span id="screen-mode-short-label">Normal</span>
+      <span id="screen-mode-short-label" data-i18n="normalScreen">Normal</span>
     </button>
-    <button class="sound-control sound-control--header" id="sound-toggle" type="button" aria-pressed="false" aria-label="Activar música y ambiente">
+    <button class="sound-control sound-control--header" id="sound-toggle" type="button" aria-pressed="false" aria-label="Activar música y ambiente" data-i18n-aria="soundOffLabel">
       <span class="sound-control__icon" aria-hidden="true">♫</span>
-      <span id="sound-label">Música</span>
+      <span id="sound-label" data-i18n="music">Música</span>
       <span class="sound-control__state" id="sound-state">OFF</span>
     </button>
   </header>
@@ -43,21 +44,21 @@
       </picture>
       <div class="opening__vignette" aria-hidden="true"></div>
       <div class="opening__copy">
-        <p class="campaign-kicker">Artículo 12 · Declaración Universal de los Derechos Humanos</p>
-        <h1 id="opening-title">El Cartógrafo<br><em>ya sabe por dónde vas.</em></h1>
-        <p class="opening__lead copy-justify">23:17. Calle Mayor. Una foto, una hora y una rutina bastan para empezar a seguir un rastro. Cada decisión cambia lo que ocurre después.</p>
-        <div class="view-modes" role="group" aria-label="Elige cómo ver el recorrido">
+        <p class="campaign-kicker" data-i18n="openingKicker">Artículo 12 · Declaración Universal de los Derechos Humanos</p>
+        <h1 id="opening-title" data-i18n-html="openingTitle">El Cartógrafo<br><em>ya sabe por dónde vas.</em></h1>
+        <p class="opening__lead copy-justify" data-i18n="openingLead">23:17. Calle Mayor. Una foto, una hora y una rutina bastan para empezar a seguir un rastro. Cada decisión cambia lo que ocurre después.</p>
+        <div class="view-modes" role="group" aria-label="Elige cómo ver el recorrido" data-i18n-aria="viewModesLabel">
           <button class="view-mode-option is-selected" id="mode-normal" type="button" aria-pressed="true">
-            <span>Pantalla normal</span><span class="view-mode-option__hint">Vertical</span>
+            <span data-i18n="normalMode">Pantalla normal</span><span class="view-mode-option__hint" data-i18n="vertical">Vertical</span>
           </button>
           <button class="view-mode-option" id="mode-immersive" type="button" aria-pressed="false">
-            <span>Más inmersiva</span><span class="view-mode-option__hint">Gira el teléfono</span>
+            <span data-i18n="immersiveMode">Más inmersiva</span><span class="view-mode-option__hint" data-i18n="rotatePhone">Gira el teléfono</span>
           </button>
         </div>
         <button class="button button--light" id="start-story" type="button" aria-controls="recorrido">
-          <span>Entrar en la historia</span><span class="button__icon" aria-hidden="true">↘</span>
+          <span data-i18n="enterStory">Entrar en la historia</span><span class="button__icon" aria-hidden="true">↘</span>
         </button>
-        <p class="microcopy">Ficción recreada · Música que cambia con tus decisiones · Efectos al tocar · Sin datos guardados</p>
+        <p class="microcopy" data-i18n="openingNote">Ficción recreada · Música que cambia con tus decisiones · Efectos al tocar · Sin datos guardados</p>
       </div>
       <div class="opening__evidence" aria-hidden="true"><span>23:17</span><i></i><span>CALLE MAYOR</span></div>
     </section>
@@ -68,11 +69,11 @@
         <div class="story__film-grain"></div>
       </div>
       <div class="story__topline"><span id="scene-place">CALLE MAYOR · CASA NATAL DE CERVANTES</span><span id="progress-number">DECISIÓN 1 DE 4</span></div>
-      <div class="story__hotspots" id="scene-hotspots" role="group" aria-label="Explora los elementos de la escena"></div>
+      <div class="story__hotspots" id="scene-hotspots" role="group" aria-label="Explora los elementos de la escena" data-i18n-aria="exploreScene"></div>
       <div class="story__content" id="scene">
         <p class="story__kicker" id="scene-kicker">CALLE MAYOR · 23:17</p>
         <h2 id="story-title" tabindex="-1">La foto ya está en tu perfil.</h2>
-        <p class="story__explore-hint">Toca la escena: cada toque vuelve a activar la reacción.</p>
+        <p class="story__explore-hint" data-i18n="tapScene">Toca la escena: cada toque vuelve a activar la reacción.</p>
         <p class="story__body copy-justify" id="scene-body">Una story pública deja ver los soportales. El Cartógrafo reúne detalles que cualquiera puede ver; no necesita entrar en tu teléfono.</p>
         <p class="story__clue copy-justify" id="scene-clue" aria-live="polite" hidden></p>
         <p class="story__prompt" id="choice-prompt">La vas a subir. ¿Qué haces con la ubicación?</p>
@@ -81,7 +82,7 @@
           <button class="choice choice--safe" type="button" data-choice="remove-location" data-risk="0"><span class="choice__mark" aria-hidden="true">B</span><span>Quitar la ubicación y esperar a mañana</span><span class="choice__arrow" aria-hidden="true">↗</span></button>
         </div>
         <button class="button button--light" id="continue-story" type="button" hidden><span id="continue-label">Seguir</span><span class="button__icon" aria-hidden="true">↘</span></button>
-        <p class="story__fiction-note">Ficción. Sin acceso a tus datos.</p>
+        <p class="story__fiction-note" data-i18n="fictionNote">Ficción. Sin acceso a tus datos.</p>
       </div>
       <div class="story__soundline" aria-hidden="true"><i></i> EL CARTÓGRAFO · ARCHIVO 01</div>
     </section>
@@ -93,44 +94,44 @@
         <p class="ending__kicker" id="ending-kicker">EL FINAL DE TU RECORRIDO</p>
         <h2 id="reveal-title" tabindex="-1">El rastro<br><em>termina aquí.</em></h2>
         <p class="ending__outcome copy-justify" id="ending-outcome"></p>
-        <p class="ending__fiction-note copy-justify">Ficción en Alcalá. Publicar no convierte una invasión de intimidad en culpa de quien la sufre.</p>
+        <p class="ending__fiction-note copy-justify" data-i18n="endingFiction">Ficción en Alcalá. Publicar no convierte una invasión de intimidad en culpa de quien la sufre.</p>
         <div class="ending__article">
-          <p class="ending__article-kicker">ARTÍCULO 12 · DECLARACIÓN UNIVERSAL DE LOS DERECHOS HUMANOS</p>
-          <h3>Tu vida privada merece protección.</h3>
-          <p class="copy-justify">Nadie puede meterse arbitrariamente en tu domicilio, mensajes o vida privada. Este derecho hace posible vivir y expresarse con libertad, también en internet.</p>
+          <p class="ending__article-kicker" data-i18n="articleKicker">ARTÍCULO 12 · DECLARACIÓN UNIVERSAL DE LOS DERECHOS HUMANOS</p>
+          <h3 data-i18n="articleTitle">Tu vida privada merece protección.</h3>
+          <p class="copy-justify" data-i18n="articleSummary">Nadie puede meterse arbitrariamente en tu domicilio, mensajes o vida privada. Este derecho hace posible vivir y expresarse con libertad, también en internet.</p>
         </div>
         <details class="ending__details">
-          <summary>Pincha aquí para ver consejos y saber más</summary>
+          <summary data-i18n="moreAboutArticle">Pincha aquí para ver consejos y saber más</summary>
           <div class="ending__details-body">
             <div class="ending__article">
-              <p class="ending__article-kicker">ARTÍCULO 12 · DECLARACIÓN UNIVERSAL DE LOS DERECHOS HUMANOS</p>
-              <h3>Tu vida privada merece protección.</h3>
-              <p class="copy-justify">Nadie será objeto de injerencias arbitrarias en su vida privada, su familia, su domicilio o su correspondencia, ni de ataques a su honra o a su reputación. Toda persona tiene derecho a la protección de la ley contra tales injerencias o ataques.</p>
-              <a class="ending__resource-link" href="https://www.un.org/es/about-us/universal-declaration-of-human-rights" target="_blank" rel="noreferrer">Lee el texto completo en Naciones Unidas ↗</a>
+              <p class="ending__article-kicker" data-i18n="articleKicker">ARTÍCULO 12 · DECLARACIÓN UNIVERSAL DE LOS DERECHOS HUMANOS</p>
+              <h3 data-i18n="articleTitle">Tu vida privada merece protección.</h3>
+              <p class="copy-justify" data-i18n="articleFullText">Nadie será objeto de injerencias arbitrarias en su vida privada, su familia, su domicilio o su correspondencia, ni de ataques a su honra o a su reputación. Toda persona tiene derecho a la protección de la ley contra tales injerencias o ataques.</p>
+              <a class="ending__resource-link" id="un-declaration-link" data-i18n="unTextLink" href="https://www.un.org/es/about-us/universal-declaration-of-human-rights" target="_blank" rel="noreferrer">Lee el texto completo en Naciones Unidas ↗</a>
             </div>
-            <h3>Cuida tus datos sin dejar de vivir.</h3>
+            <h3 data-i18n="privacyTipsTitle">Cuida tus datos sin dejar de vivir.</h3>
             <ul>
-              <li class="copy-justify">Quita la ubicación y publica cuando ya te hayas ido.</li>
-              <li class="copy-justify">Revisa quién ve tus publicaciones y qué revelan el fondo y los horarios.</li>
-              <li class="copy-justify">Usa contraseñas distintas y verificación en dos pasos.</li>
-              <li class="copy-justify">Ante una amenaza: guarda pruebas, bloquea, reporta y avisa a alguien de confianza. En una emergencia en España, llama al 112.</li>
+              <li class="copy-justify" data-i18n="tipLocation">Quita la ubicación y publica cuando ya te hayas ido.</li>
+              <li class="copy-justify" data-i18n="tipAudience">Revisa quién ve tus publicaciones y qué revelan el fondo y los horarios.</li>
+              <li class="copy-justify" data-i18n="tipPasswords">Usa contraseñas distintas y verificación en dos pasos.</li>
+              <li class="copy-justify" data-i18n="tipThreat">Ante una amenaza: guarda pruebas, bloquea, reporta y avisa a alguien de confianza. En una emergencia en España, llama al 112.</li>
             </ul>
-            <p class="copy-justify">Estas medidas ayudan; la responsabilidad de respetar el derecho es de quien no debe invadirlo.</p>
-            <a class="ending__resource-link" href="https://www.aepd.es/areas-de-actuacion/internet-y-redes-sociales/protege-tu-privacidad" target="_blank" rel="noreferrer">Guías de privacidad de la AEPD ↗</a>
-            <p class="copy-justify">Escenarios ficticios inspirados en lugares reales: <a class="ending__resource-link" href="https://www.turismoalcala.es/turismo/museo-casa-natal-de-cervantes/" target="_blank" rel="noreferrer">Casa Natal de Cervantes, Calle Mayor 48</a> · <a class="ending__resource-link" href="https://www.turismoalcala.es/turismo/puerta-de-madrid-alcala-de-henares-y-recinto-amurallado/" target="_blank" rel="noreferrer">Puerta de Madrid y recinto amurallado</a>.</p>
-            <p class="project-credit copy-justify">Proyecto realizado por <strong>Jeisson Osorio Mesa</strong>, estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos, Universidad de Alcalá.</p>
+            <p class="copy-justify" data-i18n="responsibilityNote">Estas medidas ayudan; la responsabilidad de respetar el derecho es de quien no debe invadirlo.</p>
+            <a class="ending__resource-link" data-i18n="aepdLink" href="https://www.aepd.es/areas-de-actuacion/internet-y-redes-sociales/protege-tu-privacidad" target="_blank" rel="noreferrer">Guías de privacidad de la AEPD ↗</a>
+            <p class="copy-justify"><span data-i18n="realPlaces">Escenarios ficticios inspirados en lugares reales:</span> <a class="ending__resource-link" data-i18n="cervantesHouse" href="https://www.turismoalcala.es/turismo/museo-casa-natal-de-cervantes/" target="_blank" rel="noreferrer">Casa Natal de Cervantes, Calle Mayor 48</a> · <a class="ending__resource-link" data-i18n="madridGate" href="https://www.turismoalcala.es/turismo/puerta-de-madrid-alcala-de-henares-y-recinto-amurallado/" target="_blank" rel="noreferrer">Puerta de Madrid y recinto amurallado</a>.</p>
+            <p class="project-credit copy-justify"><span data-i18n="projectCredit">Proyecto realizado por</span> <strong>Jeisson Osorio Mesa</strong><span data-i18n="projectCreditRest">, estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos, Universidad de Alcalá.</span></p>
           </div>
         </details>
         <div class="ending__links">
-          <a class="atlas-link" href="https://sukimalabs.com/atlasonu" target="_blank" rel="noreferrer"><span>¿Quieres explorar otros proyectos de derechos humanos?</span><strong>Visita ATLAS ONU ↗</strong></a>
+          <a class="atlas-link" href="https://sukimalabs.com/atlasonu" target="_blank" rel="noreferrer"><span data-i18n="atlasQuestion">¿Quieres explorar otros proyectos de derechos humanos?</span><strong data-i18n="atlasLink">Visita ATLAS ONU ↗</strong></a>
         </div>
         <div class="ending__share-card">
-          <p class="ending__article-kicker">SI QUIERES COMPARTIR TUS RESPUESTAS</p>
-          <p class="copy-justify" id="share-summary">Comparte el recorrido que elegiste en esta historia.</p>
-          <button class="share-ending" id="share-ending" type="button">Compartir mis respuestas <span aria-hidden="true">↗</span></button>
+          <p class="ending__article-kicker" data-i18n="shareKicker">SI QUIERES COMPARTIR TUS RESPUESTAS</p>
+          <p class="copy-justify" id="share-summary" data-i18n="shareIntro">Comparte el recorrido que elegiste en esta historia.</p>
+          <button class="share-ending" id="share-ending" type="button"><span data-i18n="shareButton">Compartir mis respuestas</span> <span aria-hidden="true">↗</span></button>
           <span class="share-status" id="share-status" role="status" aria-live="polite"></span>
         </div>
-        <button class="button button--light" id="restart-story" type="button"><span>Volver a empezar</span><span class="button__icon" aria-hidden="true">↺</span></button>
+        <button class="button button--light" id="restart-story" type="button"><span data-i18n="restart">Volver a empezar</span><span class="button__icon" aria-hidden="true">↺</span></button>
       </div>
     </section>
   </main>
@@ -142,14 +143,14 @@
         <span class="rotation-guide__phone"><i></i></span>
         <span class="rotation-guide__arrow">↻</span>
       </div>
-      <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Vista inmersiva</p>
-      <h2 id="rotation-guide-title" tabindex="-1">Gira el teléfono.</h2>
-      <p class="copy-justify">En horizontal, las pistas se abren a pantalla grande. El recorrido seguirá cuando lo gires.</p>
-      <button class="rotation-guide__normal" id="leave-immersive" type="button">Volver a pantalla normal</button>
+      <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> <span data-i18n="immersiveView">Vista inmersiva</span></p>
+      <h2 id="rotation-guide-title" tabindex="-1" data-i18n="rotateTitle">Gira el teléfono.</h2>
+      <p class="copy-justify" data-i18n="rotateDescription">En horizontal, las pistas se abren a pantalla grande. El recorrido seguirá cuando lo gires.</p>
+      <button class="rotation-guide__normal" id="leave-immersive" type="button" data-i18n="backNormal">Volver a pantalla normal</button>
     </div>
   </div>
 
-  <footer class="footer"><span>Proyecto educativo · Derechos Humanos</span><span>Una experiencia, no una colección de datos.</span><span>Sonido: <a href="assets/audio/FUENTES.md">Mixkit · fuentes y licencia</a></span></footer>
+  <footer class="footer"><span data-i18n="footerProject">Proyecto educativo · Derechos Humanos</span><span data-i18n="footerPrivacy">Una experiencia, no una colección de datos.</span><span><span data-i18n="footerSound">Sonido:</span> <a href="assets/audio/FUENTES.md" data-i18n="soundCredits">Mixkit · fuentes y licencia</a></span></footer>
 </body>
 </html>
 
