@@ -7,8 +7,8 @@
   <meta name="description" content="Una historia interactiva de suspense en Alcalá de Henares sobre el artículo 12 y el derecho a la intimidad.">
   <title>Tu sombra digital — Artículo 12</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=depth-language-20261123">
-  <script type="module" src="script.js?v=depth-language-20261123"></script>
+  <link rel="stylesheet" href="styles.css?v=mobile-depth-v2">
+  <script type="module" src="script.js?v=mobile-depth-v2"></script>
   <script src="visit-counter.js?v=counter-20261123" defer></script>
   <script type="module" src="motion.js?v=alcala-audio-adaptativo-20261123"></script>
 </head>
@@ -73,7 +73,7 @@
       <div class="story__content" id="scene">
         <p class="story__kicker" id="scene-kicker">CALLE MAYOR · 23:17</p>
         <h2 id="story-title" tabindex="-1">La foto ya está en tu perfil.</h2>
-        <p class="story__explore-hint" data-i18n="tapScene">Toca la escena: cada toque activa una reacción.</p>
+        <p class="story__explore-hint" data-i18n="tapScene">Toca la escena para explorarla. Desliza lateralmente la imagen para mover la perspectiva.</p>
         <p class="story__body copy-justify" id="scene-body">Una historia pública deja ver los soportales. El Cartógrafo reúne detalles visibles para cualquiera; no necesita entrar en tu teléfono.</p>
         <p class="story__clue copy-justify" id="scene-clue" aria-live="polite" hidden></p>
         <p class="story__prompt" id="choice-prompt">La vas a subir. ¿Qué haces con la ubicación?</p>
@@ -125,6 +125,11 @@
         <div class="ending__links">
           <a class="atlas-link" href="https://sukimalabs.com/atlasonu" target="_blank" rel="noreferrer"><span data-i18n="atlasQuestion">¿Quieres explorar otros proyectos de derechos humanos?</span><strong data-i18n="atlasLink">Visita ATLAS ONU ↗</strong></a>
         </div>
+        <aside class="ending__course-card" aria-labelledby="course-title">
+          <h3 id="course-title" data-i18n="courseTitle">Conoce el Máster</h3>
+          <p class="copy-justify" data-i18n="courseNote">Este proyecto se realizó como trabajo académico para el Máster Universitario en Protección Internacional de los Derechos Humanos de la Universidad de Alcalá. Es un trabajo independiente, sin afiliación institucional; no representa una iniciativa ni una posición oficial de la Universidad.</p>
+          <a class="ending__resource-link" id="course-link" data-i18n="courseLink" href="https://derecho.uah.es/es/estudios/estudio/Proteccion-Internacional-de-los-Derechos-Humanos/" target="_blank" rel="noreferrer">Información oficial del Máster ↗</a>
+        </aside>
         <div class="ending__share-card">
           <p class="ending__article-kicker" data-i18n="shareKicker">SI QUIERES COMPARTIR TUS RESPUESTAS</p>
           <p class="copy-justify" id="share-summary" data-i18n="shareIntro">Comparte el recorrido que elegiste en esta historia.</p>
@@ -150,7 +155,7 @@
     </div>
   </div>
 
-  <footer class="footer"><span data-i18n="footerProject">Proyecto educativo · Derechos Humanos</span><span data-i18n="footerPrivacy">Una experiencia, no una colección de datos.</span><span><span data-i18n="footerSound">Sonido:</span> <a href="assets/audio/FUENTES.md" data-i18n="soundCredits">Mixkit · fuentes y licencia</a></span></footer>
+  <footer class="footer"><span data-i18n="footerProject">Trabajo académico · Máster en Protección Internacional de los Derechos Humanos</span><span data-i18n="footerPrivacy">Una experiencia, no una colección de datos.</span><span><span data-i18n="footerSound">Sonido:</span> <a href="assets/audio/FUENTES.md" data-i18n="soundCredits">Mixkit · fuentes y licencia</a></span></footer>
 </body>
 </html>
 

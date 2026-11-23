@@ -1,6 +1,6 @@
 import { justify } from './assets/justif/dist/index.js';
 import { hyphenateEs } from './assets/justif/dist/hyphenate/es.js';
-import { getLanguage, setLanguage, text as localized, t } from './language.js';
+import { getLanguage, setLanguage, text as localized, t } from './language.js?v=mobile-depth-v2';
 
 const opening = document.querySelector('.opening');
 const story = document.querySelector('.story');
@@ -225,9 +225,9 @@ function sceneValue(value) {
 }
 
 const depthTimers = new WeakMap();
-function aimPerspective(container, clientX, clientY, range = 1) {
+function aimPerspective(container, clientX, clientY, range = 1, reference = container) {
   if (reduceMotion) return;
-  const rect = container.getBoundingClientRect();
+  const rect = reference.getBoundingClientRect();
   if (!rect.width || !rect.height) return;
   const x = Math.max(-1, Math.min(1, ((clientX - rect.left) / rect.width - 0.5) * 2));
   const y = Math.max(-1, Math.min(1, ((clientY - rect.top) / rect.height - 0.5) * 2));
@@ -240,6 +240,9 @@ function releasePerspective(container, delay = 850) {
   depthTimers.set(container, window.setTimeout(() => {
     container.style.setProperty('--tilt-x', '0deg');
     container.style.setProperty('--tilt-y', '0deg');
+    container.style.setProperty('--depth-photo-x', '0px');
+    container.style.setProperty('--depth-photo-y', '0px');
+    container.classList.remove('is-depth-dragging');
   }, delay));
 }
 
@@ -247,12 +250,58 @@ if (!reduceMotion && window.matchMedia('(pointer:fine)').matches) {
   for (const surface of [opening, story]) {
     surface.addEventListener('pointermove', (event) => {
       if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
-        aimPerspective(surface, event.clientX, event.clientY, surface === opening ? 1.15 : 0.72);
+        aimPerspective(surface, event.clientX, event.clientY, surface === opening ? 3.1 : 2.7);
       }
     }, { passive: true });
     surface.addEventListener('pointerleave', () => releasePerspective(surface, 0), { passive: true });
   }
 }
+
+let depthGesture;
+let suppressHotspotClickUntil = 0;
+let suppressedHotspot;
+function enableTouchPerspective(surface, visual, range) {
+  surface.addEventListener('pointerdown', (event) => {
+    if (reduceMotion || event.pointerType !== 'touch' || !event.isPrimary || depthGesture) return;
+    if (event.target.closest('button:not(.story__hotspot), a, summary, input')) return;
+    const rect = visual.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) return;
+    depthGesture = { surface, visual, pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, moved: false, hotspot: event.target.closest('[data-hotspot]') };
+  }, { passive: true });
+
+  surface.addEventListener('pointermove', (event) => {
+    if (!depthGesture || depthGesture.surface !== surface || depthGesture.pointerId !== event.pointerId) return;
+    const rect = visual.getBoundingClientRect();
+    const dragX = event.clientX - depthGesture.startX;
+    const dragY = event.clientY - depthGesture.startY;
+    if (!depthGesture.moved && (Math.abs(dragX) < 10 || Math.abs(dragX) < Math.abs(dragY) * 1.12)) return;
+    depthGesture.moved = true;
+    surface.classList.add('is-depth-dragging');
+    const x = Math.max(-1, Math.min(1, dragX / 64));
+    const y = Math.max(-1, Math.min(1, dragY / 52));
+    surface.style.setProperty('--tilt-x', `${(x * range).toFixed(2)}deg`);
+    surface.style.setProperty('--tilt-y', `${(-y * range * 0.62).toFixed(2)}deg`);
+    surface.style.setProperty('--depth-photo-x', `${(-x * 17).toFixed(1)}px`);
+    surface.style.setProperty('--depth-photo-y', `${(-y * 11).toFixed(1)}px`);
+  }, { passive: true });
+
+  const finishGesture = (event) => {
+    if (!depthGesture || depthGesture.surface !== surface || depthGesture.pointerId !== event.pointerId) return;
+    if (depthGesture.moved) {
+      if (depthGesture.hotspot) {
+        suppressedHotspot = depthGesture.hotspot;
+        suppressHotspotClickUntil = Date.now() + 350;
+      }
+      releasePerspective(surface, 320);
+    }
+    depthGesture = undefined;
+  };
+  surface.addEventListener('pointerup', finishGesture, { passive: true });
+  surface.addEventListener('pointercancel', finishGesture, { passive: true });
+}
+
+enableTouchPerspective(opening, opening.querySelector('.opening__visual'), 3.8);
+enableTouchPerspective(story, sceneImageWrap, 4.1);
 
 function renderScene(index, { languageRefresh = false } = {}) {
   const hotspotToRestore = languageRefresh ? activeHotspotId : '';
@@ -419,6 +468,11 @@ document.querySelector('#start-story').addEventListener('click', () => {
   goToStory();
 });
 sceneHotspots.addEventListener('click', (event) => {
+  if (Date.now() < suppressHotspotClickUntil && event.target.closest('[data-hotspot]') === suppressedHotspot) {
+    event.preventDefault();
+    suppressedHotspot = undefined;
+    return;
+  }
   const button = event.target.closest('[data-hotspot]');
   if (!button) return;
   const hotspot = sceneValue(scenes[currentScene]?.hotspots)?.find((item) => item.id === button.dataset.hotspot);
@@ -426,7 +480,7 @@ sceneHotspots.addEventListener('click', (event) => {
   const touchTarget = button.getBoundingClientRect();
   const touchX = event.clientX || touchTarget.left + touchTarget.width / 2;
   const touchY = event.clientY || touchTarget.top + touchTarget.height / 2;
-  aimPerspective(story, touchX, touchY, hotspot.id === 'cartographer' ? 1.55 : 1.05);
+  aimPerspective(story, touchX, touchY, hotspot.id === 'cartographer' ? 3.7 : 2.8, sceneImageWrap);
   releasePerspective(story, hotspot.id === 'cartographer' ? 1150 : 780);
   activeHotspotId = hotspot.id;
   sceneClue.textContent = sceneValue(hotspot.response);

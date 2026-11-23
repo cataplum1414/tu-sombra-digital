@@ -1,6 +1,6 @@
 # Tu sombra digital
 
-**Una historia interactiva de suspense sobre el artículo 12 y el derecho a la intimidad.** La experiencia transcurre de noche en Alcalá de Henares: a través de las decisiones de la protagonista, muestra cómo una foto, la hora y algunos detalles del entorno pueden revelar información personal.
+**Un trabajo académico independiente para el Máster Universitario en Protección Internacional de los Derechos Humanos de la Universidad de Alcalá.** La experiencia es una historia interactiva de suspense sobre el artículo 12 y el derecho a la intimidad. Transcurre de noche en Alcalá de Henares y muestra cómo una foto, la hora y algunos detalles del entorno pueden revelar información personal.
 
 ## Abre la experiencia
 
@@ -11,13 +11,15 @@ El enlace también puede utilizarse en el código QR del cartel. La página est�
 ## Qué encontrarás
 
 - **Una historia ramificada:** cuatro escenas y decisiones que cambian el recorrido y el desenlace. La ruta pasa por la Casa Natal de Cervantes, la Plaza de Cervantes y, según lo que elijas, una cafetería o un portal de la calle Cardenal Sandoval y Rojas.
-- **Escenas que puedes explorar:** toca personajes y objetos de las imágenes para descubrir pistas, activar efectos de sonido y, si el dispositivo lo permite, una vibración breve. Las zonas interactivas no añaden iconos sobre la escena.
+- **Escenas que puedes explorar:** toca personajes y objetos de las imágenes para descubrir pistas, activar efectos de sonido y, si el dispositivo lo permite, una vibración breve. Desliza lateralmente sobre la imagen para inclinar la perspectiva 3D y desplazar sus planos. Las zonas interactivas no añaden iconos sobre la escena.
 - **Ambiente que responde a tus decisiones:** la música y la tensión sonora cambian según el rumbo de la historia. El sonido es opcional y se controla desde la cabecera.
 - **Una experiencia adaptable:** puedes recorrerla en vertical o girar el móvil para una vista horizontal. Las animaciones respetan la preferencia del dispositivo por reducir el movimiento.
 - **Español e inglés:** cambia el idioma desde el control ES/EN.
 - **Una reflexión final:** al terminar, encontrarás una explicación breve del artículo 12 de la Declaración Universal de los Derechos Humanos, recomendaciones de privacidad y enlaces a Naciones Unidas, la AEPD y [ATLAS ONU](https://sukimalabs.com/atlasonu).
 
 La historia y las imágenes son una recreación ficticia inspirada en lugares reales de Alcalá de Henares; no documentan hechos ni personas reales. La página no pide acceso a la cámara o a la ubicación y no guarda las decisiones del recorrido.
+
+Este trabajo no está afiliado a la Universidad de Alcalá ni representa una iniciativa o posición oficial de la Universidad. [Conoce el Máster en la página oficial de la UAH](https://derecho.uah.es/es/estudios/estudio/Proteccion-Internacional-de-los-Derechos-Humanos/).
 
 ## Abrir el proyecto en tu ordenador
 
@@ -53,4 +55,4 @@ GitHub Pages publica el contenido de la rama `main` desde la raíz del repositor
 
 ## Autoría
 
-Proyecto realizado por **Jeisson Osorio Mesa**, estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos de la Universidad de Alcalá.
+Proyecto realizado por **Jeisson Osorio Mesa**, estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos de la Universidad de Alcalá. Es un trabajo independiente, sin afiliación institucional.

@@ -14,7 +14,7 @@ const copy = {
   enterStory: ['Entrar en la historia', 'Enter the story'],
   openingNote: ['Historia ficticia. La música cambia según tus decisiones. Toca la escena para activar los efectos. No se guardan datos.', 'Fictional story · Music shifts with your choices · Touch reactions · No data stored'],
   exploreScene: ['Explora los elementos de la escena', 'Explore the scene'],
-  tapScene: ['Toca la escena: cada toque activa una reacción.', 'Touch the scene. Every tap triggers a new reaction.'],
+  tapScene: ['Toca la escena para explorarla. Desliza lateralmente la imagen para mover la perspectiva.', 'Tap the scene to explore it. Swipe sideways across the image to shift the perspective.'],
   fictionNote: ['Ficción. Sin acceso a tus datos.', 'Fiction. No access to your data.'],
   endingFiction: ['Historia ficticia ambientada en Alcalá. Compartir una foto nunca justifica invadir la intimidad de quien la publica.', 'Fiction set in Alcalá. Sharing a photo never makes the person targeted responsible for an invasion of privacy.'],
   articleKicker: ['ARTÍCULO 12 · DECLARACIÓN UNIVERSAL DE LOS DERECHOS HUMANOS', 'ARTICLE 12 · UNIVERSAL DECLARATION OF HUMAN RIGHTS'],
@@ -37,6 +37,9 @@ const copy = {
   projectCreditRest: [', estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos, Universidad de Alcalá.', ', student in the Master’s Degree in International Protection of Human Rights, University of Alcalá.'],
   atlasQuestion: ['¿Quieres explorar otros proyectos de derechos humanos?', 'Want to explore more human rights projects?'],
   atlasLink: ['Visita ATLAS ONU ↗', 'Visit ATLAS ONU ↗'],
+  courseTitle: ['Conoce el Máster', 'Learn about the Master’s programme'],
+  courseNote: ['Proyecto académico de Jeisson Osorio Mesa, estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos de la Universidad de Alcalá. Es una iniciativa independiente: no tiene afiliación institucional ni representa oficialmente a la Universidad.', 'Academic project by Jeisson Osorio Mesa, a student in the Master’s Degree in International Protection of Human Rights at the University of Alcalá. It is independent, has no institutional affiliation and does not officially represent the University.'],
+  courseLink: ['Información oficial del Máster ↗', 'Official Master’s programme information ↗'],
   shareKicker: ['SI QUIERES COMPARTIR TUS RESPUESTAS', 'IF YOU WANT TO SHARE YOUR CHOICES'],
   shareIntro: ['Comparte el recorrido que elegiste en esta historia.', 'Share the path you chose in this story.'],
   shareButton: ['Compartir mis respuestas', 'Share my choices'],
@@ -45,7 +48,7 @@ const copy = {
   rotateTitle: ['Gira el teléfono.', 'Turn your phone.'],
   rotateDescription: ['Gira el teléfono para ver la escena en horizontal. La historia continuará cuando lo gires.', 'Landscape view opens up the scene. The story continues when you turn your phone.'],
   backNormal: ['Volver a la vista normal', 'Return to standard view'],
-  footerProject: ['Proyecto educativo · Derechos Humanos', 'Educational project · Human Rights'],
+  footerProject: ['Trabajo académico · Máster en Protección Internacional de los Derechos Humanos', 'Academic work · Master’s in International Protection of Human Rights'],
   footerPrivacy: ['Una experiencia, no una colección de datos.', 'An experience, not a collection of data.'],
   footerSound: ['Sonido:', 'Sound:'],
   soundCredits: ['Mixkit · fuentes y licencia', 'Mixkit · sources and licence'],
@@ -109,6 +112,10 @@ export function setLanguage(language) {
   if (declarationLink) declarationLink.href = currentLanguage === 'en'
     ? 'https://www.un.org/en/about-us/universal-declaration-of-human-rights'
     : 'https://www.un.org/es/about-us/universal-declaration-of-human-rights';
+  const courseLink = document.querySelector('#course-link');
+  if (courseLink) courseLink.href = currentLanguage === 'en'
+    ? 'https://posgrado.uah.es/en/oferta/International-Protection-of-Human-Rights/'
+    : 'https://derecho.uah.es/es/estudios/estudio/Proteccion-Internacional-de-los-Derechos-Humanos/';
 
   const toggle = document.querySelector('#language-toggle');
   if (toggle) {
