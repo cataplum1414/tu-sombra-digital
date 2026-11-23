@@ -11,7 +11,8 @@
 
 ## Escenas fotográficas
 
-- `assets/story/cartografo-portada.webp`, `alcala-night.webp`, `alcala-reflection.webp`, `alcala-portal.webp` y `alcala-cafe.webp` son imágenes creadas con ImageGen para esta ficción interactiva. La portada presenta al Cartógrafo encapuchado en primer plano.
+- `assets/story/cartografo-portada.webp`, `cartografo-horizontal.webp`, `alcala-night.webp`, `alcala-reflection.webp`, `alcala-portal.webp` y `alcala-cafe.webp` son imágenes creadas con ImageGen para esta ficción interactiva. La portada presenta al Cartógrafo encapuchado en primer plano y tiene encuadres separados para móvil vertical y apaisado.
+- En la portada, un movimiento lento de cámara y dos pequeños tirones de imagen sugieren una presencia que observa; se desactivan si el dispositivo solicita movimiento reducido.
 - Son recreaciones visuales ambientadas en Alcalá de Henares; no son fotografías documentales ni representan hechos o personas reales. La página lo indica junto a la historia.
 - Las imágenes se guardan en el propio repositorio para cargar desde GitHub Pages sin depender de un servicio externo.
 
