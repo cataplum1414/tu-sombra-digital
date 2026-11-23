@@ -19,3 +19,7 @@ El sitio es estático y puede publicarse con GitHub Pages desde la rama `main` y
 ## Estado
 
 Prototipo inicial. La narrativa y el artículo 12 están preparados para revisión; la identidad institucional, los créditos y el cartel impreso deben completarse antes de distribuir el QR.
+
+## Sonido
+
+La página genera su propia atmósfera sonora con Web Audio API: un zumbido tonal suave y textura filtrada, sin pista grabada ni audio de terceros. El sonido empieza solo si la persona activa el control; puede apagarlo en cualquier momento. La página recomienda auriculares a volumen cómodo.

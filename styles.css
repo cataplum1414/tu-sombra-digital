@@ -187,3 +187,16 @@ h1 em, h2 em { color: var(--lime); font-style: normal; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 
+
+.sound-prompt { margin-top: 14px; display: flex; align-items: center; flex-wrap: wrap; gap: 7px 14px; }
+.sound-control { display: inline-flex; align-items: center; gap: 9px; padding: 5px 0; border: 0; background: transparent; color: #c1c8d3; cursor: pointer; font-size: .75rem; }
+.sound-control:hover { color: var(--lime); }
+.sound-control:focus-visible { outline: 2px solid var(--coral); outline-offset: 4px; }
+.sound-control__icon { color: var(--lime); font-size: 1rem; }
+.sound-control__state { padding: 3px 6px; border: 1px solid rgba(233,237,242,.2); color: #8f9aab; font: 600 .58rem Consolas, monospace; text-transform: uppercase; letter-spacing: .04em; }
+.sound-control[aria-pressed="true"] .sound-control__state { border-color: var(--lime); color: var(--lime); }
+.sound-prompt__hint { margin: 0; color: #858fa1; font-size: .64rem; }
+@media (max-width: 680px) {
+  .sound-prompt { margin-top: 12px; gap: 3px 12px; }
+  .sound-prompt__hint { flex-basis: 100%; padding-left: 25px; }
+}

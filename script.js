@@ -103,3 +103,85 @@ continueButton.addEventListener('click', showNextScene);
 document.querySelector('#restart-story').addEventListener('click', restart);
 
 
+
+const soundToggle = document.querySelector('#sound-toggle');
+const soundLabel = document.querySelector('#sound-label');
+const soundState = document.querySelector('#sound-state');
+let soundContext = null;
+let soundMaster = null;
+let ambientOn = false;
+
+function buildSoundscape() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return false;
+  soundContext = new AudioContextClass();
+  soundMaster = soundContext.createGain();
+  soundMaster.gain.value = 0.0001;
+  soundMaster.connect(soundContext.destination);
+
+  const makeTone = (frequency, type, level, detune = 0) => {
+    const oscillator = soundContext.createOscillator();
+    const voice = soundContext.createGain();
+    oscillator.type = type;
+    oscillator.frequency.value = frequency;
+    oscillator.detune.value = detune;
+    voice.gain.value = level;
+    oscillator.connect(voice);
+    voice.connect(soundMaster);
+    oscillator.start();
+  };
+
+  // A slow, low tonal bed with gentle beating; no recorded or third-party track.
+  makeTone(54, 'sine', 0.2);
+  makeTone(55.4, 'sine', 0.15);
+  makeTone(82.4, 'triangle', 0.08, -3);
+  makeTone(110, 'sine', 0.035, 2);
+  makeTone(164.8, 'sine', 0.025, -2);
+
+  const buffer = soundContext.createBuffer(1, soundContext.sampleRate * 4, soundContext.sampleRate);
+  const channel = buffer.getChannelData(0);
+  for (let i = 0; i < channel.length; i += 1) channel[i] = (Math.random() * 2 - 1) * 0.22;
+  const noise = soundContext.createBufferSource();
+  const lowPass = soundContext.createBiquadFilter();
+  const noiseGain = soundContext.createGain();
+  noise.buffer = buffer;
+  noise.loop = true;
+  lowPass.type = 'lowpass';
+  lowPass.frequency.value = 520;
+  noiseGain.gain.value = 0.07;
+  noise.connect(lowPass);
+  lowPass.connect(noiseGain);
+  noiseGain.connect(soundMaster);
+  noise.start();
+  return true;
+}
+
+soundToggle.addEventListener('click', async () => {
+  if (!ambientOn) {
+    if (!soundContext && !buildSoundscape()) {
+      soundLabel.textContent = 'Sonido no disponible en este navegador';
+      soundState.textContent = '—';
+      soundToggle.disabled = true;
+      return;
+    }
+    await soundContext.resume();
+    soundMaster.gain.cancelScheduledValues(soundContext.currentTime);
+    soundMaster.gain.setValueAtTime(Math.max(soundMaster.gain.value, 0.0001), soundContext.currentTime);
+    soundMaster.gain.linearRampToValueAtTime(0.18, soundContext.currentTime + 2.2);
+    ambientOn = true;
+    soundToggle.setAttribute('aria-pressed', 'true');
+    soundLabel.textContent = 'Apagar sonido ambiente';
+    soundState.textContent = 'activo';
+    return;
+  }
+
+  soundMaster.gain.cancelScheduledValues(soundContext.currentTime);
+  soundMaster.gain.setValueAtTime(soundMaster.gain.value, soundContext.currentTime);
+  soundMaster.gain.linearRampToValueAtTime(0.0001, soundContext.currentTime + 0.7);
+  ambientOn = false;
+  soundToggle.setAttribute('aria-pressed', 'false');
+  soundLabel.textContent = 'Activar sonido ambiente';
+  soundState.textContent = 'apagado';
+  window.setTimeout(() => { if (!ambientOn) soundContext?.suspend(); }, 800);
+});
+
