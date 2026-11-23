@@ -709,7 +709,8 @@ body { background:#080606; color:#f2e8df; }
 .story__topline { position:absolute; top:90px; left:clamp(24px,8vw,108px); right:clamp(24px,8vw,108px); display:flex; justify-content:space-between; color:#f0d8ca; font:600 .64rem Consolas,monospace; letter-spacing:.11em; text-shadow:0 2px 10px #000; }
 .story__topline span:first-child { max-width:65%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .story__hotspots { position:absolute; z-index:3; inset:0; pointer-events:none; }
-.story__hotspot { position:absolute; display:grid; place-items:center; width:48px; height:48px; padding:0; border:0; background:transparent; color:#fff5ed; cursor:pointer; transform:translate(-50%,-50%); pointer-events:auto; touch-action:manipulation; }
+.story__hotspot { position:absolute; display:grid; place-items:center; width:48px; height:48px; padding:0; border:0; outline:none; appearance:none; -webkit-appearance:none; background:transparent; color:#fff5ed; cursor:pointer; transform:translate(-50%,-50%); pointer-events:auto; touch-action:manipulation; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+.story__hotspot:active,.story__hotspot:focus:not(:focus-visible) { outline:none; background:transparent; box-shadow:none; }
 .story__hotspot:focus-visible { outline:2px solid #fff; outline-offset:3px; border-radius:50%; }
 .story__explore-hint { margin:8px 0 3px; color:#f1b9aa; font:700 .62rem/1.2 Consolas,monospace; letter-spacing:.1em; text-transform:uppercase; }
 .story__clue { margin:11px 0; padding:9px 11px; border-left:2px solid #e32127; background:rgba(8,5,5,.82); color:#faeee6; font-size:.78rem; line-height:1.42; }
