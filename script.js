@@ -2,9 +2,13 @@ const opening = document.querySelector('.opening');
 const story = document.querySelector('.story');
 const reveal = document.querySelector('.reveal');
 const sceneImage = document.querySelector('#scene-image');
+const sceneImageWrap = document.querySelector('#scene-image-wrap');
 const sceneKicker = document.querySelector('#scene-kicker');
+const scenePlace = document.querySelector('#scene-place');
 const sceneTitle = document.querySelector('#story-title');
 const sceneBody = document.querySelector('#scene-body');
+const sceneHotspots = document.querySelector('#scene-hotspots');
+const sceneClue = document.querySelector('#scene-clue');
 const choicePrompt = document.querySelector('#choice-prompt');
 const choices = document.querySelector('#choices');
 const continueButton = document.querySelector('#continue-story');
@@ -14,6 +18,8 @@ const endingBackdrop = document.querySelector('#ending-backdrop');
 const endingKicker = document.querySelector('#ending-kicker');
 const endingTitle = document.querySelector('#reveal-title');
 const endingOutcome = document.querySelector('#ending-outcome');
+const shareSummary = document.querySelector('#share-summary');
+const shareStatus = document.querySelector('#share-status');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const scrollBehavior = reduceMotion ? 'auto' : 'smooth';
 
@@ -30,15 +36,23 @@ let viewMode = 'normal';
 let currentScene = -1;
 let riskScore = 0;
 let lastDecision = '';
+let cartographerNoticed = false;
+let doorTapped = false;
 const decisions = [];
 
 const scenes = [
   {
     image: 'assets/story/alcala-night.webp',
+    place: 'CALLE MAYOR · CASA CERVANTES',
     kicker: 'CALLE MAYOR · 23:17',
-    title: 'La foto ya está en tu perfil.',
-    body: 'Una story pública deja ver los soportales. El Cartógrafo reúne detalles que cualquiera puede ver; no necesita entrar en tu teléfono.',
-    prompt: 'La vas a subir. ¿Qué haces con la ubicación?',
+    title: 'Ya es pública.',
+    body: 'Casa Natal de Cervantes, Calle Mayor 48. La foto ya revela dónde y cuándo.',
+    prompt: '¿La publicas con ubicación?',
+    hotspots: [
+      { id: 'protagonist', label: 'La chica', x: 19, y: 43, align: 'right', response: 'La chica eres tú en esta historia. No es una víctima pasiva: puede elegir qué publicar, pedir apoyo y cambiar de rumbo.' },
+      { id: 'landmark', label: 'Calle Mayor', x: 49, y: 37, align: 'center', response: 'Estás en el casco histórico, frente a la Casa Natal de Cervantes, en Calle Mayor 48. La fachada de una foto puede revelar el lugar aunque no añadas una etiqueta.' },
+      { id: 'cartographer', label: 'El Cartógrafo', x: 76, y: 48, align: 'left', response: 'Lo señalas. La imagen da un salto: el encapuchado ya no está junto al farol; aparece en el reflejo, detrás de ti. Ha notado que lo viste.' }
+    ],
     choices: [
       { id: 'live-location', risk: 1, label: 'Publicarla ahora con la ubicación' },
       { id: 'remove-location', risk: 0, label: 'Quitar la ubicación y esperar a mañana' }
@@ -46,12 +60,20 @@ const scenes = [
   },
   {
     image: 'assets/story/alcala-reflection.webp',
-    kicker: 'UN MENSAJE · 23:24',
+    place: 'CALLE MAYOR · CERCA DE CASA CERVANTES',
+    kicker: 'CALLE MAYOR · 23:24',
     title: '«Sé por dónde vuelves».',
-    body: () => riskScore
-      ? 'La hora y la ubicación ya apuntan a la calle. Llega un mensaje desde una cuenta desconocida: «Sé por dónde vuelves».'
-      : 'Quitaste la etiqueta, pero el arco y la hora siguen dando pistas. Llega un mensaje desde una cuenta desconocida: «Sé por dónde vuelves».',
+    body: () => cartographerNoticed
+        ? 'Después de señalarlo, reaparece en el cristal de un edificio de Calle Mayor, mucho más cerca. Llega: «Sé por dónde vuelves».'
+      : riskScore
+        ? 'La hora y la ubicación apuntan a Calle Mayor. Frente a la Casa Natal llega un mensaje: «Sé por dónde vuelves».'
+        : 'Quitaste la etiqueta, pero la fachada y la hora siguen dando pistas. Frente a la Casa Natal llega: «Sé por dónde vuelves».',
     prompt: 'El Cartógrafo quiere confirmar tu rutina. ¿Qué haces?',
+    hotspots: [
+      { id: 'protagonist', label: 'La chica', x: 21, y: 42, align: 'right', response: 'Ella mira el cristal y reconoce la figura. Puedes confiar en esa señal: no tienes que responder a quien te intimida.' },
+      { id: 'phone', label: 'El móvil', x: 51, y: 67, align: 'center', response: 'La pantalla muestra la hora; el reflejo revela el escaparate. Dos detalles cotidianos pueden ubicar una foto sin que nadie hackee el teléfono.' },
+      { id: 'cartographer', label: 'El reflejo', x: 80, y: 43, align: 'left', response: 'Tocas el reflejo. Por un instante, la figura se mueve antes que tú. El cristal la devuelve demasiado cerca.' }
+    ],
     choices: [
       { id: 'reply-routine', risk: 1, label: 'Responderle y confirmar a qué hora sales' },
       { id: 'block-save', risk: 0, label: 'Guardar captura, bloquear y avisar a alguien' }
@@ -59,12 +81,18 @@ const scenes = [
   },
   {
     image: 'assets/story/alcala-portal.webp',
-    kicker: 'LA ÚLTIMA CALLE · 23:41',
+    place: 'SANDOVAL Y ROJAS · PUERTA DE MADRID',
+    kicker: 'RUMBO A PUERTA DE MADRID · 23:41',
     title: 'La ciudad se queda en silencio.',
     body: () => riskScore > 1
-      ? 'El Cartógrafo ha unido la hora, la calle y parte de tu rutina. El portal está a una manzana; llega otro mensaje: «Apuesto a que vas hacia la Plaza de la Estación».'
-      : 'La figura sigue al otro lado de la calle. No sabes qué sabe ni qué pretende. El portal queda cerca; también hay un café abierto bajo los soportales.',
+      ? 'Varias pistas te han llevado de Calle Mayor a Sandoval y Rojas. Ya distingues la Puerta de Madrid; llega otro mensaje: «Vas hacia la muralla».'
+      : 'En Sandoval y Rojas, junto a la Puerta de Madrid, la figura sigue al otro lado. El café abierto de Plaza de Cervantes ofrece un lugar atendido.',
     prompt: 'Tienes una última decisión. ¿Hacia dónde vas?',
+    hotspots: [
+      { id: 'protagonist', label: 'La chica', x: 21, y: 47, align: 'right', response: 'Ella tiene el móvil en la mano y la puerta enfrente. Puede elegir no entrar sola y avisar a alguien de confianza.' },
+      { id: 'door', label: 'La puerta', x: 86, y: 58, align: 'left', response: 'Tocas el pomo. No cede. Un portal identifica un domicilio: no publiques la entrada ni te quedes ahí si no te sientes segura.' },
+      { id: 'cartographer', label: 'El Cartógrafo', x: 63, y: 48, align: 'left', response: 'Lo tocas en la pantalla. El encapuchado avanza hasta el borde de la luz; la figura sigue siendo ficción, pero la pista que le diste era real.' }
+    ],
     choices: [
       { id: 'take-shortcut', risk: 1, label: 'Ir sola al portal por la calle vacía' },
       { id: 'go-cafe', risk: 0, label: 'Entrar al café abierto y llamar a alguien de confianza' }
@@ -146,8 +174,16 @@ function renderScene(index) {
   currentScene = index;
   sceneImage.src = scene.image;
   sceneKicker.textContent = scene.kicker;
+  scenePlace.textContent = scene.place;
   sceneTitle.textContent = scene.title;
   sceneBody.textContent = typeof scene.body === 'function' ? scene.body() : scene.body;
+  sceneClue.hidden = true;
+  sceneClue.textContent = '';
+  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched');
+  sceneHotspots.innerHTML = scene.hotspots.map((hotspot) => `
+    <button class="story__hotspot story__hotspot--${hotspot.align}" type="button" data-hotspot="${hotspot.id}" style="left:${hotspot.x}%;top:${hotspot.y}%" aria-controls="scene-clue" aria-pressed="false" aria-label="Explorar: ${hotspot.label}">
+      <span class="story__hotspot-marker" aria-hidden="true">+</span><span class="story__hotspot-label">${hotspot.label}</span>
+    </button>`).join('');
   choicePrompt.textContent = scene.prompt;
   choices.innerHTML = scene.choices.map((choice, choiceIndex) => `
     <button class="choice ${choice.risk ? 'choice--danger' : 'choice--safe'}" type="button" data-choice="${choice.id}" data-risk="${choice.risk}" aria-pressed="false">
@@ -169,17 +205,22 @@ function renderEnding() {
   const choseSupport = lastDecision === 'go-cafe';
   const finalImage = choseSupport ? 'assets/story/alcala-cafe.webp' : 'assets/story/alcala-portal.webp';
   endingBackdrop.style.backgroundImage = `url("${finalImage}")`;
-  endingKicker.textContent = choseSupport ? 'PLAZA DE CERVANTES · 23:48' : 'TU PORTAL · 23:48';
+  endingKicker.textContent = choseSupport ? 'PLAZA DE CERVANTES · 23:48' : 'CARDENAL SANDOVAL Y ROJAS · 23:48';
   endingTitle.innerHTML = choseSupport ? 'No llegaste<br><em>sola.</em>' : 'El rastro<br><em>llegó a tu puerta.</em>';
   endingOutcome.textContent = riskScore === 0
-    ? 'Quitaste la ubicación, no confirmaste tu horario y buscaste compañía. Cerraste varias pistas y cambiaste el rumbo de la noche. Ninguna medida garantiza seguridad: quien respeta tu intimidad es responsable de no invadirla.'
+    ? 'Quitaste la ubicación, no confirmaste tu horario y pediste compañía. Cerraste varias pistas. Tu intimidad merece respeto en cualquier final.'
     : riskScore === 1
       ? choseSupport
-        ? 'Una pista quedó expuesta. Al dejar de responder y entrar a un lugar atendido, evitaste compartir más sobre tu rutina. Eso reduce exposición, pero no traslada a ti la responsabilidad de que otra persona respete tu intimidad.'
-        : 'Una pista quedó expuesta y el recorrido termina frente al portal, con una figura al otro lado de la calle. El Cartógrafo no tiene acceso mágico a tu teléfono: reunió detalles visibles. Compartirlos nunca da permiso para vigilarte.'
+        ? 'Una pista quedó expuesta. Entrar a un lugar atendido y avisar a alguien frenó el rastro. Nada de esto te hace responsable de una invasión.'
+        : 'Una pista bastó para acercar al Cartógrafo. Publicar jamás autoriza a seguirte; la invasión es responsabilidad de quien la comete.'
       : choseSupport
-        ? 'El Cartógrafo pudo unir la hora, la calle y parte de tu rutina. Elegiste un lugar atendido y avisaste a alguien, aunque algunas pistas ya estaban expuestas. Si alguien invade tu intimidad, no es culpa tuya por haber publicado.'
-        : 'El Cartógrafo unió la hora, la calle y parte de tu rutina. El recorrido termina frente al portal, con una figura al otro lado de la calle. Esto es ficción: publicar no da permiso para vigilarte, y la invasión nunca es culpa de quien la sufre.';
+        ? 'El Cartógrafo unió hora, lugar y rutina. Cambiaste el destino y pediste apoyo. Compartir nunca justifica que invadan tu intimidad.'
+        : 'El Cartógrafo unió hora, lugar y rutina. Esto es ficción: ninguna publicación da permiso para vigilarte.';
+  if (doorTapped) endingOutcome.textContent = `${endingOutcome.textContent} La puerta no cedió; pedir apoyo seguía siendo una opción.`;
+  shareSummary.textContent = choseSupport
+    ? 'Elegí apoyo en Plaza de Cervantes. La intimidad también es libertad.'
+    : 'Mi ruta llegó al portal. La intimidad también es libertad.';
+  shareStatus.textContent = '';
   story.hidden = true;
   reveal.hidden = false;
   setLocation('derecho');
@@ -193,6 +234,8 @@ function goToStory() {
   story.hidden = false;
   riskScore = 0;
   lastDecision = '';
+  cartographerNoticed = false;
+  doorTapped = false;
   decisions.length = 0;
   story.dataset.risk = '0';
   story.classList.remove('is-revealing');
@@ -214,6 +257,8 @@ function restart() {
   opening.hidden = false;
   riskScore = 0;
   lastDecision = '';
+  cartographerNoticed = false;
+  doorTapped = false;
   currentScene = -1;
   decisions.length = 0;
   story.dataset.risk = '0';
@@ -225,6 +270,34 @@ function restart() {
 }
 
 document.querySelector('#start-story').addEventListener('click', goToStory);
+sceneHotspots.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-hotspot]');
+  if (!button || button.getAttribute('aria-pressed') === 'true') return;
+  const hotspot = scenes[currentScene]?.hotspots.find((item) => item.id === button.dataset.hotspot);
+  if (!hotspot) return;
+  button.setAttribute('aria-pressed', 'true');
+  sceneClue.textContent = hotspot.response;
+  sceneClue.hidden = false;
+  const isThreat = hotspot.id === 'cartographer';
+  if (isThreat) {
+    cartographerNoticed = true;
+    sceneImageWrap.classList.remove('is-disturbed');
+    void sceneImageWrap.offsetWidth;
+    sceneImageWrap.classList.add('is-disturbed');
+  }
+  if (hotspot.id === 'door') {
+    doorTapped = true;
+    sceneImageWrap.classList.remove('is-door-touched');
+    void sceneImageWrap.offsetWidth;
+    sceneImageWrap.classList.add('is-door-touched');
+  }
+  if (isThreat || hotspot.id === 'door') {
+    navigator.vibrate?.(isThreat ? [24, 32, 52] : 42);
+    if (ambientOn) playEndingImpact();
+  }
+  announce('hotspot', { id: hotspot.id, scene: currentScene + 1, threat: isThreat });
+});
+
 choices.addEventListener('click', (event) => {
   const button = event.target.closest('[data-choice]');
   if (!button || choices.hidden) return;
@@ -245,6 +318,28 @@ choices.addEventListener('click', (event) => {
 });
 continueButton.addEventListener('click', showNextScene);
 document.querySelector('#restart-story').addEventListener('click', restart);
+document.querySelector('#share-ending').addEventListener('click', async () => {
+  const title = 'Tu sombra digital · Artículo 12';
+  const url = new URL(window.location.href);
+  url.hash = 'derecho';
+  const text = `El artículo 12 protege tu vida privada, tu domicilio y tus comunicaciones frente a injerencias arbitrarias. ${shareSummary.textContent} Conoce la historia sobre el derecho a la intimidad.`;
+  const data = { title, text, url: url.href };
+  if (navigator.share) {
+    try {
+      await navigator.share(data);
+      shareStatus.textContent = 'Listo para compartir.';
+    } catch (error) {
+      if (error.name !== 'AbortError') shareStatus.textContent = 'No se pudo abrir el menú para compartir.';
+    }
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(`${text} ${url.href}`);
+    shareStatus.textContent = 'Enlace y reflexión copiados.';
+  } catch {
+    window.prompt('Copia y comparte este final:', `${text} ${url.href}`);
+  }
+});
 
 const soundToggle = document.querySelector('#sound-toggle');
 const heroSoundToggle = document.querySelector('#sound-toggle-hero');

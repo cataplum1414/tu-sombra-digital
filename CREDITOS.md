@@ -15,6 +15,7 @@
 - En la portada, un movimiento lento de cámara y dos pequeños tirones de imagen sugieren una presencia que observa; se desactivan si el dispositivo solicita movimiento reducido.
 - Son recreaciones visuales ambientadas en Alcalá de Henares; no son fotografías documentales ni representan hechos o personas reales. La página lo indica junto a la historia.
 - Las imágenes se guardan en el propio repositorio para cargar desde GitHub Pages sin depender de un servicio externo.
+- Referencias de ubicación: [Museo Casa Natal de Cervantes, Calle Mayor 48](https://www.turismoalcala.es/turismo/museo-casa-natal-de-cervantes/) y [Puerta de Madrid y recinto amurallado](https://www.turismoalcala.es/turismo/puerta-de-madrid-alcala-de-henares-y-recinto-amurallado/), según Turismo de Alcalá.
 
 ## Referencias de interacción revisadas en GitHub
 

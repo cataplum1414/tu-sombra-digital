@@ -7,9 +7,9 @@
   <meta name="description" content="Una historia interactiva de suspense en Alcalá de Henares sobre el artículo 12 y el derecho a la intimidad.">
   <title>Tu sombra digital — Artículo 12</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=cartografo-presencia-20261123">
-  <script src="script.js?v=cartografo-presencia-20261123" defer></script>
-  <script type="module" src="motion.js?v=cartografo-presencia-20261123"></script>
+  <link rel="stylesheet" href="styles.css?v=alcala-interactiva-20261123">
+  <script src="script.js?v=alcala-interactiva-20261123" defer></script>
+  <script type="module" src="motion.js?v=alcala-interactiva-20261123"></script>
 </head>
 <body>
   <header class="topbar">
@@ -62,18 +62,21 @@
         <img class="story__image" id="scene-image" src="assets/story/alcala-night.webp" alt="" fetchpriority="high">
         <div class="story__film-grain"></div>
       </div>
-      <div class="story__topline"><span>ALCALÁ DE NOCHE</span><span id="progress-number">DECISIÓN 1 DE 3</span></div>
-      <div class="story__content" id="scene" aria-live="polite" aria-atomic="true">
+      <div class="story__topline"><span id="scene-place">CALLE MAYOR · CASA NATAL DE CERVANTES</span><span id="progress-number">DECISIÓN 1 DE 3</span></div>
+      <div class="story__hotspots" id="scene-hotspots" role="group" aria-label="Explora los elementos de la escena"></div>
+      <div class="story__content" id="scene">
         <p class="story__kicker" id="scene-kicker">CALLE MAYOR · 23:17</p>
         <h2 id="story-title" tabindex="-1">La foto ya está en tu perfil.</h2>
+        <p class="story__explore-hint">Toca los puntos para explorar.</p>
         <p class="story__body" id="scene-body">Una story pública deja ver los soportales. El Cartógrafo reúne detalles que cualquiera puede ver; no necesita entrar en tu teléfono.</p>
+        <p class="story__clue" id="scene-clue" aria-live="polite" hidden></p>
         <p class="story__prompt" id="choice-prompt">La vas a subir. ¿Qué haces con la ubicación?</p>
         <div class="choices" id="choices">
           <button class="choice choice--danger" type="button" data-choice="live-location" data-risk="1"><span class="choice__mark" aria-hidden="true">A</span><span>Publicarla ahora con la ubicación</span><span class="choice__arrow" aria-hidden="true">↗</span></button>
           <button class="choice choice--safe" type="button" data-choice="remove-location" data-risk="0"><span class="choice__mark" aria-hidden="true">B</span><span>Quitar la ubicación y esperar a mañana</span><span class="choice__arrow" aria-hidden="true">↗</span></button>
         </div>
         <button class="button button--light" id="continue-story" type="button" hidden><span id="continue-label">Seguir</span><span class="button__icon" aria-hidden="true">↘</span></button>
-        <p class="story__fiction-note">Historia ficticia. No accedemos a tu ubicación, cámara ni datos.</p>
+        <p class="story__fiction-note">Ficción. Sin acceso a tus datos.</p>
       </div>
       <div class="story__soundline" aria-hidden="true"><i></i> EL CARTÓGRAFO · ARCHIVO 01</div>
     </section>
@@ -85,27 +88,35 @@
         <p class="ending__kicker" id="ending-kicker">EL FINAL DE TU RECORRIDO</p>
         <h2 id="reveal-title" tabindex="-1">El rastro<br><em>termina aquí.</em></h2>
         <p class="ending__outcome" id="ending-outcome"></p>
-        <p class="ending__fiction-note">El Cartógrafo y los hechos son ficción. Compartir una imagen nunca hace a nadie responsable de una invasión de su intimidad.</p>
+        <p class="ending__fiction-note">Ficción en Alcalá. Publicar no convierte una invasión de intimidad en culpa de quien la sufre.</p>
+        <div class="ending__share-card">
+          <p class="ending__article-kicker">LLÉVATE Y COMPARTE ESTA IDEA</p>
+          <p id="share-summary">Tu intimidad no es un secreto: es parte de tu libertad.</p>
+          <button class="share-ending" id="share-ending" type="button">Compartir mi final <span aria-hidden="true">↗</span></button>
+          <span class="share-status" id="share-status" role="status" aria-live="polite"></span>
+        </div>
         <div class="ending__article">
-          <p class="ending__article-kicker">EL DERECHO DETRÁS DE LA HISTORIA</p>
-          <h3>Artículo 12 · Declaración Universal de los Derechos Humanos</h3>
-          <blockquote>«Nadie será objeto de injerencias arbitrarias en su vida privada, su familia, su domicilio o su correspondencia, ni de ataques a su honra o a su reputación. Toda persona tiene derecho a la protección de la ley contra tales injerencias o ataques.»</blockquote>
-          <p>La intimidad protege un espacio propio para vivir, comunicarse y decidir sin vigilancia arbitraria. Es la base de la libertad y la dignidad, también en internet.</p>
-          <a class="source-link" href="https://www.ohchr.org/en/UDHR/Documents/UDHR_Translations/spn.pdf" target="_blank" rel="noreferrer">Leer el texto oficial en la ONU</a>
+          <p class="ending__article-kicker">ARTÍCULO 12 · EN UNA FRASE</p>
+          <h3>Tu vida privada merece protección.</h3>
+          <p>Nadie puede meterse arbitrariamente en tu domicilio, mensajes o vida privada. Este derecho hace posible vivir y expresarse con libertad, también en internet.</p>
         </div>
-        <div class="ending__advice">
-          <p class="ending__article-kicker">CINCO ACCIONES QUE SIRVEN EN CUALQUIER DESENLACE</p>
-          <h3>Cuida tu privacidad sin dejar de vivir.</h3>
-          <ol>
-            <li><strong>Antes de publicar:</strong> quita la ubicación y revisa caras, matrículas, portales, uniformes y horarios que aparezcan al fondo.</li>
-            <li><strong>Evita transmitir tu rutina:</strong> publica después de irte; revisa quién puede ver tus stories, etiquetas y lista de seguidores.</li>
-            <li><strong>Protege tus cuentas:</strong> usa una contraseña distinta y activa la verificación en dos pasos.</li>
-            <li><strong>Ante un mensaje que intimida:</strong> no confirmes datos ni abras enlaces; guarda pruebas, bloquea y reporta la cuenta.</li>
-            <li><strong>Si temes por tu seguridad:</strong> ve a un lugar atendido, avisa a alguien de confianza y pide ayuda local. En una emergencia en España, llama al 112.</li>
-          </ol>
-          <p class="ending__note">Estas medidas reducen exposición; no trasladan a la víctima la responsabilidad de respetar su derecho. Quien invade la intimidad cruza el límite.</p>
-          <p class="ending__resources">Para aprender a ajustar tu privacidad: <a href="https://www.aepd.es/areas-de-actuacion/internet-y-redes-sociales/protege-tu-privacidad" target="_blank" rel="noreferrer">guías de la Agencia Española de Protección de Datos</a>. El 112 es gratuito para urgencias y emergencias en España: <a href="https://www.112.es/" target="_blank" rel="noreferrer">información oficial del 112</a>.</p>
-        </div>
+        <details class="ending__details">
+          <summary>Ver consejos breves y el texto oficial</summary>
+          <div class="ending__details-body">
+            <h3>Cuida tus datos sin dejar de vivir.</h3>
+            <ul>
+              <li>Quita la ubicación y publica cuando ya te hayas ido.</li>
+              <li>Revisa quién ve tus publicaciones y qué revelan el fondo y los horarios.</li>
+              <li>Usa contraseñas distintas y verificación en dos pasos.</li>
+              <li>Ante una amenaza: guarda pruebas, bloquea, reporta y avisa a alguien de confianza. En una emergencia en España, llama al <a href="https://www.112.es/" target="_blank" rel="noreferrer">112</a>.</li>
+            </ul>
+            <p>Estas medidas ayudan; la responsabilidad de respetar el derecho es de quien no debe invadirlo.</p>
+            <a class="ending__resource-link" href="https://www.aepd.es/areas-de-actuacion/internet-y-redes-sociales/protege-tu-privacidad" target="_blank" rel="noreferrer">Guías de privacidad de la AEPD ↗</a>
+            <p>Escenarios ficticios inspirados en lugares reales: <a class="ending__resource-link" href="https://www.turismoalcala.es/turismo/museo-casa-natal-de-cervantes/" target="_blank" rel="noreferrer">Casa Natal de Cervantes, Calle Mayor 48</a> · <a class="ending__resource-link" href="https://www.turismoalcala.es/turismo/puerta-de-madrid-alcala-de-henares-y-recinto-amurallado/" target="_blank" rel="noreferrer">Puerta de Madrid y recinto amurallado</a>.</p>
+            <blockquote>«Nadie será objeto de injerencias arbitrarias en su vida privada, su familia, su domicilio o su correspondencia, ni de ataques a su honra o a su reputación. Toda persona tiene derecho a la protección de la ley contra tales injerencias o ataques.»</blockquote>
+            <a class="ending__resource-link" href="https://www.ohchr.org/en/UDHR/Documents/UDHR_Translations/spn.pdf" target="_blank" rel="noreferrer">Texto de la Declaración Universal en la ONU ↗</a>
+          </div>
+        </details>
         <div class="ending__links">
           <a class="atlas-link" href="https://sukimalabs.com/atlasonu" target="_blank" rel="noreferrer"><span>¿Quieres explorar otros proyectos de derechos humanos?</span><strong>Visita ATLAS ONU ↗</strong></a>
           <p class="project-credit">Proyecto realizado por <strong>Jeisson Osorio Mesa</strong>, estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos, Universidad de Alcalá.</p>
