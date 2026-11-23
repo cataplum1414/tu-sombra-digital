@@ -14,7 +14,7 @@ const copy = {
   enterStory: ['Entrar en la historia', 'Enter the story'],
   openingNote: ['Historia inventada. Música opcional. No guardamos tus respuestas.', 'Fictional story. Music is optional. We do not save your choices.'],
   exploreScene: ['Toca un objeto para ver una pista', 'Tap an object to see a clue'],
-  tapScene: ['Toca un objeto para ver qué pasa. Desliza la imagen para moverla.', 'Tap an object to see what happens. Swipe the image to move it.'],
+  tapScene: ['Toca una parte de la foto para descubrir una pista. La verás debajo.', 'Tap part of the photo to reveal a clue. It will appear below.'],
   fictionNote: ['Historia inventada. No usamos tu cámara ni tu ubicación.', 'Fictional story. We do not use your camera or location.'],
   endingFiction: ['Esta historia ocurre en Alcalá, pero es inventada. Publicar una foto no da permiso a nadie para seguirte.', 'This story is set in Alcalá, but it is fictional. Posting a photo does not give anyone permission to follow you.'],
   articleKicker: ['ARTÍCULO 12 · DECLARACIÓN UNIVERSAL DE LOS DERECHOS HUMANOS', 'ARTICLE 12 · UNIVERSAL DECLARATION OF HUMAN RIGHTS'],

@@ -721,6 +721,7 @@ body { background:#080606; color:#f2e8df; }
 .story__hotspot { position:absolute; display:grid; place-items:center; width:48px; height:48px; padding:0; border:0; outline:none; appearance:none; -webkit-appearance:none; background:transparent; color:#fff5ed; cursor:pointer; transform:translate(-50%,-50%); pointer-events:auto; touch-action:manipulation; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
 .story__hotspot:active,.story__hotspot:focus:not(:focus-visible) { outline:none; background:transparent; box-shadow:none; }
 .story__hotspot:focus-visible { outline:2px solid #fff; outline-offset:3px; border-radius:50%; }
+.story__clue-target { display:block; margin-bottom:4px; color:#f0b9aa; font:700 .58rem/1.2 Consolas,monospace; letter-spacing:.1em; text-transform:uppercase; }
 .story__explore-hint { margin:8px 0 3px; color:#f1b9aa; font:700 .62rem/1.2 Consolas,monospace; letter-spacing:.1em; text-transform:uppercase; }
 .story__clue { margin:11px 0; padding:9px 11px; border-left:2px solid #e32127; background:rgba(8,5,5,.82); color:#faeee6; font-size:.78rem; line-height:1.42; }
 .story__image-wrap.is-disturbed { animation:story-contact .55s ease-out; }
@@ -920,12 +921,12 @@ body { background:#080606; color:#f2e8df; }
     z-index:3;
     height:clamp(290px,40svh,380px);
   }
-  .cinematic-story .story__hotspot { width:18%; height:24%; }
-  .cinematic-story .story__hotspot--protagonist { width:24%; height:42%; }
-  .cinematic-story .story__hotspot--cartographer { width:18%; height:43%; }
-  .cinematic-story .story__hotspot--landmark { width:23%; height:25%; }
-  .cinematic-story .story__hotspot--phone { width:15%; height:22%; }
-  .cinematic-story .story__hotspot--door { width:19%; height:35%; }
+  .cinematic-story .story__hotspot { width:20%; height:30%; }
+  .cinematic-story .story__hotspot--protagonist { width:26%; height:48%; }
+  .cinematic-story .story__hotspot--cartographer { width:22%; height:46%; }
+  .cinematic-story .story__hotspot--landmark { width:26%; height:34%; }
+  .cinematic-story .story__hotspot--phone { width:21%; height:30%; }
+  .cinematic-story .story__hotspot--door { width:26%; height:44%; }
   .cinematic-story .story__content {
     position:relative;
     z-index:2;

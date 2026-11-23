@@ -1,6 +1,6 @@
 import { justify } from './assets/justif/dist/index.js';
 import { hyphenateEs } from './assets/justif/dist/hyphenate/es.js';
-import { getLanguage, setLanguage, text as localized, t } from './language.js?v=lenguaje-claro-20261124-v2';
+import { getLanguage, setLanguage, text as localized, t } from './language.js?v=hotspots-cover-fix-20261124';
 
 const opening = document.querySelector('.opening');
 const story = document.querySelector('.story');
@@ -66,6 +66,7 @@ const scenes = [
     place: copy('CALLE MAYOR · CASA CERVANTES', 'CALLE MAYOR · CERVANTES BIRTHPLACE MUSEUM'),
     kicker: copy('CALLE MAYOR · 23:17', 'CALLE MAYOR · 11:17 P.M.'),
     title: copy('¿Subes esta foto ahora?', 'Do you post this photo now?'),
+    exploreHint: copy('Toca a la protagonista, la Casa Cervantes o al Cartógrafo. La pista aparecerá debajo.', 'Tap the woman, Cervantes House or the Cartographer. The clue will appear below.'),
     body: copy('Son las 23:17. Estás en la Calle Mayor, frente a la Casa Natal de Cervantes, número 48. La foto puede mostrar dónde estás, aunque no añadas la ubicación.', 'It is 11:17 p.m. You are on Calle Mayor, outside Cervantes Birthplace Museum at number 48. The photo can show where you are, even without a location tag.'),
     prompt: copy('La foto muestra dónde estás. ¿Qué haces?', 'The photo shows where you are. What do you do?'),
     hotspots: [
@@ -83,7 +84,7 @@ const scenes = [
     place: copy('CALLE MAYOR · CERCA DE CASA CERVANTES', 'CALLE MAYOR · NEAR CERVANTES HOUSE'),
     kicker: copy('CALLE MAYOR · 23:24', 'CALLE MAYOR · 11:24 P.M.'),
     title: copy('«Sé a qué hora vuelves».', '“I know what time you go home.”'),
-    exploreHint: copy('Toca el móvil, a la protagonista o al reflejo rojo. Cada toque muestra una pista.', 'Tap the phone, the woman or the red reflection. Each tap reveals a clue.'),
+    exploreHint: copy('Toca sobre el móvil, la protagonista o el reflejo rojo. La pista aparecerá debajo.', 'Tap the phone, the woman or the red reflection. The clue will appear below.'),
     body: () => cartographerNoticed
         ? localized('Lo señalaste. Ahora aparece más cerca, en una ventana de la Calle Mayor. Te llega un mensaje: «Sé a qué hora vuelves».', 'You pointed him out. Now he appears closer, in a Calle Mayor window. A message arrives: “I know what time you go home.”')
       : riskScore
@@ -106,6 +107,7 @@ const scenes = [
     place: copy('PLAZA DE CERVANTES · CAFÉ ABIERTO', 'CERVANTES SQUARE · CAFÉ OPEN'),
     kicker: copy('PLAZA DE CERVANTES · 23:32', 'CERVANTES SQUARE · 11:32 P.M.'),
     title: copy('Hay un café abierto.', 'There is a café open.'),
+    exploreHint: copy('Toca el café, la protagonista o al Cartógrafo. La pista aparecerá debajo.', 'Tap the café, the woman or the Cartographer. The clue will appear below.'),
     body: () => decisions.includes('block-save')
       ? localized('Llegas a la Plaza de Cervantes. Paula te escribe: «Voy para allá. Espera dentro del café». El Cartógrafo te mira desde el otro lado de la plaza.', 'You reach Cervantes Square. Paula texts: “I’m coming. Wait inside the café.” The Cartographer watches you from across the square.')
       : localized('Llegas a la Plaza de Cervantes. Hay un café abierto junto a la estatua. Nadie sabe que estás aquí. Te llega otro mensaje: «Te vi junto a la Casa de Cervantes».', 'You reach Cervantes Square. A café is open beside the statue. No one knows you are here. Another message arrives: “I saw you by Cervantes House.”'),
@@ -128,6 +130,9 @@ const scenes = [
     place: () => localized(decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES · CAFÉ' : 'CALLE CARDENAL SANDOVAL Y ROJAS · PORTAL', decisions.includes('go-cafe') ? 'CERVANTES SQUARE · CAFÉ' : 'CARDENAL SANDOVAL Y ROJAS · DOORWAY'),
     kicker: () => localized(decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES · 23:38' : 'SANDOVAL Y ROJAS · 23:41', decisions.includes('go-cafe') ? 'CERVANTES SQUARE · 11:38 P.M.' : 'SANDOVAL Y ROJAS · 11:41 P.M.'),
     title: () => localized(decisions.includes('go-cafe') ? 'No estás sola.' : 'El atajo termina en una puerta.', decisions.includes('go-cafe') ? 'You are not alone.' : 'The shortcut ends at a doorway.'),
+    exploreHint: () => decisions.includes('go-cafe')
+      ? localized('Toca a Paula, el mensaje o la ventana. La pista aparecerá debajo.', 'Tap Paula, the message or the window. The clue will appear below.')
+      : localized('Toca la puerta, la protagonista o al Cartógrafo. La pista aparecerá debajo.', 'Tap the door, the woman or the Cartographer. The clue will appear below.'),
     body: () => decisions.includes('go-cafe')
       ? localized('Entras al café. Paula llega y se sienta contigo. Puedes compartir tu ubicación solo con ella hasta llegar a casa.', 'You go into the café. Paula arrives and sits with you. You can share your location with her only until you get home.')
       : localized('Vas por Cardenal Sandoval y Rojas. El portal está abierto, oscuro y vacío. La foto y la hora dieron pistas al Cartógrafo. Puedes volver a la plaza, donde hay luz y gente.', 'You walk along Cardenal Sandoval y Rojas. The doorway is open, dark and empty. The photo and time gave the Cartographer clues. You can return to the lit, busy square.'),
@@ -261,6 +266,7 @@ if (!reduceMotion && window.matchMedia('(pointer:fine)').matches) {
 
 let depthGesture;
 let suppressHotspotClickUntil = 0;
+let suppressImageClickUntil = 0;
 let suppressedHotspot;
 function enableTouchPerspective(surface, visual, range) {
   surface.addEventListener('pointerdown', (event) => {
@@ -278,6 +284,7 @@ function enableTouchPerspective(surface, visual, range) {
     const dragY = event.clientY - depthGesture.startY;
     if (!depthGesture.moved && (Math.abs(dragX) < 10 || Math.abs(dragX) < Math.abs(dragY) * 1.12)) return;
     depthGesture.moved = true;
+    suppressImageClickUntil = Date.now() + 420;
     surface.classList.add('is-depth-dragging');
     const x = Math.max(-1, Math.min(1, dragX / 64));
     const y = Math.max(-1, Math.min(1, dragY / 52));
@@ -305,6 +312,55 @@ function enableTouchPerspective(surface, visual, range) {
 enableTouchPerspective(opening, opening.querySelector('.opening__visual'), 3.8);
 enableTouchPerspective(story, sceneImageWrap, 4.1);
 
+function objectPositionFraction(value, axis) {
+  const parts = value.trim().split(/\s+/);
+  const token = parts[axis] || (axis === 0 ? '50%' : '50%');
+  if (token === 'left' || token === 'top') return 0;
+  if (token === 'right' || token === 'bottom') return 1;
+  if (token === 'center') return 0.5;
+  return Number.parseFloat(token) / 100 || 0;
+}
+
+function positionSceneHotspots() {
+  if (currentScene < 0 || !sceneImage.naturalWidth || !sceneImage.naturalHeight) return;
+  const stageWidth = sceneImageWrap.clientWidth;
+  const stageHeight = sceneImageWrap.clientHeight;
+  const stageRect = sceneImageWrap.getBoundingClientRect();
+  const overlayRect = sceneHotspots.getBoundingClientRect();
+  if (!stageWidth || !stageHeight || !overlayRect.width || !overlayRect.height) return;
+
+  const scale = Math.max(stageWidth / sceneImage.naturalWidth, stageHeight / sceneImage.naturalHeight);
+  const renderedWidth = sceneImage.naturalWidth * scale;
+  const renderedHeight = sceneImage.naturalHeight * scale;
+  const position = getComputedStyle(sceneImage).objectPosition;
+  const offsetX = (stageWidth - renderedWidth) * objectPositionFraction(position, 0);
+  const offsetY = (stageHeight - renderedHeight) * objectPositionFraction(position, 1);
+
+  sceneHotspots.querySelectorAll('[data-hotspot]').forEach((button) => {
+    const hotspot = sceneValue(scenes[currentScene].hotspots).find((item) => item.id === button.dataset.hotspot);
+    if (!hotspot) return;
+    const imageX = (hotspot.x / 100) * renderedWidth + offsetX;
+    const imageY = (hotspot.y / 100) * renderedHeight + offsetY;
+    const screenX = stageRect.left + (imageX / stageWidth) * stageRect.width;
+    const screenY = stageRect.top + (imageY / stageHeight) * stageRect.height;
+    button.style.left = `${((screenX - overlayRect.left) / overlayRect.width) * 100}%`;
+    button.style.top = `${((screenY - overlayRect.top) / overlayRect.height) * 100}%`;
+  });
+}
+
+function showHotspotClue(hotspot) {
+  const target = document.createElement('span');
+  target.className = 'story__clue-target';
+  target.textContent = localized(`PISTA: ${sceneValue(hotspot.label)}`, `CLUE: ${sceneValue(hotspot.label)}`);
+  sceneClue.replaceChildren(target, document.createTextNode(sceneValue(hotspot.response)));
+  sceneClue.hidden = false;
+}
+
+sceneImage.addEventListener('load', positionSceneHotspots);
+window.addEventListener('resize', positionSceneHotspots, { passive: true });
+window.addEventListener('orientationchange', positionSceneHotspots, { passive: true });
+window.visualViewport?.addEventListener('resize', positionSceneHotspots, { passive: true });
+
 function renderScene(index, { languageRefresh = false } = {}) {
   const hotspotToRestore = languageRefresh ? activeHotspotId : '';
   const choiceToRestore = languageRefresh && decisions.length > index ? decisions[index] : '';
@@ -327,7 +383,8 @@ function renderScene(index, { languageRefresh = false } = {}) {
   sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash');
   sceneHotspots.classList.remove('is-disturbed', 'is-door-touched');
   sceneHotspots.innerHTML = hotspots.map((hotspot) => `
-    <button class="story__hotspot story__hotspot--${hotspot.id}" type="button" data-hotspot="${hotspot.id}" style="left:${hotspot.x}%;top:${hotspot.y}%" aria-controls="scene-clue" aria-label="${t('sceneA11y')}${sceneValue(hotspot.label)}"></button>`).join('');
+    <button class="story__hotspot story__hotspot--${hotspot.id}" type="button" data-hotspot="${hotspot.id}" aria-pressed="false" style="left:${hotspot.x}%;top:${hotspot.y}%" aria-controls="scene-clue" aria-label="${t('sceneA11y')}${sceneValue(hotspot.label)}"></button>`).join('');
+  if (sceneImage.complete) positionSceneHotspots();
   choicePrompt.textContent = sceneValue(scene.prompt);
   choices.innerHTML = sceneChoices.map((choice, choiceIndex) => `
     <button class="choice ${choice.risk ? 'choice--danger' : 'choice--safe'}" type="button" data-choice="${choice.id}" data-risk="${choice.risk}" aria-pressed="false">
@@ -346,10 +403,7 @@ function renderScene(index, { languageRefresh = false } = {}) {
   if (choiceToRestore) continueLabel.textContent = index === scenes.length - 1 ? t('seeEnding') : t('continue');
   if (hotspotToRestore) {
     const restoredHotspot = hotspots.find((hotspot) => hotspot.id === hotspotToRestore);
-    if (restoredHotspot) {
-      sceneClue.textContent = sceneValue(restoredHotspot.response);
-      sceneClue.hidden = false;
-    }
+    if (restoredHotspot) showHotspotClue(restoredHotspot);
   }
   applyTextLayout();
   updateProgress(index + 1);
@@ -486,8 +540,10 @@ sceneHotspots.addEventListener('click', (event) => {
   aimPerspective(story, touchX, touchY, hotspot.id === 'cartographer' ? 3.7 : 2.8, sceneImageWrap);
   releasePerspective(story, hotspot.id === 'cartographer' ? 1150 : 780);
   activeHotspotId = hotspot.id;
-  sceneClue.textContent = sceneValue(hotspot.response);
-  sceneClue.hidden = false;
+  sceneHotspots.querySelectorAll('[data-hotspot]').forEach((target) => {
+    target.setAttribute('aria-pressed', String(target === button));
+  });
+  showHotspotClue(hotspot);
   applyTextLayout();
   const isThreat = hotspot.id === 'cartographer';
   if (isThreat) {
@@ -538,6 +594,19 @@ sceneHotspots.addEventListener('click', (event) => {
     cafeEntranceRang = true;
   }
   announce('hotspot', { id: hotspot.id, scene: currentScene + 1, threat: isThreat });
+});
+sceneImageWrap.addEventListener('click', (event) => {
+  if (Date.now() < suppressImageClickUntil) return;
+  const buttons = [...sceneHotspots.querySelectorAll('[data-hotspot]')];
+  if (!buttons.length) return;
+  const nearest = buttons.reduce((best, button) => {
+    const rect = button.getBoundingClientRect();
+    const dx = event.clientX - (rect.left + rect.width / 2);
+    const dy = event.clientY - (rect.top + rect.height / 2);
+    const distance = dx * dx + dy * dy;
+    return !best || distance < best.distance ? { button, distance } : best;
+  }, undefined);
+  nearest?.button.click();
 });
 
 choices.addEventListener('click', (event) => {
