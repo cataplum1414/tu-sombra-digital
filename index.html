@@ -9,14 +9,21 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="styles.css?v=alcala-audio-adaptativo-20261123">
   <script src="script.js?v=alcala-audio-adaptativo-20261123" defer></script>
+  <script src="visit-counter.js?v=counter-20261123" defer></script>
   <script type="module" src="motion.js?v=alcala-audio-adaptativo-20261123"></script>
 </head>
 <body>
   <header class="topbar">
-    <a class="wordmark" href="#inicio" aria-label="Tu sombra digital, inicio">
-      <span class="wordmark__mark" aria-hidden="true"></span>
-      <span>tu sombra digital</span>
-    </a>
+    <div class="topbar__identity">
+      <a class="wordmark" href="#inicio" aria-label="Tu sombra digital, inicio">
+        <span class="wordmark__mark" aria-hidden="true"></span>
+        <span>tu sombra digital</span>
+      </a>
+      <p class="visit-counter" id="visit-counter" hidden aria-live="polite" aria-label="Visitas a la página">
+        <span class="visit-counter__value" id="visit-count">—</span>
+        <span>visitas</span>
+      </p>
+    </div>
     <button class="screen-mode-shortcut" id="screen-mode-shortcut" type="button" aria-pressed="false" aria-label="Activar modo más inmersivo; gira el teléfono">
       <span class="screen-mode-shortcut__icon" aria-hidden="true">⤢</span>
       <span id="screen-mode-short-label">Normal</span>

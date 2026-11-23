@@ -1,0 +1,19 @@
+name = "tu-sombra-digital-visitas"
+main = "src/index.js"
+compatibility_date = "2026-11-23"
+
+[[durable_objects.bindings]]
+name = "VISITS"
+class_name = "VisitCounter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["VisitCounter"]
+
+[observability]
+enabled = false
+
+[observability.logs]
+enabled = false
+invocation_logs = false
+persist = false

@@ -679,6 +679,15 @@ body { background:#080606; color:#f2e8df; }
 .sound-control--header { color:#f1e6dc; }
 .sound-control__icon { color:#e32127; }
 .sound-control__state { border-color:rgba(242,232,223,.35); color:#f0dcd0; }
+.topbar__identity { display:grid; justify-items:start; gap:5px; flex:0 0 auto; }
+.visit-counter { display:flex; align-items:baseline; gap:6px; margin:0 0 0 25px; color:#e5cbc0; font-size:.66rem; letter-spacing:.035em; line-height:1.2; text-shadow:0 1px 8px #000; }
+.visit-counter__value { color:#f0716d; font-family:Georgia,serif; font-size:.84rem; font-weight:700; font-variant-numeric:tabular-nums; }
+.visit-counter[hidden] { display:none; }
+@media (max-width:480px) {
+  .topbar__identity { gap:4px; }
+  .visit-counter { margin-left:21px; font-size:.6rem; }
+  .visit-counter__value { font-size:.76rem; }
+}
 .screen-mode-shortcut { background:rgba(10,7,7,.72); border-color:rgba(255,255,255,.35); }
 .screen-mode-shortcut__icon { color:#e32127; }
 .campaign-opening { position:relative; isolation:isolate; min-height:100svh; overflow:hidden; display:flex; align-items:flex-end; padding:clamp(110px,20vh,205px) clamp(24px,8vw,112px) clamp(42px,8vh,86px); background:#080606; }
