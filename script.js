@@ -37,6 +37,7 @@ let currentScene = -1;
 let riskScore = 0;
 let lastDecision = '';
 let cartographerNoticed = false;
+let cafeEntranceRang = false;
 let soundOptedOut = false;
 const decisions = [];
 
@@ -50,7 +51,7 @@ const scenes = [
     prompt: '¿Qué haces antes de subir la foto?',
     hotspots: [
       { id: 'protagonist', label: 'La chica', x: 20, y: 45, align: 'right', response: 'El flash salta: el Cartógrafo acaba de tomar una foto desde el otro lado de Calle Mayor. La protagonista decide qué pista compartir y a quién pedir apoyo.' },
-      { id: 'landmark', label: 'Casa Cervantes', x: 53, y: 46, align: 'center', response: 'Estás en el casco histórico, frente a la Casa Natal de Cervantes, en Calle Mayor 48. La fachada de una foto puede revelar el lugar aunque no añadas una etiqueta.' },
+      { id: 'landmark', label: 'Casa Cervantes', x: 53, y: 46, align: 'center', response: 'Unos pasos húmedos resuenan bajo los soportales. Estás frente a la Casa Natal de Cervantes, Calle Mayor 48; la fachada puede ubicar la foto aunque no añadas una etiqueta.' },
       { id: 'cartographer', label: 'El Cartógrafo', x: 74, y: 57, align: 'left', response: 'Lo señalas. La imagen da un salto: el encapuchado ya no está junto al farol; aparece en el reflejo, detrás de ti. Ha notado que lo viste.' }
     ],
     choices: [
@@ -71,7 +72,7 @@ const scenes = [
     prompt: 'El Cartógrafo quiere confirmar tu rutina. ¿Qué haces?',
     hotspots: [
       { id: 'protagonist', label: 'La chica', x: 20, y: 45, align: 'right', response: 'Un destello cruza el cristal. Ella reconoce al Cartógrafo; no tiene que responder a quien la intimida.' },
-      { id: 'phone', label: 'El móvil', x: 51, y: 72, align: 'center', response: 'La pantalla muestra la hora; el reflejo revela el escaparate. Dos detalles cotidianos pueden ubicar una foto sin que nadie hackee el teléfono.' },
+      { id: 'phone', label: 'El móvil', x: 51, y: 72, align: 'center', response: 'El móvil vibra con otro mensaje. La hora en pantalla y el reflejo del escaparate dan pistas sobre tu rutina; nadie tuvo que hackear el teléfono.' },
       { id: 'cartographer', label: 'El reflejo', x: 79, y: 44, align: 'left', response: 'Tocas el reflejo. Por un instante, la figura se mueve antes que tú. El cristal la devuelve demasiado cerca.' }
     ],
     choices: [
@@ -92,8 +93,8 @@ const scenes = [
       ? 'Paula viene hacia la cafetería. ¿Esperas dentro o tomas el atajo?'
       : 'La cafetería está abierta. ¿Pides ayuda o tomas el atajo?',
     hotspots: [
-      { id: 'cafe', label: 'La cafetería', x: 21, y: 57, align: 'right', response: 'La puerta abierta deja salir luz y voces. Dentro hay gente; puedes pedir ayuda sin entregar tus contraseñas ni publicar tu ubicación.' },
-      { id: 'protagonist', label: 'La chica', x: 52, y: 75, align: 'center', response: 'Aún estás en la plaza. Puedes entrar donde hay gente, llamar a Paula y decidir con calma qué compartir.' },
+      { id: 'cafe', label: 'La cafetería', x: 21, y: 57, align: 'right', response: 'Te acercas a la entrada: suena la campanilla y salen luz y voces. Dentro hay gente; puedes pedir ayuda sin entregar tus contraseñas ni publicar tu ubicación.' },
+      { id: 'protagonist', label: 'La chica', x: 52, y: 75, align: 'center', response: 'Avanzas unos pasos por la plaza iluminada. Puedes entrar donde hay gente, llamar a Paula y decidir con calma qué compartir.' },
       { id: 'cartographer', label: 'La figura', x: 75, y: 56, align: 'left', response: 'Bajo los soportales, la figura parece estar mirando hacia ti. Cuando la luz de la plaza parpadea, ya no está junto a la farola.' }
     ],
     choices: () => [
@@ -114,13 +115,13 @@ const scenes = [
       ? 'Llega una última notificación. ¿Qué compartes ahora?'
       : '¿Qué haces al llegar al portal?',
     hotspots: () => decisions.includes('go-cafe') ? [
-      { id: 'friend', label: 'Paula', x: 60, y: 58, align: 'right', response: 'Paula deja el teléfono boca abajo y se queda contigo. Pedir apoyo no requiere entregar todas tus cuentas: basta con contar lo que pasó y qué necesitas.' },
+      { id: 'friend', label: 'Paula', x: 60, y: 58, align: 'right', response: 'Paula desliza una taza sobre la mesa y se queda contigo. Pedir apoyo no requiere entregar tus cuentas: basta con contar qué pasó y qué necesitas.' },
       { id: 'phone', label: 'La notificación', x: 28, y: 84, align: 'left', response: 'El mensaje exige saber dónde estás. No contestar y guardar una captura conserva una prueba sin abrir otro dato privado.' },
-      { id: 'cartographer', label: 'El cristal', x: 88, y: 45, align: 'left', response: 'Afuera solo queda la calle mojada. La amenaza no convierte en culpable a quien compartió una foto: la responsabilidad de invadir la intimidad es de quien lo hace.' }
+      { id: 'cartographer', label: 'El cristal', x: 88, y: 45, align: 'left', response: 'Afuera se oyen pasos que se alejan por la calle mojada. La amenaza no convierte en culpable a quien compartió una foto: la responsabilidad de invadir la intimidad es de quien lo hace.' }
     ] : [
-      { id: 'protagonist', label: 'La chica', x: 22, y: 47, align: 'right', response: 'Se detiene antes de tocar el portal. Puede cambiar de rumbo, llamar a Paula y volver a la plaza iluminada.' },
-      { id: 'door', label: 'El picaporte', x: 88, y: 69, align: 'left', response: 'El metal está frío. Entrar en un portal desconocido no te protege; la cafetería y las calles con gente siguen siendo una opción.' },
-      { id: 'cartographer', label: 'La figura', x: 65, y: 49, align: 'left', response: 'El encapuchado no cruza la calle. El peligro de la escena es la información que reunió, no una capacidad mágica para leer tu móvil.' }
+      { id: 'protagonist', label: 'La chica', x: 22, y: 47, align: 'right', response: 'Retrocedes desde el portal. Puedes cambiar de rumbo, llamar a Paula y volver a la plaza iluminada.' },
+      { id: 'door', label: 'El picaporte', x: 88, y: 69, align: 'left', response: 'El picaporte cede y la puerta cruje al abrirse unos centímetros. Aún puedes retroceder: entrar en un portal desconocido no te protege; la cafetería y las calles con gente siguen siendo una opción.' },
+      { id: 'cartographer', label: 'La figura', x: 65, y: 49, align: 'left', response: 'No se oye nada. El encapuchado sigue al otro lado de la calle: la amenaza está en la información que reunió, no en una capacidad mágica para leer tu móvil.' }
     ],
     choices: () => decisions.includes('go-cafe') ? [
       { id: 'share-private', risk: 0, label: 'Guardar la prueba y compartir tu ubicación solo con Paula' },
@@ -280,6 +281,7 @@ function goToStory() {
   riskScore = 0;
   lastDecision = '';
   cartographerNoticed = false;
+  cafeEntranceRang = false;
   decisions.length = 0;
   story.dataset.risk = '0';
   story.classList.remove('is-revealing');
@@ -302,6 +304,7 @@ function restart() {
   riskScore = 0;
   lastDecision = '';
   cartographerNoticed = false;
+  cafeEntranceRang = false;
   currentScene = -1;
   decisions.length = 0;
   story.dataset.risk = '0';
@@ -340,29 +343,34 @@ sceneHotspots.addEventListener('click', (event) => {
     sceneHotspots.classList.add('is-door-touched');
   }
   if (isThreat) {
-    navigator.vibrate?.([24, 32, 52]);
-    playCameraFlash(0.38);
+    navigator.vibrate?.([20, 28, 42]);
+    if (currentScene !== 3 || decisions.includes('go-cafe')) playFootsteps(0.34);
   } else if (hotspot.id === 'door') {
     navigator.vibrate?.(42);
-    playDoorKnock();
+    playDoorCreak();
   } else if (hotspot.id === 'protagonist') {
     navigator.vibrate?.(18);
-    sceneImageWrap.classList.remove('is-camera-flash');
-    void sceneImageWrap.offsetWidth;
-    sceneImageWrap.classList.add('is-camera-flash');
-    playCameraFlash();
+    if (currentScene < 2) {
+      sceneImageWrap.classList.remove('is-camera-flash');
+      void sceneImageWrap.offsetWidth;
+      sceneImageWrap.classList.add('is-camera-flash');
+      playCameraFlash();
+    } else {
+      playFootsteps(0.34);
+    }
   } else if (hotspot.id === 'phone') {
     navigator.vibrate?.(14);
     playMessageAlert();
   } else if (hotspot.id === 'landmark') {
     navigator.vibrate?.(14);
-    playLocationPing();
+    playFootsteps(0.34);
   } else if (hotspot.id === 'friend') {
     navigator.vibrate?.(14);
-    playCafeClink();
+    playCoffeeCup();
   } else if (hotspot.id === 'cafe') {
     navigator.vibrate?.(14);
-    playCafeClink();
+    playCafeDoorbell();
+    cafeEntranceRang = true;
   }
   announce('hotspot', { id: hotspot.id, scene: currentScene + 1, threat: isThreat });
 });
@@ -384,7 +392,8 @@ choices.addEventListener('click', (event) => {
   continueLabel.textContent = currentScene === scenes.length - 1 ? 'Ver cómo termina' : 'Continuar';
   announce('choice', { choice: lastDecision, risk: riskScore, scene: currentScene + 1 });
   navigator.vibrate?.(Number(button.dataset.risk) ? [35, 45, 70] : 24);
-  if (['live-location', 'reply-routine', 'share-private'].includes(lastDecision)) playMessageAlert();
+  if (lastDecision === 'go-cafe' && !cafeEntranceRang) playCafeDoorbell();
+  else if (lastDecision === 'live-location') playCameraFlash();
   else if (['take-shortcut', 'return-light'].includes(lastDecision)) playFootsteps();
   else if (['block-save', 'post-cafe'].includes(lastDecision)) playCameraFlash();
   else if (lastDecision === 'open-portal') playDoorCreak();
@@ -433,12 +442,11 @@ let ambienceFadeFrame = 0;
 
 const soundEffects = {
   camera: 'assets/audio/camera-shutter.mp3',
-  doorKnock: 'assets/audio/door-knock.mp3',
   doorCreak: 'assets/audio/door-creak.mp3',
   footsteps: 'assets/audio/wet-pavement-steps.mp3',
   message: 'assets/audio/message-alert.mp3',
-  cafe: 'assets/audio/cafe-glass-clink.mp3',
-  heartbeat: 'assets/audio/ending-heartbeat.mp3'
+  cafeDoorbell: 'assets/audio/cafe-doorbell.mp3',
+  coffeeCup: 'assets/audio/coffee-cup-setdown.mp3'
 };
 
 function setAmbientTrack(name) {
@@ -516,10 +524,6 @@ function turnSoundOff() {
   updateSoundControls(false);
 }
 
-function playEndingImpact() {
-  playSoundEffect('heartbeat', 0.4, 0, 3600);
-}
-
 function duckAmbienceFor(milliseconds, level = 0.24) {
   if (licensedAmbience.paused) return;
   fadeAmbienceTo(level, 120);
@@ -546,18 +550,9 @@ function playCameraFlash(volume = 0.55) {
   playSoundEffect('camera', volume);
 }
 
-function playLocationPing() {
-  playSoundEffect('message', 0.38);
-}
-
-function playDoorKnock() {
-  duckAmbienceFor(600, 0.18);
-  playSoundEffect('doorKnock', 0.5);
-}
-
-function playFootsteps() {
+function playFootsteps(volume = 0.4) {
   duckAmbienceFor(900, 0.2);
-  playSoundEffect('footsteps', 0.4);
+  playSoundEffect('footsteps', volume);
 }
 
 function playDoorCreak() {
@@ -569,8 +564,12 @@ function playMessageAlert() {
   playSoundEffect('message', 0.38);
 }
 
-function playCafeClink() {
-  playSoundEffect('cafe', 0.38);
+function playCafeDoorbell() {
+  playSoundEffect('cafeDoorbell', 0.42);
+}
+
+function playCoffeeCup() {
+  playSoundEffect('coffeeCup', 0.36);
 }
 
 function toggleSoundFromControl() {
@@ -584,9 +583,6 @@ function toggleSoundFromControl() {
 }
 
 soundToggle.addEventListener('click', toggleSoundFromControl);
-window.addEventListener('story:ending', (event) => {
-  if (event.detail.risk > 0) playEndingImpact();
-});
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && ambientOn) {
     licensedAmbience.pause();

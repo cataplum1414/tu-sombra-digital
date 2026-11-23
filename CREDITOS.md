@@ -3,7 +3,7 @@
 ## Música y efectos
 
 - La ambientación cambia de una calle urbana mojada a un café con gente según la escena; la música de ambiente puede apagarse.
-- El obturador marca los momentos de vigilancia; las alertas, los pasos, los golpes de puerta, el ambiente de calle y cafetería y el pulso final son grabaciones integradas desde Mixkit. Se retiró la risa de monstruo para mantener el tono realista de la historia.
+- Cada sonido sigue la acción: obturador al capturar una imagen, pasos sobre calle mojada al avanzar o seguir a la protagonista, campanilla y voces al entrar en el café, taza en la mesa junto a Paula y puerta al tocar el picaporte. El final mantiene el ambiente del lugar en vez de añadir un pulso de terror genérico.
 - Los efectos al tocar siguen activos aunque se apague la música. Las fuentes y los términos de la licencia están en [`assets/audio/FUENTES.md`](assets/audio/FUENTES.md).
 
 ## Escenas fotográficas

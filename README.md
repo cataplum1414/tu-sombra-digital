@@ -8,7 +8,7 @@ Experiencia interactiva de suspense sobre el artículo 12 de la Declaración Uni
 - La historia avanza desde la Casa Natal de Cervantes, en Calle Mayor, hasta Plaza de Cervantes; la ruta de riesgo continúa hacia Sandoval y Rojas.
 - La tercera escena ocurre en Plaza de Cervantes: primero se ve la cafetería desde fuera; entrar lleva al interior y tomar el atajo lleva a un portal de Cardenal Sandoval y Rojas.
 - Los personajes y objetos de cada fotografía son zonas táctiles invisibles: cada toque repite su sonido y vibración compatible con el dispositivo.
-- La música de ambiente es opcional. Los sonidos de interacción se oyen aunque la música esté apagada.
+- La ambientación distingue calle nocturna de cafetería. Cada efecto corresponde a una acción descrita en pantalla: obturador al publicar o guardar una imagen, pasos al cruzar o retroceder, alerta al consultar un mensaje, campanilla al acercarse al café, taza cuando Paula la deja y puerta cuando el picaporte cede. Las decisiones de enviar mensajes no suenan como alertas entrantes; el silencio del Cartógrafo inmóvil también forma parte de la tensión. Los efectos se oyen aunque el ambiente esté apagado.
 - La historia no solicita permisos de cámara o ubicación ni guarda elecciones. Las fotografías son recreaciones ficticias, no pruebas documentales.
 - El final resume el artículo 12, ofrece consejos breves de privacidad y enlaza el texto oficial y ATLAS ONU.
 
