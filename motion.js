@@ -1,5 +1,6 @@
 ﻿import { animate, inView, scroll } from 'https://cdn.jsdelivr.net/npm/motion@14.14.0/+esm';
 
+document.documentElement.classList.add('has-motion');
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const portrait = document.querySelector('.portrait');
 const opening = document.querySelector('.opening');
@@ -54,18 +55,38 @@ if (!reduced) {
   window.addEventListener('story:scene', (event) => {
     animate('.scene-copy', { opacity: [0, 0.4, 1], x: [18, 0], filter: ['blur(5px)', 'blur(0px)'] }, { duration: 0.8, ease: [0.22, 1, 0.36, 1] });
     if (event.detail.scene === 2) {
-      const route = document.querySelector('.scene-map__route');
+      const route = document.querySelector(event.detail.choice === 'share' ? '.scene-map__route--home' : '.scene-map__route--safe');
+      const otherRoute = document.querySelector(event.detail.choice === 'share' ? '.scene-map__route--safe' : '.scene-map__route--home');
       const length = route.getTotalLength();
-      const ending = event.detail.choice === 'review' ? length * 0.38 : 0;
+      const otherLength = otherRoute.getTotalLength();
       route.style.strokeDasharray = String(length);
       route.style.strokeDashoffset = String(length);
-      animate(route, { strokeDashoffset: [length, ending] }, { duration: 2.1, delay: 0.25, ease: [0.2, 0.7, 0.15, 1] });
-      animate('.scene-map__label', { opacity: [0, 1], y: [8, 0] }, { duration: 0.6, delay: 0.8 });
+      otherRoute.style.strokeDasharray = String(otherLength);
+      otherRoute.style.strokeDashoffset = String(otherLength);
+      const map = document.querySelector('.scene-map');
+      map.classList.add('is-zooming');
+      const destination = document.querySelector(event.detail.choice === 'share' ? '.scene-map__destination--home' : '.scene-map__destination--safe');
+      const mapBox = map.getBoundingClientRect();
+      const targetBox = destination.getBoundingClientRect();
+      const zoom = 1.45;
+      const cameraX = (mapBox.left + mapBox.width / 2 - targetBox.left - targetBox.width / 2) * zoom;
+      const cameraY = (mapBox.top + mapBox.height / 2 - targetBox.top - targetBox.height / 2) * zoom;
+      animate(map, { scale: [0.94, 1, zoom], x: [0, 0, cameraX], y: [0, 0, cameraY], opacity: [0.25, 1, 1] }, { duration: 1.25, delay: 1.4, ease: [0.16, 1, 0.3, 1] });
+      animate(route, { strokeDashoffset: [length, 0] }, { duration: 2.25, delay: 0.12, ease: [0.2, 0.7, 0.15, 1] });
+      animate(event.detail.choice === 'share' ? '.scene-map__destination--home' : '.scene-map__destination--safe', { scale: [0.5, 1.8, 1], opacity: [0, 1, 1] }, { duration: 0.55, delay: 2.15, ease: [0.16, 1, 0.3, 1] });
+      animate('.scene-map__label', { opacity: [0, 1], y: [8, 0] }, { duration: 0.6, delay: 0.7 });
     }
     if (event.detail.scene === 3) {
-      animate('.scene-door__slab', { rotateY: [0, -16], opacity: [0.6, 1] }, { duration: 1.1, ease: [0.22, 1, 0.36, 1] });
-      animate('.scene-door__beam', { opacity: [0, 0.75, 0.2], y: ['-120%', '0%', '120%'] }, { duration: 2.2, delay: 0.2, ease: 'easeInOut' });
-      animate('.scene-door__stamp', { opacity: [0, 1], scale: [0.9, 1] }, { duration: 0.35, delay: 1.3 });
+      if (event.detail.choice === 'share') {
+        animate(storyScene, { x: [0, -13, 8, -4, 0], filter: ['brightness(1)', 'brightness(.42)', 'brightness(1.4)', 'brightness(.82)', 'brightness(1)'] }, { duration: 0.62, ease: 'easeOut' });
+        animate('.scene-door__slab', { rotateY: [0, -62, -52], x: [0, -10, -5], opacity: [0.6, 1, 1] }, { duration: 0.72, delay: 0.12, ease: [0.18, 0.75, 0.25, 1] });
+        animate('.scene-door__beam', { opacity: [0, 0.92, 0.18], y: ['-120%', '0%', '120%'] }, { duration: 0.78, delay: 0.16, ease: 'easeIn' });
+        animate('.scene-door__stamp', { opacity: [0, 1], scale: [1.4, 0.92, 1], rotate: [8, -3, 4] }, { duration: 0.42, delay: 0.72, ease: [0.16, 1, 0.3, 1] });
+      } else {
+        animate('.scene-safe__lamp', { opacity: [0, 1], scale: [0.6, 1.2, 1] }, { duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] });
+        animate('.scene-safe__pool', { opacity: [0, 0.9], scale: [0.75, 1] }, { duration: 1.2, delay: 0.25, ease: 'easeOut' });
+        animate('.scene-safe__person', { opacity: [0, 1], y: [10, 0] }, { duration: 0.55, delay: 0.45, ease: [0.16, 1, 0.3, 1] });
+      }
     }
   });
 

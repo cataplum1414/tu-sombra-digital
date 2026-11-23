@@ -7,10 +7,10 @@
   <meta name="description" content="Una experiencia interactiva sobre el derecho a la intimidad y la vida privada.">
   <title>Tu sombra digital — Artículo 12</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=investigacion-20261123">
-  <script src="script.js?v=investigacion-20261123" defer></script>
-  <script src="signal-field.js?v=investigacion-20261123" defer></script>
-  <script type="module" src="motion.js?v=investigacion-20261123"></script>
+  <link rel="stylesheet" href="styles.css?v=rutas-inmersivas-20261123">
+  <script src="script.js?v=rutas-inmersivas-20261123" defer></script>
+  <script src="signal-field.js?v=rutas-inmersivas-20261123" defer></script>
+  <script type="module" src="motion.js?v=rutas-inmersivas-20261123"></script>
 </head>
 <body>
   <header class="topbar">
@@ -18,6 +18,10 @@
       <span class="wordmark__mark" aria-hidden="true"></span>
       <span>tu sombra digital</span>
     </a>
+    <button class="screen-mode-shortcut" id="screen-mode-shortcut" type="button" aria-pressed="false" aria-label="Activar modo más inmersivo; gira el teléfono">
+      <span class="screen-mode-shortcut__icon" aria-hidden="true">⤢</span>
+      <span id="screen-mode-short-label">Normal</span>
+    </button>
     <button class="sound-control sound-control--header" id="sound-toggle" type="button" aria-pressed="false" aria-label="Activar ambiente sonoro">
       <span class="sound-control__icon" aria-hidden="true">♫</span>
       <span id="sound-label">Activar ambiente</span>
@@ -31,6 +35,14 @@
         <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Derecho humano · Artículo 12</p>
         <h1 id="opening-title">Tu intimidad<br><em>también es un derecho.</em></h1>
         <p class="opening__lead">Una imagen. Tres pistas. Alguien que no conoces empieza a reconstruir una vida. Sigue el rastro y descubre el límite que protege el Artículo 12.</p>
+        <div class="view-modes" role="group" aria-label="Elige cómo ver el recorrido">
+          <button class="view-mode-option is-selected" id="mode-normal" type="button" aria-pressed="true">
+            <span>Pantalla normal</span><span class="view-mode-option__hint">Vertical</span>
+          </button>
+          <button class="view-mode-option" id="mode-immersive" type="button" aria-pressed="false">
+            <span>Más inmersiva</span><span class="view-mode-option__hint">Gira el teléfono</span>
+          </button>
+        </div>
         <button class="button button--light" id="start-story" type="button" aria-controls="recorrido">
           <span>Iniciar con ambiente</span><span class="button__icon" aria-hidden="true">↘</span>
         </button>
@@ -76,10 +88,11 @@
         <div class="scene-art" id="scene-art" data-scene="1" aria-hidden="true">
           <div class="scene-art__photo"><span class="scene-art__sun"></span><span class="scene-art__window"></span><span class="scene-art__person"></span><span class="scene-art__phone"></span></div>
           <div class="scene-map" aria-hidden="true">
-            <div class="scene-map__grid"></div><svg viewBox="0 0 360 440" focusable="false"><path class="scene-map__route" d="M42 355 C74 330 72 288 122 276 S157 228 198 221 S222 163 275 142 S298 99 323 76"/><circle cx="42" cy="355" r="8"/><circle cx="323" cy="76" r="9"/></svg>
-            <span class="scene-map__label scene-map__label--start">20:41 · FOTO PUBLICADA</span><span class="scene-map__label scene-map__label--end">21:06 · CASA</span>
+            <div class="scene-map__grid"></div><svg viewBox="0 0 360 440" focusable="false"><path class="scene-map__route scene-map__route--home" d="M42 355 C74 330 72 288 122 276 S157 228 198 221 S222 163 275 142 S298 99 323 76"/><path class="scene-map__route scene-map__route--safe" d="M42 355 C74 330 72 288 122 276 S157 228 198 221 S222 163 185 143 S133 115 92 74"/><circle class="scene-map__origin" cx="42" cy="355" r="8"/><circle class="scene-map__destination scene-map__destination--home" cx="323" cy="76" r="9"/><circle class="scene-map__destination scene-map__destination--safe" cx="92" cy="74" r="9"/></svg>
+            <span class="scene-map__label scene-map__label--start">20:41 · FOTO PUBLICADA</span><span class="scene-map__label scene-map__label--end" id="map-arrival">21:06 · DESTINO</span>
           </div>
-          <div class="scene-door" aria-hidden="true"><span class="scene-door__beam"></span><div class="scene-door__frame"><div class="scene-door__slab"><i></i></div></div><span class="scene-door__label">RUTINA RECONSTRUIDA</span><span class="scene-door__stamp">ACCESO<br>NO AUTORIZADO</span></div>
+          <div class="scene-door" aria-hidden="true"><span class="scene-door__beam"></span><div class="scene-door__frame"><div class="scene-door__slab"><i></i></div></div><span class="scene-door__label">ALGUIEN HA LLEGADO</span><span class="scene-door__stamp">TU PORTAL<br>21:06</span></div>
+          <div class="scene-safe" aria-hidden="true"><div class="scene-safe__buildings"><i></i><i></i><i></i><i></i></div><span class="scene-safe__lamp"></span><span class="scene-safe__pool"></span><span class="scene-safe__person scene-safe__person--one"></span><span class="scene-safe__person scene-safe__person--two"></span><span class="scene-safe__label">PLAZA · CON APOYO</span></div>
           <span class="scene-tag scene-tag--one">IMG_1048 · 20:41</span>
           <span class="scene-tag scene-tag--two">UBICACIÓN DETECTADA</span>
           <span class="scene-tag scene-tag--three">RUTINA ENCONTRADA</span>
@@ -115,6 +128,20 @@
       <div class="reveal__closing" aria-hidden="true"><span>Lo que es tuyo<br>también merece un límite.</span><i></i></div>
     </section>
   </main>
+
+  <div class="rotation-guide" id="rotation-guide" role="dialog" aria-modal="true" aria-labelledby="rotation-guide-title" hidden>
+    <div class="rotation-guide__panel">
+      <div class="rotation-guide__animation" aria-hidden="true">
+        <span class="rotation-guide__orbit"></span>
+        <span class="rotation-guide__phone"><i></i></span>
+        <span class="rotation-guide__arrow">↻</span>
+      </div>
+      <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Vista inmersiva</p>
+      <h2 id="rotation-guide-title" tabindex="-1">Gira el teléfono.</h2>
+      <p>En horizontal, las pistas se abren a pantalla grande. El recorrido seguirá cuando lo gires.</p>
+      <button class="rotation-guide__normal" id="leave-immersive" type="button">Volver a pantalla normal</button>
+    </div>
+  </div>
 
   <footer class="footer"><span>Proyecto educativo · Derechos Humanos</span><span>Una experiencia, no una colección de datos.</span><span>Audio: Ancient caverns · congusbongus · <a href="https://opengameart.org/content/ancient-caverns-horror-ambient-loop" target="_blank" rel="noreferrer">CC0</a></span></footer>
 </body>

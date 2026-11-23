@@ -12,24 +12,96 @@ const progressNumber = document.querySelector('#progress-number');
 const progressLine = document.querySelector('#progress-line');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const scrollBehavior = reduceMotion ? 'auto' : 'smooth';
+const modeNormal = document.querySelector('#mode-normal');
+const modeImmersive = document.querySelector('#mode-immersive');
+const screenModeShortcut = document.querySelector('#screen-mode-shortcut');
+const screenModeShortLabel = document.querySelector('#screen-mode-short-label');
+const rotationGuide = document.querySelector('#rotation-guide');
+const rotationGuideTitle = document.querySelector('#rotation-guide-title');
+const leaveImmersive = document.querySelector('#leave-immersive');
+const portraitOrientation = window.matchMedia('(orientation: portrait)');
+let viewMode = 'normal';
+
+function shouldAskToRotate() {
+  const touchDevice = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+  return viewMode === 'immersive' && touchDevice && window.innerWidth <= 900 && portraitOrientation.matches;
+}
+
+function syncRotationGuide() {
+  const showGuide = shouldAskToRotate();
+  const wasVisible = !rotationGuide.hidden;
+  rotationGuide.hidden = !showGuide;
+  if (wasVisible && !showGuide && rotationGuide.contains(document.activeElement)) {
+    screenModeShortcut.focus({ preventScroll: true });
+  }
+}
+
+function setViewMode(mode) {
+  viewMode = mode;
+  const immersive = mode === 'immersive';
+  document.body.classList.toggle('view-immersive', immersive);
+  modeNormal.setAttribute('aria-pressed', String(!immersive));
+  modeImmersive.setAttribute('aria-pressed', String(immersive));
+  modeNormal.classList.toggle('is-selected', !immersive);
+  modeImmersive.classList.toggle('is-selected', immersive);
+  screenModeShortLabel.textContent = immersive ? 'Inmersiva' : 'Normal';
+  screenModeShortcut.setAttribute('aria-pressed', String(immersive));
+  screenModeShortcut.setAttribute('aria-label', immersive
+    ? 'Volver a pantalla normal'
+    : 'Activar modo más inmersivo; gira el teléfono');
+  syncRotationGuide();
+  announce('viewmode', { mode });
+}
+
+modeNormal.addEventListener('click', () => setViewMode('normal'));
+modeImmersive.addEventListener('click', () => {
+  setViewMode('immersive');
+  if (!rotationGuide.hidden) rotationGuideTitle.focus({ preventScroll: true });
+});
+screenModeShortcut.addEventListener('click', () => {
+  setViewMode(viewMode === 'normal' ? 'immersive' : 'normal');
+  if (!rotationGuide.hidden) rotationGuideTitle.focus({ preventScroll: true });
+});
+leaveImmersive.addEventListener('click', () => {
+  setViewMode('normal');
+  screenModeShortcut.focus({ preventScroll: true });
+});
+rotationGuide.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    setViewMode('normal');
+    screenModeShortcut.focus({ preventScroll: true });
+    return;
+  }
+  if (event.key === 'Tab') {
+    event.preventDefault();
+    if (document.activeElement === rotationGuideTitle) leaveImmersive.focus();
+    else rotationGuideTitle.focus();
+  }
+});
+window.addEventListener('resize', syncRotationGuide, { passive: true });
+window.addEventListener('orientationchange', syncRotationGuide, { passive: true });
+screen.orientation?.addEventListener?.('change', syncRotationGuide);
 
 let chosenPath = '';
 let currentScene = 1;
 
 const scenes = {
   2: {
-    kicker: 'PISTA 02 · EL MAPA',
-    title: 'La hora se une<br><em>al lugar.</em>',
-    share: 'La ubicación se cruza con la hora. El punto rojo avanza por el mapa y empieza a dibujar una rutina.',
-    review: 'Quitaste una pista. El mapa pierde precisión. La intimidad no debería depender de que vivas escondiéndote.',
-    next: 'Seguir la última pista'
+    kicker: 'PISTA 02 · DOS DESTINOS',
+    title: 'La misma foto.<br><em>Dos caminos.</em>',
+    share: 'La hora se cruza con el lugar. El punto rojo avanza hasta tu portal. Alguien que no conoces ya puede reconstruir parte de tu rutina.',
+    review: 'La ubicación ya no está en la foto. El rastro se desvía hacia una plaza concurrida. Esto reduce una pista; no debería ser tu única protección.',
+    next: 'Ver dónde termina el rastro'
   },
   3: {
-    kicker: 'PISTA 03 · EL LÍMITE',
+    kicker: 'DESTINO · TU PORTAL',
+    reviewKicker: 'DESTINO · PLAZA ABIERTA',
     title: 'El rastro llega<br><em>a tu puerta.</em>',
-    share: 'En este caso ficticio, alguien reconstruye tu rutina y se acerca a tu hogar. Esa invasión de la vida privada es grave: nadie tiene derecho a cruzar ese límite arbitrariamente.',
-    review: 'En este caso ficticio, quitar la ubicación reduce una pista, pero no garantiza protección total. Si alguien invade tu vida privada, la responsabilidad es de quien cruza el límite.',
-    next: 'Descubrir qué te protege'
+    reviewTitle: 'La ruta cambia.<br><em>No estás sola.</em>',
+    share: 'En este caso ficticio, una persona llega hasta tu domicilio. Una intromisión así es grave. Tú no la has provocado: el artículo 12 protege ese límite.',
+    review: 'En este caso ficticio, llegas a un lugar público y contactas a alguien de confianza. Cambiar los datos reduce una pista, pero la protección de la intimidad no puede depender solo de ti.',
+    next: 'Descubrir qué protege el artículo 12'
   }
 };
 
@@ -61,8 +133,12 @@ function goToStory() {
   story.hidden = false;
   story.classList.add('is-revealing');
   story.dataset.choice = '';
+  const sceneMap = document.querySelector('.scene-map');
+  sceneMap.classList.remove('is-zooming');
+  sceneMap.style.transform = '';
   currentScene = 1;
   sceneArt.dataset.scene = '1';
+  sceneArt.dataset.route = '';
   updateProgress(1);
   setLocation('recorrido');
   announce('start');
@@ -83,14 +159,31 @@ function showNextScene() {
 
   currentScene += 1;
   const details = scenes[currentScene];
-  sceneKicker.textContent = details.kicker;
-  sceneTitle.innerHTML = details.title;
+  sceneKicker.textContent = details[`${chosenPath}Kicker`] || details.kicker;
+  sceneTitle.innerHTML = details[`${chosenPath}Title`] || details.title;
   sceneBody.textContent = details[chosenPath];
   choices.hidden = true;
   continueButton.hidden = false;
   continueLabel.textContent = details.next;
   story.dataset.choice = chosenPath;
   sceneArt.dataset.scene = String(currentScene);
+  sceneArt.dataset.route = chosenPath;
+  const mapArrival = document.querySelector('#map-arrival');
+  mapArrival.textContent = chosenPath === 'share' ? '21:06 · TU PORTAL' : '21:06 · PLAZA ABIERTA';
+  sceneArt.classList.remove('is-arriving');
+  void sceneArt.offsetWidth;
+  sceneArt.classList.add('is-arriving');
+  if (currentScene === 2) {
+    const routes = [...document.querySelectorAll('.scene-map__route')];
+    const selectedRoute = document.querySelector(chosenPath === 'share' ? '.scene-map__route--home' : '.scene-map__route--safe');
+    for (const route of routes) {
+      const length = route.getTotalLength();
+      route.style.strokeDasharray = String(length);
+      route.style.strokeDashoffset = String(length);
+    }
+    requestAnimationFrame(() => { selectedRoute.style.strokeDashoffset = '0'; });
+  }
+  window.setTimeout(() => sceneArt.classList.remove('is-arriving'), 900);
   story.classList.remove('is-revealing');
   void story.offsetWidth;
   story.classList.add('is-revealing');
@@ -117,6 +210,12 @@ function restart() {
   currentScene = 1;
   story.dataset.choice = '';
   sceneArt.dataset.scene = '1';
+  sceneArt.dataset.route = '';
+  const sceneMap = document.querySelector('.scene-map');
+  sceneMap.classList.remove('is-zooming');
+  sceneMap.style.transform = '';
+  document.querySelector('#map-arrival').textContent = '21:06 · DESTINO';
+  sceneArt.classList.remove('is-arriving');
   story.classList.remove('is-revealing');
   history.replaceState(null, '', '#inicio');
   announce('reset');
@@ -295,6 +394,7 @@ function turnSoundOff() {
   audioRequest += 1;
   licensedAmbience.pause();
   licensedAmbience.currentTime = 0;
+  licensedAmbience.volume = 0.72;
   if (audioContext && soundMaster) {
     soundMaster.gain.cancelScheduledValues(audioContext.currentTime);
     soundMaster.gain.setTargetAtTime(0.0001, audioContext.currentTime, 0.18);
@@ -310,6 +410,59 @@ function turnSoundOff() {
   soundHint.textContent = 'El sonido es opcional. Actívalo cuando quieras desde aquí o desde el control superior.';
   announce('audio', { active: false });
 }
+
+function playDoorImpact() {
+  if (!ambientOn || !audioContext || audioContext.state !== 'running') return;
+  const originalTrackVolume = licensedAmbience.volume;
+  if (activeAudioMode === 'licensed-track') licensedAmbience.volume = 0.08;
+  if (soundMaster) {
+    soundMaster.gain.cancelScheduledValues(audioContext.currentTime);
+    soundMaster.gain.setTargetAtTime(0.09, audioContext.currentTime, 0.025);
+  }
+  window.setTimeout(() => {
+    if (!ambientOn || audioContext.state !== 'running') return;
+    const now = audioContext.currentTime;
+    const thud = audioContext.createOscillator();
+    const thudGain = audioContext.createGain();
+    const noise = audioContext.createBufferSource();
+    const filter = audioContext.createBiquadFilter();
+    const noiseGain = audioContext.createGain();
+    const impact = audioContext.createBuffer(1, Math.ceil(audioContext.sampleRate * 0.3), audioContext.sampleRate);
+    const samples = impact.getChannelData(0);
+    for (let i = 0; i < samples.length; i += 1) samples[i] = (Math.random() * 2 - 1) * (1 - i / samples.length);
+    noise.buffer = impact;
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(620, now);
+    filter.frequency.exponentialRampToValueAtTime(110, now + 0.24);
+    noiseGain.gain.setValueAtTime(0.0001, now);
+    noiseGain.gain.linearRampToValueAtTime(0.18, now + 0.008);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+    noise.connect(filter);
+    filter.connect(noiseGain);
+    noiseGain.connect(audioContext.destination);
+    thud.type = 'sine';
+    thud.frequency.setValueAtTime(128, now);
+    thud.frequency.exponentialRampToValueAtTime(48, now + 0.25);
+    thudGain.gain.setValueAtTime(0.0001, now);
+    thudGain.gain.linearRampToValueAtTime(0.3, now + 0.012);
+    thudGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+    thud.connect(thudGain);
+    thudGain.connect(audioContext.destination);
+    noise.start(now);
+    thud.start(now);
+    noise.stop(now + 0.3);
+    thud.stop(now + 0.44);
+    window.setTimeout(() => {
+      if (!ambientOn) return;
+      if (activeAudioMode === 'licensed-track') licensedAmbience.volume = originalTrackVolume;
+      if (soundMaster) soundMaster.gain.setTargetAtTime(0.42, audioContext.currentTime, 0.35);
+    }, 520);
+  }, 260);
+}
+
+window.addEventListener('story:scene', (event) => {
+  if (event.detail.scene === 3 && event.detail.choice === 'share') playDoorImpact();
+});
 
 soundToggle.addEventListener('click', () => {
   if (ambientOn || audioPending) turnSoundOff();

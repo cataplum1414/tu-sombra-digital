@@ -19,10 +19,15 @@ Se adaptaron ideas generales de interacción y ritmo narrativo. No se copiaron c
 | [Bao Scroll Story](https://github.com/architech97/bao-scroll-story) | Transiciones que convierten las escenas en un relato continuo; se conserva el scroll nativo del móvil. |
 | [Aether Worlds](https://github.com/TheNonFungibleHuman/Aether-worlds) | Entorno visual generado con CSS y Canvas, con movimiento reducido y una alternativa sin WebGL. |
 | [Night Shift Protocol](https://github.com/char704/Night-Shift-Protocol) | Elecciones que alteran la secuencia y revelan consecuencias distintas. |
+| [inkjs](https://github.com/inkle/inkjs) · MIT | Narración ramificada con elecciones y consecuencias legibles; la lógica de este sitio sigue siendo JavaScript propio. |
+| [WebQuestEngine](https://github.com/WebQuestEngine/WebQuestEngine) · MIT | Referencia para separar escenas tocables y caminos narrativos. El motor está en desarrollo y no se incorpora como dependencia. |
+| [Codrops Cinematic Scroll Animations](https://github.com/JosephASG/codrops-cinematic-scroll-animations) · MIT | Referencia de ritmo de cámara, escala y composición. No se usan las imágenes de demostración ni los recursos del tutorial. |
+| [smirk-dev/backrooms](https://github.com/smirk-dev/backrooms) | Referencia para usar espacio vacío y silencio como tensión antes del golpe en la puerta; no se copia su código. |
+| [LuminoDevelopment/3DHorror](https://github.com/LuminoDevelopment/3DHorror) · MIT | Referencia de impacto visual y sonoro. Su recorrido con teclado y perspectiva en primera persona no es adecuado para este QR móvil, así que no se integra como motor. |
 
 ## Bibliotecas
 
 - [Motion](https://github.com/motiondivision/motion), MIT: anima pistas, mapa, escenas y revelación final. Se carga desde jsDelivr.
-- No se usan bibliotecas ni modelos 3D de las referencias: el sitio mantiene controles táctiles y escenas CSS/Canvas para cargar rápido en móviles.
+- No se usan bibliotecas ni modelos 3D de las referencias: el sitio mantiene controles táctiles y escenas CSS/Canvas para cargar rápido en móviles. La escena de puerta y la plaza se dibujan con elementos propios; los cambios de movimiento responden a la opción elegida.
 
 Las bibliotecas y los recursos multimedia de sus demos pueden tener licencias distintas. No se incorporaron archivos de los repositorios citados.
