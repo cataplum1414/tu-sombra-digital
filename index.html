@@ -7,9 +7,9 @@
   <meta name="description" content="Una historia interactiva de suspense en Alcalá de Henares sobre el artículo 12 y el derecho a la intimidad.">
   <title>Tu sombra digital — Artículo 12</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=alcala-interactiva-20261123">
-  <script src="script.js?v=alcala-interactiva-20261123" defer></script>
-  <script type="module" src="motion.js?v=alcala-interactiva-20261123"></script>
+  <link rel="stylesheet" href="styles.css?v=alcala-efectos-20261123">
+  <script src="script.js?v=alcala-efectos-20261123" defer></script>
+  <script type="module" src="motion.js?v=alcala-efectos-20261123"></script>
 </head>
 <body>
   <header class="topbar">
@@ -21,9 +21,9 @@
       <span class="screen-mode-shortcut__icon" aria-hidden="true">⤢</span>
       <span id="screen-mode-short-label">Normal</span>
     </button>
-    <button class="sound-control sound-control--header" id="sound-toggle" type="button" aria-pressed="false" aria-label="Activar ambiente sonoro">
+    <button class="sound-control sound-control--header" id="sound-toggle" type="button" aria-pressed="false" aria-label="Activar música y efectos de sonido">
       <span class="sound-control__icon" aria-hidden="true">♫</span>
-      <span id="sound-label">Activar ambiente</span>
+      <span id="sound-label">Audio</span>
       <span class="sound-control__state" id="sound-state">OFF</span>
     </button>
   </header>
@@ -50,8 +50,8 @@
         <button class="button button--light" id="start-story" type="button" aria-controls="recorrido">
           <span>Entrar en la historia</span><span class="button__icon" aria-hidden="true">↘</span>
         </button>
-        <button class="audio-launch" id="sound-toggle-hero" type="button" aria-pressed="false" aria-label="Activar ambiente sonoro"><span aria-hidden="true">♫</span><span id="hero-sound-label">Escuchar con ambiente</span><span class="audio-launch__state" id="hero-sound-state">OFF</span></button>
-        <div class="sound-prompt"><p class="sound-prompt__hint">La atmósfera sonora es opcional. Toca el botón para escucharla; no se activa sola.</p></div>
+        <button class="audio-launch" id="sound-toggle-hero" type="button" aria-pressed="false" aria-label="Activar música y efectos de sonido"><span aria-hidden="true">♫</span><span id="hero-sound-label">Ambiente + efectos</span><span class="audio-launch__state" id="hero-sound-state">OFF</span></button>
+        <div class="sound-prompt"><p class="sound-prompt__hint">La música empieza al entrar; los puntos activan efectos. Puedes silenciarlo cuando quieras.</p></div>
         <p class="microcopy">Ficción con escenas recreadas · Audio opcional · Sin datos guardados</p>
       </div>
       <div class="opening__evidence" aria-hidden="true"><span>23:17</span><i></i><span>CALLE MAYOR</span></div>

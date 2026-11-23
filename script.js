@@ -38,6 +38,7 @@ let riskScore = 0;
 let lastDecision = '';
 let cartographerNoticed = false;
 let doorTapped = false;
+let soundOptedOut = false;
 const decisions = [];
 
 const scenes = [
@@ -49,7 +50,7 @@ const scenes = [
     body: 'Casa Natal de Cervantes, Calle Mayor 48. La foto ya revela dónde y cuándo.',
     prompt: '¿La publicas con ubicación?',
     hotspots: [
-      { id: 'protagonist', label: 'La chica', x: 19, y: 43, align: 'right', response: 'La chica eres tú en esta historia. No es una víctima pasiva: puede elegir qué publicar, pedir apoyo y cambiar de rumbo.' },
+      { id: 'protagonist', label: 'La protagonista', x: 19, y: 43, align: 'right', response: 'El flash salta: el Cartógrafo acaba de tomar una foto desde el otro lado de Calle Mayor. La protagonista decide qué pista compartir y a quién pedir apoyo.' },
       { id: 'landmark', label: 'Calle Mayor', x: 49, y: 37, align: 'center', response: 'Estás en el casco histórico, frente a la Casa Natal de Cervantes, en Calle Mayor 48. La fachada de una foto puede revelar el lugar aunque no añadas una etiqueta.' },
       { id: 'cartographer', label: 'El Cartógrafo', x: 76, y: 48, align: 'left', response: 'Lo señalas. La imagen da un salto: el encapuchado ya no está junto al farol; aparece en el reflejo, detrás de ti. Ha notado que lo viste.' }
     ],
@@ -70,7 +71,7 @@ const scenes = [
         : 'Quitaste la etiqueta, pero la fachada y la hora siguen dando pistas. Frente a la Casa Natal llega: «Sé por dónde vuelves».',
     prompt: 'El Cartógrafo quiere confirmar tu rutina. ¿Qué haces?',
     hotspots: [
-      { id: 'protagonist', label: 'La chica', x: 21, y: 42, align: 'right', response: 'Ella mira el cristal y reconoce la figura. Puedes confiar en esa señal: no tienes que responder a quien te intimida.' },
+      { id: 'protagonist', label: 'La protagonista', x: 21, y: 42, align: 'right', response: 'Un destello cruza el cristal. Ella reconoce al Cartógrafo; no tiene que responder a quien la intimida.' },
       { id: 'phone', label: 'El móvil', x: 51, y: 67, align: 'center', response: 'La pantalla muestra la hora; el reflejo revela el escaparate. Dos detalles cotidianos pueden ubicar una foto sin que nadie hackee el teléfono.' },
       { id: 'cartographer', label: 'El reflejo', x: 80, y: 43, align: 'left', response: 'Tocas el reflejo. Por un instante, la figura se mueve antes que tú. El cristal la devuelve demasiado cerca.' }
     ],
@@ -89,7 +90,7 @@ const scenes = [
       : 'En Sandoval y Rojas, junto a la Puerta de Madrid, la figura sigue al otro lado. El café abierto de Plaza de Cervantes ofrece un lugar atendido.',
     prompt: 'Tienes una última decisión. ¿Hacia dónde vas?',
     hotspots: [
-      { id: 'protagonist', label: 'La chica', x: 21, y: 47, align: 'right', response: 'Ella tiene el móvil en la mano y la puerta enfrente. Puede elegir no entrar sola y avisar a alguien de confianza.' },
+      { id: 'protagonist', label: 'La protagonista', x: 21, y: 47, align: 'right', response: 'El flash ilumina el pomo. Ella decide no entrar sola y avisar a alguien de confianza.' },
       { id: 'door', label: 'La puerta', x: 86, y: 58, align: 'left', response: 'Tocas el pomo. No cede. Un portal identifica un domicilio: no publiques la entrada ni te quedes ahí si no te sientes segura.' },
       { id: 'cartographer', label: 'El Cartógrafo', x: 63, y: 48, align: 'left', response: 'Lo tocas en la pantalla. El encapuchado avanza hasta el borde de la luz; la figura sigue siendo ficción, pero la pista que le diste era real.' }
     ],
@@ -179,7 +180,7 @@ function renderScene(index) {
   sceneBody.textContent = typeof scene.body === 'function' ? scene.body() : scene.body;
   sceneClue.hidden = true;
   sceneClue.textContent = '';
-  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched');
+  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash');
   sceneHotspots.innerHTML = scene.hotspots.map((hotspot) => `
     <button class="story__hotspot story__hotspot--${hotspot.align}" type="button" data-hotspot="${hotspot.id}" style="left:${hotspot.x}%;top:${hotspot.y}%" aria-controls="scene-clue" aria-pressed="false" aria-label="Explorar: ${hotspot.label}">
       <span class="story__hotspot-marker" aria-hidden="true">+</span><span class="story__hotspot-label">${hotspot.label}</span>
@@ -269,7 +270,10 @@ function restart() {
   document.querySelector('#opening-title').focus({ preventScroll: true });
 }
 
-document.querySelector('#start-story').addEventListener('click', goToStory);
+document.querySelector('#start-story').addEventListener('click', () => {
+  if (!ambientOn && !soundOptedOut) turnSoundOn();
+  goToStory();
+});
 sceneHotspots.addEventListener('click', (event) => {
   const button = event.target.closest('[data-hotspot]');
   if (!button || button.getAttribute('aria-pressed') === 'true') return;
@@ -291,9 +295,18 @@ sceneHotspots.addEventListener('click', (event) => {
     void sceneImageWrap.offsetWidth;
     sceneImageWrap.classList.add('is-door-touched');
   }
-  if (isThreat || hotspot.id === 'door') {
-    navigator.vibrate?.(isThreat ? [24, 32, 52] : 42);
-    if (ambientOn) playEndingImpact();
+  if (isThreat) {
+    navigator.vibrate?.([24, 32, 52]);
+    if (ambientOn) playMacabreLaugh();
+  } else if (hotspot.id === 'door') {
+    navigator.vibrate?.(42);
+    if (ambientOn) playDoorKnock();
+  } else if (hotspot.id === 'protagonist' || hotspot.id === 'phone') {
+    navigator.vibrate?.(18);
+    sceneImageWrap.classList.remove('is-camera-flash');
+    void sceneImageWrap.offsetWidth;
+    sceneImageWrap.classList.add('is-camera-flash');
+    if (ambientOn) playCameraFlash();
   }
   announce('hotspot', { id: hotspot.id, scene: currentScene + 1, threat: isThreat });
 });
@@ -359,8 +372,8 @@ let fallbackVoices = [];
 
 function updateSoundControls(active, mode = 'none') {
   ambientOn = active;
-  const label = active ? 'Apagar ambiente' : 'Activar ambiente';
-  const heroLabel = active ? 'Apagar ambiente' : 'Escuchar con ambiente';
+  const label = active ? 'Silenciar' : 'Audio';
+  const heroLabel = active ? 'Silenciar audio' : 'Ambiente + efectos';
   soundLabel.textContent = label;
   soundState.textContent = active ? 'ON' : 'OFF';
   heroSoundLabel.textContent = heroLabel;
@@ -369,8 +382,10 @@ function updateSoundControls(active, mode = 'none') {
   heroSoundToggle.setAttribute('aria-pressed', String(active));
   opening.classList.toggle('is-audio-on', active);
   soundHint.textContent = active
-    ? 'Ambiente activo. Puedes apagarlo con ♫ en cualquier momento.'
-    : 'El ambiente es opcional. Actívalo aquí o desde el control ♫.';
+    ? 'Música y efectos activos. Puedes silenciarlo con ♫ cuando quieras.'
+    : soundOptedOut
+      ? 'Audio silenciado. Puedes activarlo cuando quieras.'
+      : 'La música empieza al entrar; los puntos activan efectos de sonido.';
   announce('audio', { active, mode });
 }
 
@@ -481,8 +496,161 @@ function playEndingImpact() {
   }, 320);
 }
 
-soundToggle.addEventListener('click', () => ambientOn ? turnSoundOff() : turnSoundOn());
-heroSoundToggle.addEventListener('click', () => ambientOn ? turnSoundOff() : turnSoundOn());
+function getSoundContext() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return null;
+  audioContext = audioContext || new AudioContextClass();
+  if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
+  return audioContext;
+}
+
+function duckAmbienceFor(milliseconds, level = 0.16) {
+  if (licensedAmbience.paused) return;
+  licensedAmbience.volume = Math.min(licensedAmbience.volume, level);
+  window.setTimeout(() => {
+    if (ambientOn && !licensedAmbience.paused) licensedAmbience.volume = 0.72;
+  }, milliseconds);
+}
+
+function makeNoiseBuffer(context, seconds) {
+  const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * seconds), context.sampleRate);
+  const samples = buffer.getChannelData(0);
+  for (let index = 0; index < samples.length; index += 1) {
+    const fade = 1 - index / samples.length;
+    samples[index] = (Math.random() * 2 - 1) * fade;
+  }
+  return buffer;
+}
+
+function playCameraFlash() {
+  if (!ambientOn) return;
+  const context = getSoundContext();
+  if (!context) return;
+  duckAmbienceFor(420, 0.25);
+  const now = context.currentTime;
+  const noise = context.createBufferSource();
+  const highPass = context.createBiquadFilter();
+  const hissGain = context.createGain();
+  noise.buffer = makeNoiseBuffer(context, 0.12);
+  highPass.type = 'highpass';
+  highPass.frequency.setValueAtTime(1250, now);
+  hissGain.gain.setValueAtTime(0.0001, now);
+  hissGain.gain.linearRampToValueAtTime(0.22, now + 0.004);
+  hissGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.11);
+  noise.connect(highPass);
+  highPass.connect(hissGain);
+  hissGain.connect(context.destination);
+  noise.start(now);
+  noise.stop(now + 0.12);
+
+  const click = context.createOscillator();
+  const clickGain = context.createGain();
+  click.type = 'square';
+  click.frequency.setValueAtTime(1850, now);
+  click.frequency.exponentialRampToValueAtTime(520, now + 0.035);
+  clickGain.gain.setValueAtTime(0.055, now);
+  clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+  click.connect(clickGain);
+  clickGain.connect(context.destination);
+  click.start(now);
+  click.stop(now + 0.05);
+}
+
+function playMacabreLaugh() {
+  if (!ambientOn) return;
+  const context = getSoundContext();
+  if (!context) return;
+  duckAmbienceFor(1450, 0.14);
+  const now = context.currentTime;
+  const voice = context.createOscillator();
+  const formant = context.createBiquadFilter();
+  const voiceGain = context.createGain();
+  const breath = context.createBufferSource();
+  const breathFormant = context.createBiquadFilter();
+  const breathGain = context.createGain();
+  const delay = context.createDelay(0.35);
+  const echoGain = context.createGain();
+  voice.type = 'sawtooth';
+  formant.type = 'bandpass';
+  formant.Q.setValueAtTime(2.2, now);
+  breath.buffer = makeNoiseBuffer(context, 0.92);
+  breathFormant.type = 'bandpass';
+  breathFormant.Q.setValueAtTime(0.9, now);
+  delay.delayTime.setValueAtTime(0.21, now);
+  echoGain.gain.setValueAtTime(0.16, now);
+  voice.connect(formant);
+  formant.connect(voiceGain);
+  voiceGain.connect(context.destination);
+  voiceGain.connect(delay);
+  delay.connect(echoGain);
+  echoGain.connect(context.destination);
+  breath.connect(breathFormant);
+  breathFormant.connect(breathGain);
+  breathGain.connect(context.destination);
+
+  const laughs = [
+    { offset: 0.02, pitch: 176, endPitch: 132, formant: 620, length: 0.17 },
+    { offset: 0.28, pitch: 158, endPitch: 118, formant: 530, length: 0.17 },
+    { offset: 0.56, pitch: 139, endPitch: 94, formant: 440, length: 0.22 }
+  ];
+  laughs.forEach(({ offset, pitch, endPitch, formant: vowel, length }) => {
+    const start = now + offset;
+    voice.frequency.setValueAtTime(pitch, start);
+    voice.frequency.exponentialRampToValueAtTime(endPitch, start + length);
+    formant.frequency.setValueAtTime(vowel, start);
+    formant.frequency.exponentialRampToValueAtTime(vowel * 0.82, start + length);
+    voiceGain.gain.setValueAtTime(0.0001, start);
+    voiceGain.gain.linearRampToValueAtTime(0.15, start + 0.025);
+    voiceGain.gain.exponentialRampToValueAtTime(0.0001, start + length);
+    breathFormant.frequency.setValueAtTime(vowel * 1.3, start);
+    breathGain.gain.setValueAtTime(0.0001, start);
+    breathGain.gain.linearRampToValueAtTime(0.055, start + 0.02);
+    breathGain.gain.exponentialRampToValueAtTime(0.0001, start + length * 0.9);
+  });
+  voice.start(now);
+  breath.start(now);
+  voice.stop(now + 0.86);
+  breath.stop(now + 0.9);
+  window.setTimeout(() => {
+    try { delay.disconnect(); echoGain.disconnect(); } catch {}
+  }, 1200);
+}
+
+function playDoorKnock() {
+  if (!ambientOn) return;
+  const context = getSoundContext();
+  if (!context) return;
+  duckAmbienceFor(900, 0.2);
+  const now = context.currentTime;
+  [0, 0.2].forEach((offset, index) => {
+    const start = now + offset;
+    const thud = context.createOscillator();
+    const thudGain = context.createGain();
+    thud.type = 'sine';
+    thud.frequency.setValueAtTime(index === 0 ? 92 : 78, start);
+    thud.frequency.exponentialRampToValueAtTime(48, start + 0.13);
+    thudGain.gain.setValueAtTime(0.0001, start);
+    thudGain.gain.linearRampToValueAtTime(index === 0 ? 0.24 : 0.19, start + 0.008);
+    thudGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.16);
+    thud.connect(thudGain);
+    thudGain.connect(context.destination);
+    thud.start(start);
+    thud.stop(start + 0.17);
+  });
+}
+
+function toggleSoundFromControl() {
+  if (ambientOn) {
+    soundOptedOut = true;
+    turnSoundOff();
+  } else {
+    soundOptedOut = false;
+    turnSoundOn();
+  }
+}
+
+soundToggle.addEventListener('click', toggleSoundFromControl);
+heroSoundToggle.addEventListener('click', toggleSoundFromControl);
 window.addEventListener('story:ending', (event) => {
   if (event.detail.decision === 'take-shortcut') playEndingImpact();
 });

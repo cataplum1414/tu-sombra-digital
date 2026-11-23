@@ -7,7 +7,8 @@
 - Registro de procedencia: https://github.com/euuuuuuan/moonshard-warden-public/blob/main/CREDITS.md
 - Licencia CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
 - Archivo incluido: `assets/audio/ambiente-cavernas.ogg` · SHA-256: `5c841ef1a7bacd2a038801ecee0741e200d1cf1cd08f36a6a89cce95bcfb6a8a`
-- La pista solo empieza tras tocar uno de los controles de audio. Si el navegador no puede decodificarla, se intenta activar una atmósfera sintetizada de respaldo.
+- La pista empieza tras una acción del usuario (Entrar en la historia o tocar un control de audio). Si el navegador no puede decodificarla, se intenta activar una atmósfera sintetizada de respaldo.
+- Al tocar «Entrar en la historia» se inicia el ambiente desde esa acción del usuario. El obturador y destello, la risa distorsionada del Cartógrafo y los golpes de puerta se sintetizan con Web Audio en el navegador; no dependen de muestras externas. Se pueden apagar con el control de audio.
 
 ## Escenas fotográficas
 

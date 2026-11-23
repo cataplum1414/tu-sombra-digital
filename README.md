@@ -6,6 +6,7 @@ Experiencia interactiva de suspense sobre el artículo 12 de la Declaración Uni
 
 - La persona toma tres decisiones consecutivas que cambian el riesgo y el destino narrativo.
 - Cada escena ofrece puntos tocables: la protagonista, el móvil, la puerta y el Cartógrafo revelan pistas; tocar al Cartógrafo desencadena un salto de imagen y cambia el siguiente encuentro.
+- Al entrar desde el botón de inicio comienza la banda sonora CC0. El obturador, la risa distorsionada y los golpes de puerta son efectos sintetizados en el navegador y se pueden silenciar.
 - La ruta nombra lugares concretos: Casa Natal de Cervantes (Calle Mayor 48), Cardenal Sandoval y Rojas junto a la Puerta de Madrid, y Plaza de Cervantes. Las escenas son recreaciones ficticias.
 - Hay desenlaces distintos según el rastro compartido y la respuesta ante una persona desconocida.
 - El final presenta una explicación breve del artículo 12 y un botón para compartirla. Los consejos y el texto oficial completo quedan desplegables para no interrumpir el cierre.
