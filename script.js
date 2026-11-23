@@ -460,6 +460,7 @@ let musicTargetVolume = 0.2;
 let audioContext = null;
 let tensionGain = null;
 let tensionFilter = null;
+const tensionVoices = [];
 const audioFadeFrames = new WeakMap();
 
 const soundEffects = {
@@ -584,14 +585,14 @@ function initTensionLayer() {
   audioContext = new AudioContextClass();
   tensionFilter = audioContext.createBiquadFilter();
   tensionFilter.type = 'lowpass';
-  tensionFilter.frequency.value = 240;
-  tensionFilter.Q.value = 0.7;
+  tensionFilter.frequency.value = 1500;
+  tensionFilter.Q.value = 1.1;
   tensionGain = audioContext.createGain();
   tensionGain.gain.value = 0;
   tensionFilter.connect(tensionGain);
   tensionGain.connect(audioContext.destination);
 
-  [[55, 'sine', 0.32], [58.27, 'sine', 0.16], [110, 'triangle', 0.12], [116.54, 'triangle', 0.08]]
+  [[130.81, 'sine', 0.16], [196, 'sine', 0.12], [261.63, 'triangle', 0.09], [329.63, 'sine', 0.07], [392, 'triangle', 0.045], [523.25, 'sine', 0.025]]
     .forEach(([frequency, type, volume]) => {
       const oscillator = audioContext.createOscillator();
       const oscillatorGain = audioContext.createGain();
@@ -601,20 +602,30 @@ function initTensionLayer() {
       oscillator.connect(oscillatorGain);
       oscillatorGain.connect(tensionFilter);
       oscillator.start();
+      tensionVoices.push(oscillator);
     });
 }
 
 function updateSoundtrackMood(level) {
   const intensity = Math.max(0, Math.min(3, Number(level) || 0));
-  musicTargetVolume = [0.2, 0.16, 0.12, 0.085][intensity];
+  const moods = [
+    { notes: [130.81, 196, 261.63, 329.63, 392, 523.25], filter: 1800, layer: 0.035, music: 0.25 },
+    { notes: [73.42, 110, 146.83, 174.61, 220, 293.66], filter: 1250, layer: 0.055, music: 0.18 },
+    { notes: [55, 58.27, 110, 116.54, 155.56, 164.81], filter: 820, layer: 0.12, music: 0.09 },
+    { notes: [41.2, 43.65, 55, 58.27, 77.78, 82.41], filter: 560, layer: 0.19, music: 0.025 }
+  ];
+  const mood = moods[intensity];
+  musicTargetVolume = mood.music;
   if (storyMusic) {
     if (ambientOn && !storyMusic.paused) fadeAudioTo(storyMusic, musicTargetVolume, 1500);
     else storyMusic.volume = musicTargetVolume;
   }
   if (tensionGain && audioContext) {
-    const gainTarget = [0, 0.018, 0.045, 0.075][intensity];
-    tensionGain.gain.setTargetAtTime(gainTarget, audioContext.currentTime, 1.4);
-    tensionFilter.frequency.setTargetAtTime(240 + intensity * 105, audioContext.currentTime, 1.6);
+    tensionVoices.forEach((oscillator, index) => {
+      oscillator.frequency.setTargetAtTime(mood.notes[index], audioContext.currentTime, 0.9);
+    });
+    tensionGain.gain.setTargetAtTime(mood.layer, audioContext.currentTime, intensity > 1 ? 0.65 : 1.1);
+    tensionFilter.frequency.setTargetAtTime(mood.filter, audioContext.currentTime, 0.9);
   }
 }
 
