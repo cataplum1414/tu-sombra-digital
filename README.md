@@ -1,31 +1,56 @@
 # Tu sombra digital
 
-Experiencia interactiva de suspense sobre el artículo 12 de la Declaración Universal de los Derechos Humanos. La historia ficticia transcurre de noche en Alcalá de Henares y muestra cómo una foto, una hora y una rutina pueden revelar la intimidad.
+**Una historia interactiva de suspense sobre el artículo 12 y el derecho a la intimidad.** La experiencia transcurre de noche en Alcalá de Henares: a través de las decisiones de la protagonista, muestra cómo una foto, la hora y algunos detalles del entorno pueden revelar información personal.
 
-## Recorrido
+## Abre la experiencia
 
-- Cuatro decisiones cambian el rumbo y el desenlace.
-- La historia avanza desde la Casa Natal de Cervantes, en Calle Mayor, hasta Plaza de Cervantes; la ruta de riesgo continúa hacia Sandoval y Rojas.
-- La tercera escena ocurre en Plaza de Cervantes: primero se ve la cafetería desde fuera; entrar lleva al interior y tomar el atajo lleva a un portal de Cardenal Sandoval y Rojas.
-- Los personajes y objetos de cada fotografía son zonas táctiles invisibles: cada toque repite su sonido y vibración compatible con el dispositivo.
-- La perspectiva 3D CSS hace que la fotografía y la capa de interacción respondan suavemente al cursor o al toque; respeta la preferencia de movimiento reducido.
-- El recorrido está disponible en español e inglés desde el control ES/EN de la cabecera. El idioma no se guarda.
-- La ambientación distingue calle nocturna de cafetería. Una base musical suave se mezcla con una capa de tensión generada en el navegador: sube con elecciones de riesgo y se retira con decisiones seguras. Cada efecto corresponde a la acción visible: obturador, pasos, mensaje, risa o respiración del Cartógrafo, campanilla, taza o puerta. La mezcla baja el ambiente durante cada efecto para que se entienda en el móvil. Las decisiones de enviar mensajes no suenan como alertas entrantes; la respiración del Cartógrafo subraya su inmovilidad frente al portal. Los efectos al tocar siguen activos aunque se apague la música.
-- La historia no solicita permisos de cámara o ubicación ni guarda elecciones. Las fotografías son recreaciones ficticias, no pruebas documentales.
-- El final resume el artículo 12, ofrece consejos breves de privacidad y enlaza el texto oficial y ATLAS ONU.
+**[Visitar Tu sombra digital](https://cataplum1414.github.io/tu-sombra-digital/)**
 
-## Archivos
+El enlace también puede utilizarse en el código QR del cartel. La página está pensada para abrirse directamente en el navegador de un móvil; no hace falta instalar una aplicación.
 
-- `index.html`: portada, escenas y contenido sobre el derecho.
-- `styles.css`: dirección visual y adaptación a pantallas pequeñas.
-- `script.js`: decisiones, escenas, efectos de audio y desenlaces.
-- `language.js`: textos de interfaz en español e inglés.
-- `motion.js`: transiciones visuales.
-- `assets/story/`: imágenes WebP de las escenas.
-- `assets/audio/`: ambientes y efectos de sonido. Consulta `assets/audio/FUENTES.md` para créditos y licencias.
-- `assets/justif/`: Justif 0.9.2 y patrones de división de palabras en español; consulta su atribución y licencias en `assets/justif/README.md`.
-- `CREDITOS.md`: música, licencias y referencias visuales.
+## Qué encontrarás
+
+- **Una historia ramificada:** cuatro escenas y decisiones que cambian el recorrido y el desenlace. La ruta pasa por la Casa Natal de Cervantes, la Plaza de Cervantes y, según lo que elijas, una cafetería o un portal de la calle Cardenal Sandoval y Rojas.
+- **Escenas que puedes explorar:** toca personajes y objetos de las imágenes para descubrir pistas, activar efectos de sonido y, si el dispositivo lo permite, una vibración breve. Las zonas interactivas no añaden iconos sobre la escena.
+- **Ambiente que responde a tus decisiones:** la música y la tensión sonora cambian según el rumbo de la historia. El sonido es opcional y se controla desde la cabecera.
+- **Una experiencia adaptable:** puedes recorrerla en vertical o girar el móvil para una vista horizontal. Las animaciones respetan la preferencia del dispositivo por reducir el movimiento.
+- **Español e inglés:** cambia el idioma desde el control ES/EN.
+- **Una reflexión final:** al terminar, encontrarás una explicación breve del artículo 12 de la Declaración Universal de los Derechos Humanos, recomendaciones de privacidad y enlaces a Naciones Unidas, la AEPD y [ATLAS ONU](https://sukimalabs.com/atlasonu).
+
+La historia y las imágenes son una recreación ficticia inspirada en lugares reales de Alcalá de Henares; no documentan hechos ni personas reales. La página no pide acceso a la cámara o a la ubicación y no guarda las decisiones del recorrido.
+
+## Abrir el proyecto en tu ordenador
+
+El sitio es estático y no necesita un proceso de compilación. Para probarlo, sirve la carpeta con un servidor local —necesario para que funcionen los módulos de JavaScript— y abre `http://localhost:8000`:
+
+```bash
+git clone https://github.com/cataplum1414/tu-sombra-digital.git
+cd tu-sombra-digital
+python -m http.server 8000
+```
+
+También puedes descargar el repositorio como ZIP y ejecutar el servidor desde su carpeta. Si no tienes Python instalado, utiliza cualquier servidor local para sitios estáticos.
+
+## Estructura del repositorio
+
+| Archivo o carpeta | Contenido |
+| --- | --- |
+| `index.html` | Portada, escenas, decisiones y reflexión sobre el artículo 12. |
+| `styles.css` | Diseño adaptable, escenas y efectos visuales. |
+| `script.js` | Recorrido, decisiones, interacciones y audio. |
+| `language.js` | Textos en español e inglés. |
+| `motion.js` | Transiciones de la experiencia. |
+| `visit-counter.js` | Integración opcional del contador; permanece desactivada mientras no se configure su servicio. |
+| `assets/story/` | Imágenes de las escenas. |
+| `assets/audio/` | Música y efectos de sonido. |
+| `CREDITOS.md` | Créditos, licencias y referencias de diseño. |
+
+Para consultar las fuentes de audio, abre [`assets/audio/FUENTES.md`](assets/audio/FUENTES.md). La atribución y licencia del recurso de justificación de texto se encuentran en [`assets/justif/README.md`](assets/justif/README.md).
 
 ## Publicación
 
-El sitio es estático y se publica con GitHub Pages desde `main` y la raíz del repositorio. El QR del cartel debe apuntar a la URL pública, no a una ruta local.
+GitHub Pages publica el contenido de la rama `main` desde la raíz del repositorio. La dirección pública es [cataplum1414.github.io/tu-sombra-digital](https://cataplum1414.github.io/tu-sombra-digital/).
+
+## Autoría
+
+Proyecto realizado por **Jeisson Osorio Mesa**, estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos de la Universidad de Alcalá.
