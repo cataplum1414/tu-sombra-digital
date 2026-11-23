@@ -33,8 +33,8 @@ const scenes = {
 
 function updateProgress(number) {
   progressNumber.textContent = `0${number} / 03`;
-  progressLine.style.height = `${number * 33.333}%`;
-  progressLine.style.width = `${number * 33.333}%`;
+  progressLine.style.setProperty("--progress", `${number * 33.333}%`);
+
 }
 
 function goToStory() {
@@ -101,3 +101,5 @@ document.querySelectorAll('.choice').forEach((button) => {
 
 continueButton.addEventListener('click', showNextScene);
 document.querySelector('#restart-story').addEventListener('click', restart);
+
+
