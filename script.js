@@ -35,7 +35,7 @@ let viewMode = 'normal';
 
 let currentScene = -1;
 let riskScore = 0;
-let tensionLevel = 1;
+let tensionLevel = 0;
 let lastDecision = '';
 let cartographerNoticed = false;
 let cafeEntranceRang = false;
@@ -280,13 +280,13 @@ function goToStory() {
   opening.hidden = true;
   story.hidden = false;
   riskScore = 0;
-  tensionLevel = 1;
+  tensionLevel = 0;
   lastDecision = '';
   cartographerNoticed = false;
   cafeEntranceRang = false;
   decisions.length = 0;
   story.dataset.risk = '0';
-  story.dataset.tension = '1';
+  story.dataset.tension = '0';
   updateSoundtrackMood(tensionLevel);
   story.classList.remove('is-revealing');
   setLocation('recorrido');
@@ -306,14 +306,14 @@ function restart() {
   story.hidden = true;
   opening.hidden = false;
   riskScore = 0;
-  tensionLevel = 1;
+  tensionLevel = 0;
   lastDecision = '';
   cartographerNoticed = false;
   cafeEntranceRang = false;
   currentScene = -1;
   decisions.length = 0;
   story.dataset.risk = '0';
-  story.dataset.tension = '1';
+  story.dataset.tension = '0';
   story.dataset.lastDecision = '';
   updateSoundtrackMood(tensionLevel);
   history.replaceState(null, '', '#inicio');
@@ -442,25 +442,31 @@ const ambienceTracks = {
   street: 'assets/audio/alcala-night-city.mp3',
   cafe: 'assets/audio/cafe-crowd.mp3'
 };
-const scoreTrack = 'assets/audio/soft-hopeful-bed.mp3';
+const scoreSources = {
+  hopeful: 'assets/audio/soft-hopeful-bed.mp3',
+  ominous: 'assets/audio/echoes.mp3',
+  horror: 'assets/audio/piano-horror.mp3'
+};
 let currentAmbience = 'street';
 const licensedAmbience = new Audio(ambienceTracks.street);
 licensedAmbience.loop = true;
 licensedAmbience.preload = 'none';
 licensedAmbience.volume = 0.24;
-const storyMusic = new Audio(scoreTrack);
-storyMusic.loop = true;
-storyMusic.preload = 'none';
+const scorePlayers = Object.fromEntries(Object.entries(scoreSources).map(([mood, source]) => {
+  const player = new Audio(source);
+  player.loop = true;
+  player.preload = 'none';
+  player.volume = 0;
+  return [mood, player];
+}));
+let currentScoreMood = 'hopeful';
+let storyMusic = scorePlayers[currentScoreMood];
 storyMusic.volume = 0.2;
 let ambientOn = false;
 let soundscapeDuckTimer = 0;
 let activeSoundEffect = null;
 let ambienceTargetVolume = 0.24;
 let musicTargetVolume = 0.2;
-let audioContext = null;
-let tensionGain = null;
-let tensionFilter = null;
-const tensionVoices = [];
 const audioFadeFrames = new WeakMap();
 
 const soundEffects = {
@@ -528,11 +534,9 @@ function updateSoundControls(active, mode = 'none') {
 
 function turnSoundOn() {
   if (ambientOn) return;
-  initTensionLayer();
   updateSoundtrackMood(tensionLevel);
   storyMusic.volume = musicTargetVolume;
   storyMusic.play().catch(() => {});
-  audioContext?.resume().catch(() => {});
   const playback = licensedAmbience.play();
   if (!playback?.then) {
     updateSoundControls(true, 'licensed-track');
@@ -549,14 +553,15 @@ function turnSoundOn() {
 function turnSoundOff() {
   window.clearTimeout(soundscapeDuckTimer);
   cancelAudioFade(licensedAmbience);
-  cancelAudioFade(storyMusic);
   licensedAmbience.pause();
-  storyMusic.pause();
   licensedAmbience.currentTime = 0;
-  storyMusic.currentTime = 0;
   licensedAmbience.volume = ambienceTargetVolume;
-  storyMusic.volume = musicTargetVolume;
-  audioContext?.suspend().catch(() => {});
+  Object.values(scorePlayers).forEach((player) => {
+    cancelAudioFade(player);
+    player.pause();
+    player.currentTime = 0;
+    player.volume = player === storyMusic ? musicTargetVolume : 0;
+  });
   updateSoundControls(false);
 }
 
@@ -579,61 +584,54 @@ function fadeAudioTo(audio, target, duration = 700) {
   audioFadeFrames.set(audio, window.requestAnimationFrame(step));
 }
 
-function initTensionLayer() {
-  if (audioContext || !(window.AudioContext || window.webkitAudioContext)) return;
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  audioContext = new AudioContextClass();
-  tensionFilter = audioContext.createBiquadFilter();
-  tensionFilter.type = 'lowpass';
-  tensionFilter.frequency.value = 1500;
-  tensionFilter.Q.value = 1.1;
-  tensionGain = audioContext.createGain();
-  tensionGain.gain.value = 0;
-  tensionFilter.connect(tensionGain);
-  tensionGain.connect(audioContext.destination);
-
-  [[130.81, 'sine', 0.16], [196, 'sine', 0.12], [261.63, 'triangle', 0.09], [329.63, 'sine', 0.07], [392, 'triangle', 0.045], [523.25, 'sine', 0.025]]
-    .forEach(([frequency, type, volume]) => {
-      const oscillator = audioContext.createOscillator();
-      const oscillatorGain = audioContext.createGain();
-      oscillator.type = type;
-      oscillator.frequency.value = frequency;
-      oscillatorGain.gain.value = volume;
-      oscillator.connect(oscillatorGain);
-      oscillatorGain.connect(tensionFilter);
-      oscillator.start();
-      tensionVoices.push(oscillator);
-    });
-}
-
 function updateSoundtrackMood(level) {
   const intensity = Math.max(0, Math.min(3, Number(level) || 0));
   const moods = [
-    { notes: [130.81, 196, 261.63, 329.63, 392, 523.25], filter: 1800, layer: 0.035, music: 0.25 },
-    { notes: [73.42, 110, 146.83, 174.61, 220, 293.66], filter: 1250, layer: 0.055, music: 0.18 },
-    { notes: [55, 58.27, 110, 116.54, 155.56, 164.81], filter: 820, layer: 0.12, music: 0.09 },
-    { notes: [41.2, 43.65, 55, 58.27, 77.78, 82.41], filter: 560, layer: 0.19, music: 0.025 }
+    { track: 'hopeful', music: 0.23 },
+    { track: 'ominous', music: 0.25 },
+    { track: 'horror', music: 0.29 },
+    { track: 'horror', music: 0.36 }
   ];
   const mood = moods[intensity];
   musicTargetVolume = mood.music;
-  if (storyMusic) {
-    if (ambientOn && !storyMusic.paused) fadeAudioTo(storyMusic, musicTargetVolume, 1500);
-    else storyMusic.volume = musicTargetVolume;
+  if (mood.track !== currentScoreMood) {
+    const previousMusic = storyMusic;
+    const nextMusic = scorePlayers[mood.track];
+    const shouldCrossfade = ambientOn && !previousMusic.paused && !document.hidden;
+    currentScoreMood = mood.track;
+    storyMusic = nextMusic;
+    cancelAudioFade(nextMusic);
+    nextMusic.pause();
+    nextMusic.currentTime = 0;
+    nextMusic.volume = 0;
+
+    if (shouldCrossfade) {
+      nextMusic.play().catch(() => {});
+      fadeAudioTo(previousMusic, 0, 1150);
+      fadeAudioTo(nextMusic, musicTargetVolume, 1150);
+      window.setTimeout(() => {
+        if (storyMusic !== previousMusic) {
+          previousMusic.pause();
+          previousMusic.currentTime = 0;
+        }
+      }, 1200);
+    } else {
+      previousMusic.pause();
+      previousMusic.currentTime = 0;
+      nextMusic.volume = musicTargetVolume;
+    }
+    return;
   }
-  if (tensionGain && audioContext) {
-    tensionVoices.forEach((oscillator, index) => {
-      oscillator.frequency.setTargetAtTime(mood.notes[index], audioContext.currentTime, 0.9);
-    });
-    tensionGain.gain.setTargetAtTime(mood.layer, audioContext.currentTime, intensity > 1 ? 0.65 : 1.1);
-    tensionFilter.frequency.setTargetAtTime(mood.filter, audioContext.currentTime, 0.9);
-  }
+  if (ambientOn && !storyMusic.paused) fadeAudioTo(storyMusic, musicTargetVolume, 900);
+  else storyMusic.volume = musicTargetVolume;
 }
 
 function duckSoundscapeFor(milliseconds = 900) {
   if (!ambientOn) return;
   fadeAudioTo(licensedAmbience, ambienceTargetVolume * 0.26, 80);
-  fadeAudioTo(storyMusic, musicTargetVolume * 0.18, 80);
-  if (tensionGain && audioContext) tensionGain.gain.setTargetAtTime(0.008, audioContext.currentTime, 0.08);
+  Object.values(scorePlayers).forEach((player) => {
+    fadeAudioTo(player, player === storyMusic ? musicTargetVolume * 0.18 : 0, 80);
+  });
   window.clearTimeout(soundscapeDuckTimer);
   soundscapeDuckTimer = window.setTimeout(() => {
     if (!ambientOn) return;
@@ -689,11 +687,9 @@ soundToggle.addEventListener('click', toggleSoundFromControl);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && ambientOn) {
     licensedAmbience.pause();
-    storyMusic.pause();
-    audioContext?.suspend().catch(() => {});
+    Object.values(scorePlayers).forEach((player) => player.pause());
   } else if (!document.hidden && ambientOn) {
     if (licensedAmbience.currentTime > 0) licensedAmbience.play().catch(() => turnSoundOff());
     if (storyMusic.currentTime > 0) storyMusic.play().catch(() => {});
-    audioContext?.resume().catch(() => {});
   }
 });
