@@ -672,7 +672,7 @@ body { min-width: 0; }
 /* Alcalá thriller campaign: photographic scenes carry the visual story. */
 :root { --ink:#090707; --ink-soft:#140d0e; --paper:#f2e8df; --muted:#c2b4aa; --lime:#f3d8c0; --coral:#e32127; --hairline:rgba(242,232,223,.22); }
 body { background:#080606; color:#f2e8df; }
-.topbar { position:absolute; z-index:10; width:100%; padding:18px clamp(16px,4vw,54px); border-bottom:1px solid rgba(255,255,255,.17); background:linear-gradient(180deg,rgba(6,4,4,.78),transparent); }
+.topbar { position:fixed; inset:0 0 auto; z-index:10; width:100%; padding:max(18px,env(safe-area-inset-top)) clamp(16px,4vw,54px) 18px; border-bottom:1px solid rgba(255,255,255,.17); background:linear-gradient(180deg,rgba(6,4,4,.88),rgba(6,4,4,.42) 72%,transparent); }
 .wordmark { text-transform:uppercase; letter-spacing:.12em; font-size:.69rem; }
 .wordmark__mark { border-color:#e32127; }
 .wordmark__mark::after { background:#e32127; }

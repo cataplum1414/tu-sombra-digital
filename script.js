@@ -335,7 +335,7 @@ document.querySelector('#share-ending').addEventListener('click', async () => {
   const title = 'Tu sombra digital · Artículo 12';
   const url = new URL(window.location.href);
   url.hash = 'derecho';
-  const text = `El artículo 12 protege tu vida privada, tu domicilio y tus comunicaciones frente a injerencias arbitrarias. ${shareSummary.textContent} Conoce la historia sobre el derecho a la intimidad.`;
+  const text = `El artículo 12 de la Declaración Universal de los Derechos Humanos protege tu vida privada, tu domicilio y tus comunicaciones frente a injerencias arbitrarias. ${shareSummary.textContent} Conoce la historia sobre el derecho a la intimidad.`;
   const data = { title, text, url: url.href };
   if (navigator.share) {
     try {
@@ -355,12 +355,8 @@ document.querySelector('#share-ending').addEventListener('click', async () => {
 });
 
 const soundToggle = document.querySelector('#sound-toggle');
-const heroSoundToggle = document.querySelector('#sound-toggle-hero');
 const soundLabel = document.querySelector('#sound-label');
 const soundState = document.querySelector('#sound-state');
-const heroSoundLabel = document.querySelector('#hero-sound-label');
-const heroSoundState = document.querySelector('#hero-sound-state');
-const soundHint = document.querySelector('.sound-prompt__hint');
 const licensedAmbience = new Audio('assets/audio/ambiente-cavernas.ogg');
 licensedAmbience.loop = true;
 licensedAmbience.preload = 'none';
@@ -373,19 +369,11 @@ let fallbackVoices = [];
 function updateSoundControls(active, mode = 'none') {
   ambientOn = active;
   const label = active ? 'Silenciar' : 'Audio';
-  const heroLabel = active ? 'Silenciar audio' : 'Ambiente + efectos';
   soundLabel.textContent = label;
   soundState.textContent = active ? 'ON' : 'OFF';
-  heroSoundLabel.textContent = heroLabel;
-  heroSoundState.textContent = active ? 'ON' : 'OFF';
   soundToggle.setAttribute('aria-pressed', String(active));
-  heroSoundToggle.setAttribute('aria-pressed', String(active));
+  soundToggle.setAttribute('aria-label', active ? 'Silenciar música y efectos de sonido' : 'Activar música y efectos de sonido');
   opening.classList.toggle('is-audio-on', active);
-  soundHint.textContent = active
-    ? 'Música y efectos activos. Puedes silenciarlo con ♫ cuando quieras.'
-    : soundOptedOut
-      ? 'Audio silenciado. Puedes activarlo cuando quieras.'
-      : 'La música empieza al entrar; los puntos activan efectos de sonido.';
   announce('audio', { active, mode });
 }
 
@@ -429,7 +417,9 @@ function turnSoundOn() {
   }
   playback.then(() => updateSoundControls(true, 'licensed-track'))
     .catch(() => startSynthFallback().catch(() => {
-      soundHint.textContent = 'El navegador bloqueó el audio. Puedes reintentarlo o recorrer la historia en silencio.';
+      soundLabel.textContent = 'Reintentar';
+      soundState.textContent = 'OFF';
+      soundToggle.setAttribute('aria-label', 'No se pudo iniciar el audio. Toca para reintentar.');
     }));
 }
 
@@ -650,7 +640,6 @@ function toggleSoundFromControl() {
 }
 
 soundToggle.addEventListener('click', toggleSoundFromControl);
-heroSoundToggle.addEventListener('click', toggleSoundFromControl);
 window.addEventListener('story:ending', (event) => {
   if (event.detail.decision === 'take-shortcut') playEndingImpact();
 });
