@@ -264,9 +264,27 @@ function renderEnding() {
         : choseSupport
           ? 'Una pista quedó expuesta. Cambiaste de rumbo y buscaste compañía. Compartir una foto nunca da permiso para vigilarte: la responsabilidad es de quien invade la intimidad.'
           : 'El Cartógrafo reunió hora, lugar y rutina. Esto es ficción: publicar no autoriza a nadie a seguirte ni convierte en culpable a quien comparte una foto.';
-  shareSummary.textContent = choseSupport
-    ? 'Elegí pedir apoyo en Alcalá. La intimidad también es libertad.'
-    : 'Mi ruta llegó al portal. La intimidad también es libertad.';
+  const answerLabels = {
+    'live-location': 'publiqué mi ubicación en directo',
+    'remove-location': 'quité la ubicación y esperé',
+    'reply-routine': 'confirmé mi horario',
+    'block-save': 'guardé pruebas, bloqueé y pedí apoyo',
+    'go-cafe': 'entré en la cafetería y busqué compañía',
+    'take-shortcut': 'salí sola por el atajo',
+    'share-private': 'compartí mi ubicación solo con Paula',
+    'post-cafe': 'publiqué otra story en directo',
+    'return-light': 'volví a la plaza iluminada',
+    'open-portal': 'entré sola al portal'
+  };
+  const answerRoute = decisions.map((decision, index) => `${index + 1}. ${answerLabels[decision] || 'elegí una opción'}`).join(' · ');
+  const endingLabels = {
+    'share-private': 'Terminé acompañada en la cafetería.',
+    'post-cafe': 'Llegué a la cafetería, pero volví a publicar en directo.',
+    'return-light': 'Volví a la plaza iluminada.',
+    'open-portal': 'Entré sola al portal.'
+  };
+  const endingLabel = endingLabels[lastDecision] || 'Mi recorrido terminó en Alcalá.';
+  shareSummary.textContent = `Mis respuestas: ${answerRoute}. ${endingLabel} La intimidad también es libertad.`;
   shareStatus.textContent = '';
   story.hidden = true;
   reveal.hidden = false;

@@ -7,8 +7,8 @@
   <meta name="description" content="Una historia interactiva de suspense en Alcalá de Henares sobre el artículo 12 y el derecho a la intimidad.">
   <title>Tu sombra digital — Artículo 12</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=final-colapsable-20261123">
-  <script src="script.js?v=musica-rutas-20261123" defer></script>
+  <link rel="stylesheet" href="styles.css?v=final-orden-cierre-20261123">
+  <script src="script.js?v=final-share-route-20261123" defer></script>
   <script src="visit-counter.js?v=counter-20261123" defer></script>
   <script type="module" src="motion.js?v=alcala-audio-adaptativo-20261123"></script>
 </head>
@@ -94,15 +94,13 @@
         <h2 id="reveal-title" tabindex="-1">El rastro<br><em>termina aquí.</em></h2>
         <p class="ending__outcome" id="ending-outcome"></p>
         <p class="ending__fiction-note">Ficción en Alcalá. Publicar no convierte una invasión de intimidad en culpa de quien la sufre.</p>
-        <div class="ending__share-card">
-          <p class="ending__article-kicker">LLÉVATE Y COMPARTE ESTA IDEA</p>
-          <p id="share-summary">Tu intimidad no es un secreto: es parte de tu libertad.</p>
-          <button class="share-ending" id="share-ending" type="button">Compartir mi final <span aria-hidden="true">↗</span></button>
-          <span class="share-status" id="share-status" role="status" aria-live="polite"></span>
+        <div class="ending__article">
+          <p class="ending__article-kicker">ARTÍCULO 12 · DECLARACIÓN UNIVERSAL DE LOS DERECHOS HUMANOS</p>
+          <h3>Tu vida privada merece protección.</h3>
+          <p>Nadie puede meterse arbitrariamente en tu domicilio, mensajes o vida privada. Este derecho hace posible vivir y expresarse con libertad, también en internet.</p>
         </div>
-        <p class="ending__reflection">El artículo 12 protege tu vida privada y hace posible vivir y expresarte con libertad, también en internet.</p>
         <details class="ending__details">
-          <summary>Pincha aquí para saber más sobre el artículo 12</summary>
+          <summary>Pincha aquí para ver consejos y saber más</summary>
           <div class="ending__details-body">
             <div class="ending__article">
               <p class="ending__article-kicker">ARTÍCULO 12 · DECLARACIÓN UNIVERSAL DE LOS DERECHOS HUMANOS</p>
@@ -120,12 +118,18 @@
             <p>Estas medidas ayudan; la responsabilidad de respetar el derecho es de quien no debe invadirlo.</p>
             <a class="ending__resource-link" href="https://www.aepd.es/areas-de-actuacion/internet-y-redes-sociales/protege-tu-privacidad" target="_blank" rel="noreferrer">Guías de privacidad de la AEPD ↗</a>
             <p>Escenarios ficticios inspirados en lugares reales: <a class="ending__resource-link" href="https://www.turismoalcala.es/turismo/museo-casa-natal-de-cervantes/" target="_blank" rel="noreferrer">Casa Natal de Cervantes, Calle Mayor 48</a> · <a class="ending__resource-link" href="https://www.turismoalcala.es/turismo/puerta-de-madrid-alcala-de-henares-y-recinto-amurallado/" target="_blank" rel="noreferrer">Puerta de Madrid y recinto amurallado</a>.</p>
-            <div class="ending__links">
-              <a class="atlas-link" href="https://sukimalabs.com/atlasonu" target="_blank" rel="noreferrer"><span>¿Quieres explorar otros proyectos de derechos humanos?</span><strong>Visita ATLAS ONU ↗</strong></a>
-              <p class="project-credit">Proyecto realizado por <strong>Jeisson Osorio Mesa</strong>, estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos, Universidad de Alcalá.</p>
-            </div>
+            <p class="project-credit">Proyecto realizado por <strong>Jeisson Osorio Mesa</strong>, estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos, Universidad de Alcalá.</p>
           </div>
         </details>
+        <div class="ending__links">
+          <a class="atlas-link" href="https://sukimalabs.com/atlasonu" target="_blank" rel="noreferrer"><span>¿Quieres explorar otros proyectos de derechos humanos?</span><strong>Visita ATLAS ONU ↗</strong></a>
+        </div>
+        <div class="ending__share-card">
+          <p class="ending__article-kicker">SI QUIERES COMPARTIR TUS RESPUESTAS</p>
+          <p id="share-summary">Comparte el recorrido que elegiste en esta historia.</p>
+          <button class="share-ending" id="share-ending" type="button">Compartir mis respuestas <span aria-hidden="true">↗</span></button>
+          <span class="share-status" id="share-status" role="status" aria-live="polite"></span>
+        </div>
         <button class="button button--light" id="restart-story" type="button"><span>Volver a empezar</span><span class="button__icon" aria-hidden="true">↺</span></button>
       </div>
     </section>
