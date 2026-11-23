@@ -200,3 +200,7 @@ h1 em, h2 em { color: var(--lime); font-style: normal; }
   .sound-prompt { margin-top: 12px; gap: 3px 12px; }
   .sound-prompt__hint { flex-basis: 100%; padding-left: 25px; }
 }
+
+.project-credit { max-width: 590px; margin: -12px 0 26px; color: #abb6c6; font-size: .8rem; line-height: 1.55; }
+.project-credit strong { color: var(--paper); }
+
