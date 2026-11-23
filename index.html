@@ -8,6 +8,7 @@
   <title>Tu sombra digital — Artículo 12</title>
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
+  <script type="module" src="motion.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -15,34 +16,34 @@
       <span class="wordmark__mark" aria-hidden="true"></span>
       <span>tu sombra digital</span>
     </a>
-    <p class="topbar__date">10 diciembre · Día de los Derechos Humanos</p>
+    <button class="sound-control sound-control--header" id="sound-toggle" type="button" aria-pressed="false" aria-label="Activar sonido ambiente">
+      <span class="sound-control__icon" aria-hidden="true">♫</span>
+      <span id="sound-label">Sonido</span>
+      <span class="sound-control__state" id="sound-state">apagado</span>
+    </button>
   </header>
 
   <main id="inicio">
     <section class="opening" aria-labelledby="opening-title">
       <div class="opening__copy">
-        <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Una historia sobre el Artículo 12</p>
-        <h1 id="opening-title">¿Cuánto de ti queda <em>a la vista?</em></h1>
-        <p class="opening__lead">Una foto parece solo una foto. Hasta que alguien junta las pistas.</p>
+        <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Caso ficticio · Artículo 12</p>
+        <h1 id="opening-title">No publicaste tu dirección.<br><em>Solo una foto.</em></h1>
+        <p class="opening__lead">Alguien juntó la hora, el lugar y los detalles del fondo. Sigue el rastro para descubrir por qué tu intimidad necesita protección.</p>
         <button class="button button--light" id="start-story" type="button">
-          <span>Seguir el rastro</span><span class="button__icon" aria-hidden="true">↘</span>
+          <span>Abrir el expediente</span><span class="button__icon" aria-hidden="true">↘</span>
         </button>
         <div class="sound-prompt">
-          <button class="sound-control" id="sound-toggle" type="button" aria-pressed="false">
-            <span class="sound-control__icon" aria-hidden="true">♫</span>
-            <span id="sound-label">Activar sonido ambiente</span>
-            <span class="sound-control__state" id="sound-state">apagado</span>
-          </button>
-          <p class="sound-prompt__hint">Con auriculares se aprecia mejor · volumen cómodo</p>
+
+          <p class="sound-prompt__hint">Auriculares opcionales · volumen cómodo · sonido siempre apagable</p>
         </div>
-        <p class="microcopy">Un recorrido de 1 minuto · No usa datos de tu teléfono</p>
+        <p class="microcopy">10 diciembre · Día de los Derechos Humanos · No usa datos de tu teléfono</p>
       </div>
 
-      <div class="portrait" aria-label="Ilustración abstracta de un rostro hecho de puntos y rastros digitales" role="img">
+      <div class="portrait" aria-label="Rostro ficticio bajo un barrido de vigilancia" role="img">
         <div class="portrait__halo"></div>
         <div class="portrait__orbit portrait__orbit--one"></div>
         <div class="portrait__orbit portrait__orbit--two"></div>
-        <div class="portrait__silhouette">
+        <div class="portrait__silhouette"><span class="portrait__scanline" aria-hidden="true"></span><span class="portrait__reticle" aria-hidden="true">ARCHIVO 08 / VIGILANCIA</span>
           <div class="portrait__face"></div>
           <span class="portrait__eye"></span>
           <span class="portrait__trace portrait__trace--a"></span>
@@ -54,7 +55,7 @@
         <span class="fragment fragment--time">08:13 · MARTES</span>
         <span class="fragment fragment--photo">IMG_1048.jpg</span>
         <span class="fragment fragment--message">«ya llegué»</span>
-        <span class="portrait__caption">No hace falta que cuentes nada.<br>Solo mira cómo encajan las pistas.</span>
+        <span class="portrait__caption">Una pista no cuenta toda la historia.<br>Juntas, dibujan una rutina.</span>
       </div>
       <div class="opening__edge" aria-hidden="true"><span>Desliza para mirar más cerca</span><span class="edge-line"></span></div>
     </section>
@@ -66,25 +67,30 @@
         <span class="story__rail-number" id="progress-number">01 / 03</span>
       </div>
       <div class="story__scene" id="scene" aria-live="polite" aria-atomic="true">
-        <div class="scene-art" id="scene-art" aria-hidden="true">
+        <div class="scene-art" id="scene-art" data-scene="1" aria-hidden="true">
           <div class="scene-art__photo"><span class="scene-art__sun"></span><span class="scene-art__window"></span><span class="scene-art__person"></span><span class="scene-art__phone"></span></div>
-          <span class="scene-tag scene-tag--one">una imagen</span>
-          <span class="scene-tag scene-tag--two">una hora</span>
-          <span class="scene-tag scene-tag--three">un lugar</span>
+          <div class="scene-map" aria-hidden="true">
+            <div class="scene-map__grid"></div><svg viewBox="0 0 360 440" focusable="false"><path class="scene-map__route" d="M42 355 C74 330 72 288 122 276 S157 228 198 221 S222 163 275 142 S298 99 323 76"/><circle cx="42" cy="355" r="8"/><circle cx="323" cy="76" r="9"/></svg>
+            <span class="scene-map__label scene-map__label--start">20:41 · FOTO PUBLICADA</span><span class="scene-map__label scene-map__label--end">21:06 · CASA</span>
+          </div>
+          <div class="scene-door" aria-hidden="true"><span class="scene-door__beam"></span><div class="scene-door__frame"><div class="scene-door__slab"><i></i></div></div><span class="scene-door__label">RUTINA RECONSTRUIDA</span><span class="scene-door__stamp">ACCESO<br>NO AUTORIZADO</span></div>
+          <span class="scene-tag scene-tag--one">IMG_1048 · 20:41</span>
+          <span class="scene-tag scene-tag--two">UBICACIÓN DETECTADA</span>
+          <span class="scene-tag scene-tag--three">RUTINA ENCONTRADA</span>
           <span class="scene-thread"></span>
         </div>
         <div class="scene-copy">
-          <p class="eyebrow" id="scene-kicker">La escena 1</p>
-          <h2 id="story-title" tabindex="-1">Subes una foto.<br><em>Compartes un momento.</em></h2>
-          <p class="scene-copy__body" id="scene-body">En esta historia, una imagen lleva pistas sobre cuándo y dónde ocurrió. ¿Qué harías antes de publicarla?</p>
+          <p class="eyebrow" id="scene-kicker">PISTA 01 · LA FOTO</p>
+          <h2 id="story-title" tabindex="-1">Una foto parece simple.<br><em>Hasta que no lo es.</em></h2>
+          <p class="scene-copy__body" id="scene-body">El caso es ficticio. Una foto puede revelar más por lo que aparece alrededor que por lo que querías enseñar. ¿Qué harías antes de publicarla?</p>
           <div class="choices" id="choices">
-            <button class="choice" type="button" data-choice="share"><span class="choice__dot" aria-hidden="true"></span>La publico tal cual</button>
-            <button class="choice" type="button" data-choice="review"><span class="choice__dot" aria-hidden="true"></span>Reviso qué muestra</button>
+            <button class="choice" type="button" data-choice="share"><span class="choice__dot" aria-hidden="true"></span>La publico sin revisar</button>
+            <button class="choice" type="button" data-choice="review"><span class="choice__dot" aria-hidden="true"></span>Reviso el fondo primero</button>
           </div>
           <button class="button button--lime" id="continue-story" type="button" hidden>
             <span id="continue-label">Ver qué pasa</span><span class="button__icon" aria-hidden="true">↘</span>
           </button>
-          <p class="microcopy scene-note" id="scene-note">La historia es ficticia. No se recopila ninguna elección.</p>
+          <p class="microcopy scene-note" id="scene-note">Caso ficticio. No leemos ni guardamos ningún dato de tu teléfono.</p>
         </div>
       </div>
     </section>
@@ -93,9 +99,9 @@
       <div class="reveal__stamp" aria-hidden="true">12</div>
       <div class="reveal__copy">
         <p class="eyebrow">Lo que protege la Declaración Universal</p>
-        <h2 id="reveal-title">Tu intimidad<br>también es <em>un derecho.</em></h2>
+        <h2 id="reveal-title" tabindex="-1">Tu intimidad<br>también es <em>un derecho.</em></h2>
         <p class="reveal__lead">El artículo 12 protege frente a injerencias arbitrarias en la vida privada, la familia, el domicilio o la correspondencia, y frente a ataques a la honra y la reputación.</p>
-        <p class="reveal__note">No significa que toda publicación sea una vulneración. Significa que tu vida privada merece protección y que tus límites importan.</p>
+        <p class="reveal__note">No se trata de vivir escondiéndote ni de culparte por compartir. Se trata de que nadie invada arbitrariamente tu intimidad, tu hogar o tus comunicaciones. Por eso este derecho importa.</p>
         <a class="source-link" href="https://www.un.org/es/about-us/universal-declaration-of-human-rights" target="_blank" rel="noreferrer">Leer el artículo 12 en Naciones Unidas <span aria-hidden="true">↗</span></a>
         <p class="project-credit">Proyecto realizado por <strong>Jeisson Osorio Mesa</strong>, estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos, Universidad de Alcalá.</p>
         <button class="button button--light" id="restart-story" type="button"><span>Volver a recorrer</span><span class="button__icon" aria-hidden="true">↺</span></button>
@@ -107,6 +113,4 @@
   <footer class="footer"><span>Proyecto educativo · Derechos Humanos</span><span>Una experiencia, no una colección de datos.</span></footer>
 </body>
 </html>
-
-
 

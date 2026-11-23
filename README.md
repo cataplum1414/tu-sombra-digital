@@ -23,3 +23,11 @@ Prototipo inicial. La narrativa y el artículo 12 están preparados para revisi�
 ## Sonido
 
 La página genera su propia atmósfera sonora con Web Audio API: un zumbido tonal suave y textura filtrada, sin pista grabada ni audio de terceros. El sonido empieza solo si la persona activa el control; puede apagarlo en cualquier momento. La página recomienda auriculares a volumen cómodo.
+
+## Movimiento y compatibilidad
+
+- La secuencia utiliza Motion 14.14.0 desde jsDelivr para coordinar la entrada, el mapa y el cierre. Su biblioteca es MIT: https://github.com/motiondivision/motion
+- Si Motion no carga, la historia y las decisiones siguen funcionando; los estilos conservan los barridos y las transiciones esenciales.
+- La composición se adapta a móviles estrechos, usa áreas seguras de iOS y conserva una alternativa a `100svh` para navegadores antiguos.
+- Respeta la preferencia del sistema por reducir el movimiento. El sonido solo se activa mediante un botón.
+- Las pistas, coordenadas y el caso son ficticios; no se solicitan ni recopilan datos del visitante.
