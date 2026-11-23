@@ -11,6 +11,7 @@ const sceneKicker = document.querySelector('#scene-kicker');
 const scenePlace = document.querySelector('#scene-place');
 const sceneTitle = document.querySelector('#story-title');
 const sceneBody = document.querySelector('#scene-body');
+const sceneExploreHint = document.querySelector('#scene-explore-hint');
 const sceneHotspots = document.querySelector('#scene-hotspots');
 const sceneClue = document.querySelector('#scene-clue');
 const choicePrompt = document.querySelector('#choice-prompt');
@@ -78,10 +79,11 @@ const scenes = [
     ]
   },
   {
-    image: 'assets/story/alcala-reflection.webp',
+    image: 'assets/story/alcala-reflection.webp?v=single-cartographer-20261124',
     place: copy('CALLE MAYOR · CERCA DE CASA CERVANTES', 'CALLE MAYOR · NEAR CERVANTES HOUSE'),
     kicker: copy('CALLE MAYOR · 23:24', 'CALLE MAYOR · 11:24 P.M.'),
     title: copy('«Sé a qué hora vuelves».', '“I know what time you go home.”'),
+    exploreHint: copy('Toca el móvil, a la protagonista o al reflejo rojo. Cada toque muestra una pista.', 'Tap the phone, the woman or the red reflection. Each tap reveals a clue.'),
     body: () => cartographerNoticed
         ? localized('Lo señalaste. Ahora aparece más cerca, en una ventana de la Calle Mayor. Te llega un mensaje: «Sé a qué hora vuelves».', 'You pointed him out. Now he appears closer, in a Calle Mayor window. A message arrives: “I know what time you go home.”')
       : riskScore
@@ -318,6 +320,7 @@ function renderScene(index, { languageRefresh = false } = {}) {
   sceneKicker.textContent = sceneValue(scene.kicker);
   scenePlace.textContent = sceneValue(scene.place);
   sceneTitle.textContent = sceneValue(scene.title);
+  sceneExploreHint.textContent = scene.exploreHint ? sceneValue(scene.exploreHint) : t('tapScene');
   sceneBody.textContent = sceneValue(scene.body);
   sceneClue.hidden = true;
   sceneClue.textContent = '';
