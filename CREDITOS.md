@@ -9,6 +9,12 @@
 - Archivo incluido: `assets/audio/ambiente-cavernas.ogg` · SHA-256: `5c841ef1a7bacd2a038801ecee0741e200d1cf1cd08f36a6a89cce95bcfb6a8a`
 - La pista solo empieza tras tocar uno de los controles de audio. Si el navegador no puede decodificarla, se intenta activar una atmósfera sintetizada de respaldo.
 
+## Escenas fotográficas
+
+- `assets/story/alcala-night.webp`, `alcala-reflection.webp`, `alcala-portal.webp` y `alcala-cafe.webp` son imágenes creadas con ImageGen para esta ficción interactiva.
+- Son recreaciones visuales ambientadas en Alcalá de Henares; no son fotografías documentales ni representan hechos o personas reales. La página lo indica junto a la historia.
+- Las imágenes se guardan en el propio repositorio para cargar desde GitHub Pages sin depender de un servicio externo.
+
 ## Referencias de interacción revisadas en GitHub
 
 Se adaptaron ideas generales de interacción y ritmo narrativo. No se copiaron código, modelos ni medios de estos repositorios.
@@ -27,7 +33,7 @@ Se adaptaron ideas generales de interacción y ritmo narrativo. No se copiaron c
 
 ## Bibliotecas
 
-- [Motion](https://github.com/motiondivision/motion), MIT: anima pistas, mapa, escenas y revelación final. Se carga desde jsDelivr.
-- No se usan bibliotecas ni modelos 3D de las referencias: el sitio mantiene controles táctiles y escenas CSS/Canvas para cargar rápido en móviles. La escena de puerta y la plaza se dibujan con elementos propios; los cambios de movimiento responden a la opción elegida.
+- [Motion](https://github.com/motiondivision/motion), MIT, anima las transiciones de escenas y el cierre. Se carga desde jsDelivr.
+- La historia mantiene controles táctiles y escenas fotográficas locales. No se incorporan modelos 3D ni recursos visuales de los repositorios citados.
 
 Las bibliotecas y los recursos multimedia de sus demos pueden tener licencias distintas. No se incorporaron archivos de los repositorios citados.
