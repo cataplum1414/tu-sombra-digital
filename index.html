@@ -1,0 +1,100 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111521">
+  <meta name="description" content="Una experiencia interactiva sobre el derecho a la intimidad y la vida privada.">
+  <title>Tu sombra digital — Artículo 12</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="wordmark" href="#inicio" aria-label="Tu sombra digital, inicio">
+      <span class="wordmark__mark" aria-hidden="true"></span>
+      <span>tu sombra digital</span>
+    </a>
+    <p class="topbar__date">10 diciembre · Día de los Derechos Humanos</p>
+  </header>
+
+  <main id="inicio">
+    <section class="opening" aria-labelledby="opening-title">
+      <div class="opening__copy">
+        <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Una historia sobre el Artículo 12</p>
+        <h1 id="opening-title">¿Cuánto de ti queda <em>a la vista?</em></h1>
+        <p class="opening__lead">Una foto parece solo una foto. Hasta que alguien junta las pistas.</p>
+        <button class="button button--light" id="start-story" type="button">
+          <span>Seguir el rastro</span><span class="button__icon" aria-hidden="true">↘</span>
+        </button>
+        <p class="microcopy">Un recorrido de 1 minuto · No usa datos de tu teléfono</p>
+      </div>
+
+      <div class="portrait" aria-label="Ilustración abstracta de un rostro hecho de puntos y rastros digitales" role="img">
+        <div class="portrait__halo"></div>
+        <div class="portrait__orbit portrait__orbit--one"></div>
+        <div class="portrait__orbit portrait__orbit--two"></div>
+        <div class="portrait__silhouette">
+          <div class="portrait__face"></div>
+          <span class="portrait__eye"></span>
+          <span class="portrait__trace portrait__trace--a"></span>
+          <span class="portrait__trace portrait__trace--b"></span>
+          <span class="portrait__trace portrait__trace--c"></span>
+          <span class="portrait__trace portrait__trace--d"></span>
+        </div>
+        <span class="fragment fragment--location">40.42° N&nbsp; 3.70° O</span>
+        <span class="fragment fragment--time">08:13 · MARTES</span>
+        <span class="fragment fragment--photo">IMG_1048.jpg</span>
+        <span class="fragment fragment--message">«ya llegué»</span>
+        <span class="portrait__caption">No hace falta que cuentes nada.<br>Solo mira cómo encajan las pistas.</span>
+      </div>
+      <div class="opening__edge" aria-hidden="true"><span>Desliza para mirar más cerca</span><span class="edge-line"></span></div>
+    </section>
+
+    <section class="story" id="recorrido" aria-labelledby="story-title" hidden>
+      <div class="story__rail" aria-hidden="true">
+        <span class="story__rail-label">Una vida privada<br>no es un secreto</span>
+        <span class="story__rail-line"><i id="progress-line"></i></span>
+        <span class="story__rail-number" id="progress-number">01 / 03</span>
+      </div>
+      <div class="story__scene" id="scene" aria-live="polite" aria-atomic="true">
+        <div class="scene-art" id="scene-art" aria-hidden="true">
+          <div class="scene-art__photo"><span class="scene-art__sun"></span><span class="scene-art__window"></span><span class="scene-art__person"></span><span class="scene-art__phone"></span></div>
+          <span class="scene-tag scene-tag--one">una imagen</span>
+          <span class="scene-tag scene-tag--two">una hora</span>
+          <span class="scene-tag scene-tag--three">un lugar</span>
+          <span class="scene-thread"></span>
+        </div>
+        <div class="scene-copy">
+          <p class="eyebrow" id="scene-kicker">La escena 1</p>
+          <h2 id="story-title">Subes una foto.<br><em>Compartes un momento.</em></h2>
+          <p class="scene-copy__body" id="scene-body">En esta historia, una imagen lleva pistas sobre cuándo y dónde ocurrió. ¿Qué harías antes de publicarla?</p>
+          <div class="choices" id="choices">
+            <button class="choice" type="button" data-choice="share"><span class="choice__dot" aria-hidden="true"></span>La publico tal cual</button>
+            <button class="choice" type="button" data-choice="review"><span class="choice__dot" aria-hidden="true"></span>Reviso qué muestra</button>
+          </div>
+          <button class="button button--lime" id="continue-story" type="button" hidden>
+            <span id="continue-label">Ver qué pasa</span><span class="button__icon" aria-hidden="true">↘</span>
+          </button>
+          <p class="microcopy scene-note" id="scene-note">La historia es ficticia. No se recopila ninguna elección.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal" id="derecho" aria-labelledby="reveal-title" hidden>
+      <div class="reveal__stamp" aria-hidden="true">12</div>
+      <div class="reveal__copy">
+        <p class="eyebrow">Lo que protege la Declaración Universal</p>
+        <h2 id="reveal-title">Tu intimidad<br>también es <em>un derecho.</em></h2>
+        <p class="reveal__lead">El artículo 12 protege frente a injerencias arbitrarias en la vida privada, la familia, el domicilio o la correspondencia, y frente a ataques a la honra y la reputación.</p>
+        <p class="reveal__note">No significa que toda publicación sea una vulneración. Significa que tu vida privada merece protección y que tus límites importan.</p>
+        <a class="source-link" href="https://www.un.org/es/about-us/universal-declaration-of-human-rights" target="_blank" rel="noreferrer">Leer el artículo 12 en Naciones Unidas <span aria-hidden="true">↗</span></a>
+        <button class="button button--light" id="restart-story" type="button"><span>Volver a recorrer</span><span class="button__icon" aria-hidden="true">↺</span></button>
+      </div>
+      <div class="reveal__closing" aria-hidden="true"><span>Lo que es tuyo<br>también merece un límite.</span><i></i></div>
+    </section>
+  </main>
+
+  <footer class="footer"><span>Proyecto educativo · Derechos Humanos</span><span>Una experiencia, no una colección de datos.</span></footer>
+</body>
+</html>
