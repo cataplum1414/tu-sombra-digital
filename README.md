@@ -11,6 +11,10 @@ Una experiencia breve para móvil que convierte una foto ficticia en una histori
 - `index.html`: estructura, texto y referencia al artículo 12.
 - `styles.css`: identidad visual, escena ilustrada, animaciones y adaptación móvil.
 - `script.js`: decisiones y progresión narrativa.
+- `assets/audio/ambiente-cavernas.ogg`: banda sonora ambiental CC0, descargada solo después de tocar el control de audio.
+- `vendor/howler.min.js`: reproductor local Howler.js 2.2.4 con licencia MIT.
+- `signal-field.js`: campo de señal Canvas 2D; se pausa fuera de pantalla y limita resolución y partículas en móviles.
+- `CREDITOS.md`: autoría, licencia y fuentes de medios y recursos técnicos revisados en GitHub.
 
 ## Publicar
 
@@ -22,7 +26,7 @@ Prototipo inicial. La narrativa y el artículo 12 están preparados para revisi�
 
 ## Sonido
 
-La página genera su propia atmósfera sonora con Web Audio API: un zumbido tonal suave y textura filtrada, sin pista grabada ni audio de terceros. El sonido empieza solo si la persona activa el control; puede apagarlo en cualquier momento. La página recomienda auriculares a volumen cómodo.
+La banda sonora ambiental procede de un loop CC0. No se descarga ni reproduce hasta que el visitante activa **Activar ambiente** o pulsa **Iniciar con ambiente**. Si el navegador no puede descodificar el archivo, se usa una atmósfera sintetizada de respaldo. Los dos controles muestran claramente `ON` o `OFF`.
 
 ## Movimiento y compatibilidad
 
@@ -31,3 +35,4 @@ La página genera su propia atmósfera sonora con Web Audio API: un zumbido tona
 - La composición se adapta a móviles estrechos, usa áreas seguras de iOS y conserva una alternativa a `100svh` para navegadores antiguos.
 - Respeta la preferencia del sistema por reducir el movimiento. El sonido solo se activa mediante un botón.
 - Las pistas, coordenadas y el caso son ficticios; no se solicitan ni recopilan datos del visitante.
+- Los tres indicios de la portada son controles táctiles accesibles; tocar uno revela qué información puede aportar. Cada paso de la historia actualiza el fragmento de URL para indicar el destino dentro del recorrido.

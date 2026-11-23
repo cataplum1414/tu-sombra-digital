@@ -2,13 +2,16 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#111521">
   <meta name="description" content="Una experiencia interactiva sobre el derecho a la intimidad y la vida privada.">
   <title>Tu sombra digital — Artículo 12</title>
-  <link rel="stylesheet" href="styles.css?v=mobile-hero-20261123">
-  <script src="script.js?v=mobile-hero-20261123" defer></script>
-  <script type="module" src="motion.js?v=mobile-hero-20261123"></script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css?v=immersive-20261123">
+  <script src="vendor/howler.min.js?v=2.2.4" defer></script>
+  <script src="script.js?v=immersive-20261123" defer></script>
+  <script src="signal-field.js?v=immersive-20261123" defer></script>
+  <script type="module" src="motion.js?v=immersive-20261123"></script>
 </head>
 <body>
   <header class="topbar">
@@ -16,10 +19,10 @@
       <span class="wordmark__mark" aria-hidden="true"></span>
       <span>tu sombra digital</span>
     </a>
-    <button class="sound-control sound-control--header" id="sound-toggle" type="button" aria-pressed="false" aria-label="Activar sonido ambiente">
+    <button class="sound-control sound-control--header" id="sound-toggle" type="button" aria-pressed="false" aria-label="Activar ambiente sonoro">
       <span class="sound-control__icon" aria-hidden="true">♫</span>
-      <span id="sound-label">Sonido</span>
-      <span class="sound-control__state" id="sound-state">apagado</span>
+      <span id="sound-label">Activar ambiente</span>
+      <span class="sound-control__state" id="sound-state">OFF</span>
     </button>
   </header>
 
@@ -29,17 +32,16 @@
         <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Derecho humano · Artículo 12</p>
         <h1 id="opening-title">Tu intimidad<br><em>también es un derecho.</em></h1>
         <p class="opening__lead">Una foto revela más cuando alguien junta la hora, el lugar y los detalles del fondo. Sigue el rastro para descubrir qué protege el Artículo 12.</p>
-        <button class="button button--light" id="start-story" type="button">
-          <span>Entrar al recorrido</span><span class="button__icon" aria-hidden="true">↘</span>
+        <button class="button button--light" id="start-story" type="button" aria-controls="recorrido">
+          <span>Iniciar con ambiente</span><span class="button__icon" aria-hidden="true">↘</span>
         </button>
-        <div class="sound-prompt">
-
-          <p class="sound-prompt__hint">Auriculares opcionales · volumen cómodo · sonido siempre apagable</p>
-        </div>
+        <button class="audio-launch" id="sound-toggle-hero" type="button" aria-pressed="false" aria-label="Activar ambiente sonoro"><span aria-hidden="true">♫</span><span id="hero-sound-label">Escuchar con ambiente</span><span class="audio-launch__state" id="hero-sound-state">OFF</span></button>
+        <div class="sound-prompt"><p class="sound-prompt__hint">Al iniciar se activa la banda sonora CC0. Puedes apagarla cuando quieras desde el control de audio.</p></div>
         <p class="microcopy">10 diciembre · Día de los Derechos Humanos · No usa datos de tu teléfono</p>
       </div>
 
-      <div class="portrait" aria-label="Rostro ficticio bajo un barrido de vigilancia" role="img">
+      <div class="portrait" role="group" aria-label="Imagen ficticia con pistas interactivas">
+        <canvas class="signal-field" id="signal-field" aria-hidden="true"></canvas>
         <div class="portrait__halo"></div>
         <div class="portrait__orbit portrait__orbit--one"></div>
         <div class="portrait__orbit portrait__orbit--two"></div>
@@ -55,7 +57,12 @@
         <span class="fragment fragment--time">08:13 · MARTES</span>
         <span class="fragment fragment--photo">IMG_1048.jpg</span>
         <span class="fragment fragment--message">«ya llegué»</span>
-        <span class="portrait__caption">Una pista no cuenta toda la historia.<br>Juntas, dibujan una rutina.</span>
+        <span class="portrait__caption">Rastrea la imagen.<br>Toca cada indicio.</span>
+        <span class="portrait__instruction" aria-hidden="true">TRES INDICIOS · TÓCALOS</span>
+        <button class="clue-hotspot clue-hotspot--time" type="button" data-clue="time" aria-label="Inspeccionar la hora de la foto" aria-expanded="false" aria-controls="clue-panel"><span>01</span></button>
+        <button class="clue-hotspot clue-hotspot--place" type="button" data-clue="place" aria-label="Inspeccionar la ubicación de la foto" aria-expanded="false" aria-controls="clue-panel"><span>02</span></button>
+        <button class="clue-hotspot clue-hotspot--background" type="button" data-clue="background" aria-label="Inspeccionar el fondo de la foto" aria-expanded="false" aria-controls="clue-panel"><span>03</span></button>
+        <p class="portrait__clue-panel" id="clue-panel" role="status" hidden></p>
       </div>
       <div class="opening__edge" aria-hidden="true"><span>Desliza para mirar más cerca</span><span class="edge-line"></span></div>
     </section>
@@ -110,7 +117,7 @@
     </section>
   </main>
 
-  <footer class="footer"><span>Proyecto educativo · Derechos Humanos</span><span>Una experiencia, no una colección de datos.</span></footer>
+  <footer class="footer"><span>Proyecto educativo · Derechos Humanos</span><span>Una experiencia, no una colección de datos.</span><span>Audio: Ancient caverns · congusbongus · <a href="https://opengameart.org/content/ancient-caverns-horror-ambient-loop" target="_blank" rel="noreferrer">CC0</a></span></footer>
 </body>
 </html>
 

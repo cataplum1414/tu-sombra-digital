@@ -311,6 +311,67 @@ body { background: #090b11; }
 
 .scene-art[data-scene="1"] .scene-door, .scene-art[data-scene="2"] .scene-door { display: none; }
 
+/* Touch-first evidence controls and a clear audio affordance. */
+.sound-control--header { gap: 8px; min-height: 48px; padding-inline: 13px; border-color: rgba(241,91,105,.65); background: rgba(28,14,23,.94); font-size: .78rem; font-weight: 700; }
+.sound-control__state { color: #ffd18b; font-size: .62rem; }
+.sound-control--header[aria-pressed="true"] { border-color: var(--lime); box-shadow: 0 0 0 3px rgba(200,245,106,.12), 0 0 26px rgba(200,245,106,.2); }
+.sound-control--header[aria-pressed="true"] .sound-control__icon { animation: sound-pulse 1.6s ease-in-out infinite; }
+.sound-prompt__hint { max-width: 420px; margin: 0; color: #b9bfcd; font-size: .76rem; line-height: 1.5; }
+.portrait__instruction { position: absolute; z-index: 5; top: 4%; left: 50%; transform: translateX(-50%); color: #f0c1b0; font: 700 .62rem/1.2 Consolas, monospace; letter-spacing: .09em; white-space: nowrap; }
+.signal-field { position: absolute; z-index: -1; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+.clue-hotspot { position: absolute; z-index: 7; display: grid; place-items: center; width: 50px; height: 50px; padding: 0; border: 1px solid rgba(200,245,106,.88); border-radius: 50%; background: rgba(9,11,17,.88); color: var(--lime); box-shadow: 0 0 0 6px rgba(200,245,106,.08), 0 0 24px rgba(200,245,106,.24); cursor: pointer; touch-action: manipulation; transition: transform .25s ease, background .25s ease, color .25s ease; }
+.clue-hotspot::before { content: ""; position: absolute; inset: -7px; border: 1px solid rgba(255,118,95,.6); border-radius: 50%; animation: clue-ring 2.4s ease-out infinite; }
+.clue-hotspot span { font: 800 .74rem Consolas, monospace; }
+.clue-hotspot:hover, .clue-hotspot[aria-expanded="true"] { transform: scale(1.16); background: var(--lime); color: var(--ink); }
+.clue-hotspot:focus-visible { outline: 3px solid var(--paper); outline-offset: 6px; }
+.clue-hotspot--time { top: 25%; left: 11%; }
+.clue-hotspot--place { top: 39%; right: 10%; }
+.clue-hotspot--background { bottom: 22%; left: 17%; }
+.portrait__clue-panel { position: absolute; z-index: 9; left: 6%; bottom: 3%; width: 88%; margin: 0; padding: 14px 16px; border: 1px solid rgba(241,91,105,.74); background: rgba(9,11,17,.96); color: #f1e9e8; box-shadow: 0 10px 36px rgba(0,0,0,.65), 0 0 24px rgba(241,91,105,.16); font-size: .82rem; line-height: 1.45; }
+.portrait.has-open-clue .portrait__caption { opacity: 0; }
+.portrait.has-open-clue .clue-hotspot:not([aria-expanded="true"]) { opacity: .38; }
+.portrait__silhouette { transform-style: preserve-3d; }
+.opening.is-audio-on .portrait__halo { background: radial-gradient(circle, rgba(255,118,95,.24), rgba(140,175,255,.08) 52%, transparent 72%); }
+.audio-launch { display: inline-flex; min-height: 50px; align-items: center; gap: 11px; margin: 13px 0 0 8px; padding: 0 14px; border: 1px solid rgba(255,118,95,.58); border-radius: 3px; background: rgba(35,18,25,.74); color: #f4d9d3; cursor: pointer; font-size: .78rem; font-weight: 700; touch-action: manipulation; transition: border-color .2s, background .2s, transform .2s; }
+.audio-launch > span:first-child { color: var(--coral); font-size: 1.1rem; }
+.audio-launch:hover { transform: translateY(-2px); background: rgba(65,25,33,.84); }
+.audio-launch:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
+.audio-launch[aria-pressed="true"] { border-color: var(--lime); background: rgba(29,42,25,.8); box-shadow: 0 0 26px rgba(200,245,106,.14); }
+.audio-launch__state { padding: 3px 6px; border: 1px solid rgba(255,209,139,.46); color: #ffd18b; font: 700 .61rem Consolas, monospace; }
+.audio-launch[aria-pressed="true"] .audio-launch__state { border-color: var(--lime); color: var(--lime); }
+.choice { min-height: 62px; }
+.button, .choice, .clue-hotspot, .sound-control { -webkit-tap-highlight-color: transparent; }
+@keyframes clue-ring { 0% { transform: scale(.7); opacity: .82; } 90%,100% { transform: scale(1.65); opacity: 0; } }
+@keyframes sound-pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.14); opacity: .72; } }
+@media (max-width: 680px), (max-device-width: 760px) {
+  .sound-control--header { min-height: 46px; padding-inline: 10px; gap: 6px; font-size: .7rem; }
+  .sound-control--header .sound-control__state { display: inline; padding: 2px 4px; font-size: .56rem; }
+  .wordmark { gap: 7px; font-size: .72rem; white-space: nowrap; }
+  .sound-control--header { flex-shrink: 0; }
+  .audio-launch { min-height: 48px; margin: 10px 0 0; padding-inline: 12px; font-size: .75rem; }
+  .sound-prompt__hint { max-width: 340px; font-size: .72rem; }
+  .clue-hotspot { width: 48px; height: 48px; }
+  .clue-hotspot--time { top: 24%; left: 5%; }
+  .clue-hotspot--place { top: 39%; right: 4%; }
+  .clue-hotspot--background { bottom: 21%; left: 9%; }
+  .portrait__clue-panel { left: 3%; bottom: 1%; width: 94%; font-size: .78rem; }
+  .portrait__instruction { top: 0; font-size: .56rem; }
+  .button { max-width: 100%; }
+}
+@media (max-width: 360px), (max-device-width: 360px) {
+  .topbar { gap: 8px; }
+  .wordmark { font-size: .66rem; }
+  .sound-control--header { padding-inline: 7px; font-size: .62rem; }
+  .sound-control--header .sound-control__state { font-size: .5rem; }
+  .opening { padding-inline: 18px; }
+  h1 { font-size: clamp(3rem, 14vw, 4rem); }
+  .portrait__clue-panel { font-size: .72rem; }
+}
+body { min-width: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .clue-hotspot::before, .sound-control--header[aria-pressed="true"] .sound-control__icon { animation: none; }
+}
+
 
 /* Mobile first fold: force the phone layout even when a browser reports a wide layout viewport. */
 @media (max-width: 680px), (max-device-width: 760px) {
@@ -339,4 +400,12 @@ body { background: #090b11; }
 }
 @media (max-device-width: 760px) and (orientation: portrait) {
   .opening { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 360px), (max-device-width: 360px) {
+  .topbar { gap: 8px; }
+  .wordmark { font-size: .66rem; }
+  .sound-control--header { padding-inline: 7px; font-size: .62rem; }
+  .sound-control--header .sound-control__state { font-size: .5rem; }
+  .opening { padding-inline: 18px; }
+  h1 { font-size: clamp(3rem, 14vw, 4rem); }
 }

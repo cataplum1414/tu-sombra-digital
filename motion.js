@@ -7,12 +7,17 @@ const story = document.querySelector('.story');
 const storyScene = document.querySelector('.story__scene');
 const sceneArt = document.querySelector('#scene-art');
 const reveal = document.querySelector('.reveal');
+let audioPulse = null;
 
 if (!reduced) {
   animate('.portrait__silhouette', { opacity: [0, 1], scale: [0.88, 1], filter: ['blur(8px)', 'blur(0px)'] }, { duration: 1.3, ease: [0.22, 1, 0.36, 1] });
   animate('.portrait__eye', { scaleX: [0.3, 1.15, 0.55, 1], opacity: [0.25, 1, 0.45, 0.8] }, { duration: 5.6, repeat: Infinity, ease: 'easeInOut' });
+  animate('.portrait__halo', { scale: [0.84, 1.12, 0.92], opacity: [0.38, 0.88, 0.52] }, { duration: 5.2, repeat: Infinity, ease: 'easeInOut' });
+  animate('.portrait__orbit--one', { rotate: [-21, 15, -21], scaleY: [0.56, 0.62, 0.56] }, { duration: 16, repeat: Infinity, ease: 'linear' });
+  animate('.portrait__orbit--two', { rotate: [39, -22, 39], scaleY: [0.47, 0.55, 0.47] }, { duration: 22, repeat: Infinity, ease: 'linear' });
   animate('.portrait__scanline', { y: ['-120%', '125%'] }, { duration: 6.5, repeat: Infinity, ease: 'linear' });
-  animate('.fragment', { opacity: [0, 1], y: [18, 0], rotate: [-4, 0] }, { duration: 0.8, delay: 0.16, ease: [0.16, 1, 0.3, 1] });
+  animate('.fragment', { opacity: [0, 1], y: [18, 0], rotate: [-4, 0], filter: ['blur(6px)', 'blur(0px)'] }, { duration: 0.8, delay: 0.16, ease: [0.16, 1, 0.3, 1] });
+  animate('.fragment--location', { opacity: [0.72, 1, 0.78] }, { duration: 2.8, delay: 1.2, repeat: Infinity, ease: 'easeInOut' });
 
   scroll(
     animate(portrait, { y: [0, 70], scale: [1, 0.9], opacity: [1, 0.35] }, { ease: 'linear' }),
@@ -30,6 +35,20 @@ if (!reduced) {
   window.addEventListener('story:choice', () => {
     animate('.scene-art__photo', { scale: [1, 0.94, 1.03], rotate: [-4, 2, 0] }, { duration: 0.75, ease: [0.22, 1, 0.36, 1] });
     animate('.scene-art__phone', { x: [0, -10, 0], rotate: [15, 4, 15] }, { duration: 0.7, ease: 'easeInOut' });
+  });
+
+  window.addEventListener('story:clue', (event) => {
+    const target = document.querySelector(`[data-clue="${event.detail.clue}"]`);
+    animate(target, { scale: [0.72, 1.26, 1], rotate: [0, -8, 0] }, { duration: 0.6, ease: [0.22, 1, 0.36, 1] });
+    const panel = document.querySelector('.portrait__clue-panel');
+    animate(panel, { opacity: [0, 1], y: [18, 0], filter: ['blur(7px)', 'blur(0px)'] }, { duration: 0.48, ease: [0.22, 1, 0.36, 1] });
+  });
+
+  window.addEventListener('story:audio', (event) => {
+    if (event.detail.active) {
+      audioPulse?.stop();
+      audioPulse = animate('.portrait__silhouette', { scale: [1, 1.035, 1], filter: ['brightness(1)', 'brightness(1.28)', 'brightness(1)'] }, { duration: 1.2, repeat: Infinity, repeatDelay: 2.8, ease: 'easeInOut' });
+    } else audioPulse?.stop();
   });
 
   window.addEventListener('story:scene', (event) => {
