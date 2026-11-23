@@ -7,11 +7,10 @@
   <meta name="description" content="Una experiencia interactiva sobre el derecho a la intimidad y la vida privada.">
   <title>Tu sombra digital — Artículo 12</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=immersive-20261123">
-  <script src="vendor/howler.min.js?v=2.2.4" defer></script>
-  <script src="script.js?v=immersive-20261123" defer></script>
-  <script src="signal-field.js?v=immersive-20261123" defer></script>
-  <script type="module" src="motion.js?v=immersive-20261123"></script>
+  <link rel="stylesheet" href="styles.css?v=investigacion-20261123">
+  <script src="script.js?v=investigacion-20261123" defer></script>
+  <script src="signal-field.js?v=investigacion-20261123" defer></script>
+  <script type="module" src="motion.js?v=investigacion-20261123"></script>
 </head>
 <body>
   <header class="topbar">
@@ -31,13 +30,13 @@
       <div class="opening__copy">
         <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Derecho humano · Artículo 12</p>
         <h1 id="opening-title">Tu intimidad<br><em>también es un derecho.</em></h1>
-        <p class="opening__lead">Una foto revela más cuando alguien junta la hora, el lugar y los detalles del fondo. Sigue el rastro para descubrir qué protege el Artículo 12.</p>
+        <p class="opening__lead">Una imagen. Tres pistas. Alguien que no conoces empieza a reconstruir una vida. Sigue el rastro y descubre el límite que protege el Artículo 12.</p>
         <button class="button button--light" id="start-story" type="button" aria-controls="recorrido">
           <span>Iniciar con ambiente</span><span class="button__icon" aria-hidden="true">↘</span>
         </button>
         <button class="audio-launch" id="sound-toggle-hero" type="button" aria-pressed="false" aria-label="Activar ambiente sonoro"><span aria-hidden="true">♫</span><span id="hero-sound-label">Escuchar con ambiente</span><span class="audio-launch__state" id="hero-sound-state">OFF</span></button>
-        <div class="sound-prompt"><p class="sound-prompt__hint">Al iniciar se activa la banda sonora CC0. Puedes apagarla cuando quieras desde el control de audio.</p></div>
-        <p class="microcopy">10 diciembre · Día de los Derechos Humanos · No usa datos de tu teléfono</p>
+        <div class="sound-prompt"><p class="sound-prompt__hint">La atmósfera sonora es opcional. Toca el botón para escucharla; no se activa sola.</p></div>
+        <p class="microcopy">Caso ficticio · Sin permisos · Sin datos guardados en tu teléfono</p>
       </div>
 
       <div class="portrait" role="group" aria-label="Imagen ficticia con pistas interactivas">
@@ -88,11 +87,11 @@
         </div>
         <div class="scene-copy">
           <p class="eyebrow" id="scene-kicker">PISTA 01 · LA FOTO</p>
-          <h2 id="story-title" tabindex="-1">Una foto parece simple.<br><em>Hasta que no lo es.</em></h2>
-          <p class="scene-copy__body" id="scene-body">El caso es ficticio. Una foto puede revelar más por lo que aparece alrededor que por lo que querías enseñar. ¿Qué harías antes de publicarla?</p>
+          <h2 id="story-title" tabindex="-1">A las 20:41,<br><em>subes la foto.</em></h2>
+          <p class="scene-copy__body" id="scene-body">El caso es ficticio. La imagen muestra una hora, una calle y una ventana encendida. ¿Qué harías antes de compartirla?</p>
           <div class="choices" id="choices">
-            <button class="choice" type="button" data-choice="share"><span class="choice__dot" aria-hidden="true"></span>La publico sin revisar</button>
-            <button class="choice" type="button" data-choice="review"><span class="choice__dot" aria-hidden="true"></span>Reviso el fondo primero</button>
+            <button class="choice" type="button" data-choice="share"><span class="choice__dot" aria-hidden="true"></span>La dejo pública</button>
+            <button class="choice" type="button" data-choice="review"><span class="choice__dot" aria-hidden="true"></span>Quito la ubicación</button>
           </div>
           <button class="button button--lime" id="continue-story" type="button" hidden>
             <span id="continue-label">Ver qué pasa</span><span class="button__icon" aria-hidden="true">↘</span>

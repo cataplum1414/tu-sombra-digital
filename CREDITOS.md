@@ -1,25 +1,28 @@
-# Créditos de medios y recursos
+﻿# Créditos de medios y recursos
 
 ## Ambiente sonoro
 
-- **Ancient caverns (horror ambient loop)**, de congusbongus, publicado en OpenGameArt y distribuido bajo **CC0 1.0**. El archivo OGG de esta página se obtuvo del repositorio público `euuuuuuan/moonshard-warden-public`, que conserva el registro de procedencia y la licencia. La página no reproduce sonido hasta que la persona pulsa **Activar ambiente** o **Iniciar con ambiente**.
-- Fuente original: https://opengameart.org/content/ancient-caverns-horror-ambient-loop
-- Registro de licencia y procedencia: https://github.com/euuuuuuan/moonshard-warden-public/blob/main/CREDITS.md
+- **Ancient caverns (horror ambient loop)**, de congusbongus, publicada en OpenGameArt bajo **CC0 1.0**.
+- Fuente: https://opengameart.org/content/ancient-caverns-horror-ambient-loop
+- Registro de procedencia: https://github.com/euuuuuuan/moonshard-warden-public/blob/main/CREDITS.md
 - Licencia CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
-- SHA-256 del archivo incluido: `5c841ef1a7bacd2a038801ecee0741e200d1cf1cd08f36a6a89cce95bcfb6a8a`
+- Archivo incluido: `assets/audio/ambiente-cavernas.ogg` · SHA-256: `5c841ef1a7bacd2a038801ecee0741e200d1cf1cd08f36a6a89cce95bcfb6a8a`
+- La pista solo empieza tras tocar uno de los controles de audio. Si el navegador no puede decodificarla, se intenta activar una atmósfera sintetizada de respaldo.
 
-## Recursos técnicos revisados en GitHub
+## Referencias de interacción revisadas en GitHub
 
-| Recurso | Licencia publicada por el proyecto | Uso considerado |
-| --- | --- | --- |
-| [Motion](https://github.com/motiondivision/motion) | MIT | Coreografía de pistas, mapa y escenas; ya forma parte del sitio. |
-| [Howler.js](https://github.com/goldfire/howler.js) | MIT | Runtime local en `vendor/`; reproduce el loop con desbloqueo tras toque y gestión de eventos de error en Safari/iOS y Android. |
-| [PixiJS](https://github.com/pixijs/pixijs) | MIT | Opción para gráficos 2D de alta frecuencia; evaluada, pero no incluida para conservar carga ligera y funcionamiento sin WebGL. |
-| [Three.js](https://github.com/mrdoob/three.js) | MIT | Referencia para recorridos 3D completos; se dejó fuera porque un mundo 3D elevaría peso, consumo y riesgos de rendimiento en móviles de gama baja. |
-| [Theatre.js](https://github.com/theatre-js/theatre) | Apache-2.0 para `@theatre/core`; AGPL-3.0 para el editor `@theatre/studio` | Referencia de animación cinematográfica; no se incorporó al sitio publicado. |
-| [A Drift](https://github.com/zen-aperios/a-drift) | Revisar las licencias de código y de cada medio antes de reutilizar | Referencia audiovisual: composición continua, sonido optativo y capas de scroll. No se copiaron código ni medios. |
-| [Bao Scroll Story](https://github.com/architech97/bao-scroll-story) | Revisar el archivo de licencia antes de reutilizar código o recursos | Referencia de rendimiento: carga diferida, escenas activas solamente, niveles de calidad por dispositivo y scroll nativo en móvil. |
+Se adaptaron ideas generales de interacción y ritmo narrativo. No se copiaron código, modelos ni medios de estos repositorios.
 
-Las bibliotecas y las imágenes/sonidos que usan tienen licencias distintas. La licencia de una biblioteca no licencia automáticamente los archivos multimedia de sus demos.
+| Proyecto | Idea aplicada |
+| --- | --- |
+| [Immersions](https://github.com/bruchansky/immersions) · Apache-2.0 | Explorar pistas con controles directos sobre los objetos. |
+| [Bao Scroll Story](https://github.com/architech97/bao-scroll-story) | Transiciones que convierten las escenas en un relato continuo; se conserva el scroll nativo del móvil. |
+| [Aether Worlds](https://github.com/TheNonFungibleHuman/Aether-worlds) | Entorno visual generado con CSS y Canvas, con movimiento reducido y una alternativa sin WebGL. |
+| [Night Shift Protocol](https://github.com/char704/Night-Shift-Protocol) | Elecciones que alteran la secuencia y revelan consecuencias distintas. |
 
-La versión minificada de Howler.js 2.2.4 se incluye en el repositorio junto a `vendor/HOWLER-LICENSE.txt`; no se solicita a un CDN durante la visita.
+## Bibliotecas
+
+- [Motion](https://github.com/motiondivision/motion), MIT: anima pistas, mapa, escenas y revelación final. Se carga desde jsDelivr.
+- No se usan bibliotecas ni modelos 3D de las referencias: el sitio mantiene controles táctiles y escenas CSS/Canvas para cargar rápido en móviles.
+
+Las bibliotecas y los recursos multimedia de sus demos pueden tener licencias distintas. No se incorporaron archivos de los repositorios citados.

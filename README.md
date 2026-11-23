@@ -4,7 +4,7 @@ Micrositio educativo sobre el derecho a la intimidad y la vida privada, reconoci
 
 ## Idea
 
-Una experiencia breve para móvil que convierte una foto ficticia en una historia de pistas. La persona toma una decisión, ve cómo cambia el recorrido y termina con una explicación clara del derecho. No se solicitan permisos del dispositivo ni se guardan elecciones.
+Una investigación breve para móvil que convierte una foto ficticia en un rastro. La persona inspecciona indicios, elige qué hacer y ve cambiar el mapa y el desenlace antes de conocer qué protege el artículo 12. No se solicitan permisos del dispositivo ni se guardan elecciones.
 
 ## Archivos
 
@@ -12,9 +12,8 @@ Una experiencia breve para móvil que convierte una foto ficticia en una histori
 - `styles.css`: identidad visual, escena ilustrada, animaciones y adaptación móvil.
 - `script.js`: decisiones y progresión narrativa.
 - `assets/audio/ambiente-cavernas.ogg`: banda sonora ambiental CC0, descargada solo después de tocar el control de audio.
-- `vendor/howler.min.js`: reproductor local Howler.js 2.2.4 con licencia MIT.
 - `signal-field.js`: campo de señal Canvas 2D; se pausa fuera de pantalla y limita resolución y partículas en móviles.
-- `CREDITOS.md`: autoría, licencia y fuentes de medios y recursos técnicos revisados en GitHub.
+- `CREDITOS.md`: autoría, licencia y referencias de interacción revisadas en GitHub.
 
 ## Publicar
 
@@ -22,11 +21,11 @@ El sitio es estático y puede publicarse con GitHub Pages desde la rama `main` y
 
 ## Estado
 
-Prototipo inicial. La narrativa y el artículo 12 están preparados para revisión; la identidad institucional, los créditos y el cartel impreso deben completarse antes de distribuir el QR.
+Experiencia interactiva publicada. El caso y las pistas son ficticios; el artículo 12 enlaza a la Declaración Universal en Naciones Unidas.
 
 ## Sonido
 
-La banda sonora ambiental procede de un loop CC0. No se descarga ni reproduce hasta que el visitante activa **Activar ambiente** o pulsa **Iniciar con ambiente**. Si el navegador no puede descodificar el archivo, se usa una atmósfera sintetizada de respaldo. Los dos controles muestran claramente `ON` o `OFF`.
+La banda sonora ambiental procede de un loop CC0. La reproducción se solicita directamente desde el toque en el control de sonido, como requieren los navegadores móviles. Si el navegador no puede descodificar el archivo, se usa una atmósfera sintetizada de respaldo. Los controles indican cuándo está activa.
 
 ## Movimiento y compatibilidad
 
@@ -36,3 +35,4 @@ La banda sonora ambiental procede de un loop CC0. No se descarga ni reproduce ha
 - Respeta la preferencia del sistema por reducir el movimiento. El sonido solo se activa mediante un botón.
 - Las pistas, coordenadas y el caso son ficticios; no se solicitan ni recopilan datos del visitante.
 - Los tres indicios de la portada son controles táctiles accesibles; tocar uno revela qué información puede aportar. Cada paso de la historia actualiza el fragmento de URL para indicar el destino dentro del recorrido.
+- Las ideas de los repositorios [Immersions](https://github.com/bruchansky/immersions), [Bao Scroll Story](https://github.com/architech97/bao-scroll-story), [Aether Worlds](https://github.com/TheNonFungibleHuman/Aether-worlds) y [Night Shift Protocol](https://github.com/char704/Night-Shift-Protocol) se usan como referencias de interacción. No se reutiliza su código ni sus medios.

@@ -20,15 +20,15 @@ const scenes = {
   2: {
     kicker: 'PISTA 02 · EL MAPA',
     title: 'La hora se une<br><em>al lugar.</em>',
-    share: 'La ubicación queda unida a la hora y al mensaje. Un punto se convierte en un mapa; el mapa empieza a dibujar una rutina.',
-    review: 'Quitaste la ubicación y el trayecto no se cierra. Esa decisión cambia la historia. La intimidad no debería depender de que vivas escondiéndote.',
+    share: 'La ubicación se cruza con la hora. El punto rojo avanza por el mapa y empieza a dibujar una rutina.',
+    review: 'Quitaste una pista. El mapa pierde precisión. La intimidad no debería depender de que vivas escondiéndote.',
     next: 'Seguir la última pista'
   },
   3: {
     kicker: 'PISTA 03 · EL LÍMITE',
-    title: 'Alguien conoce<br><em>tu rutina.</em>',
-    share: 'En este caso ficticio, alguien cruza el límite: interfiere en tu vida privada y tus mensajes. Esa invasión es la razón por la que el derecho importa.',
-    review: 'En este caso ficticio, alguien intenta cruzar el límite. Revisar una foto puede ayudar; no convierte en tu responsabilidad impedir toda invasión.',
+    title: 'El rastro llega<br><em>a tu puerta.</em>',
+    share: 'En este caso ficticio, alguien reconstruye tu rutina y se acerca a tu hogar. Esa invasión de la vida privada es grave: nadie tiene derecho a cruzar ese límite arbitrariamente.',
+    review: 'En este caso ficticio, quitar la ubicación reduce una pista, pero no garantiza protección total. Si alguien invade tu vida privada, la responsabilidad es de quien cruza el límite.',
     next: 'Descubrir qué te protege'
   }
 };
@@ -106,8 +106,8 @@ function restart() {
   choices.hidden = false;
   continueButton.hidden = true;
   sceneKicker.textContent = 'PISTA 01 · LA FOTO';
-  sceneTitle.innerHTML = 'Una foto parece simple.<br><em>Hasta que no lo es.</em>';
-  sceneBody.textContent = 'El caso es ficticio. Una foto puede revelar más por lo que aparece alrededor que por lo que querías enseñar. ¿Qué harías antes de publicarla?';
+  sceneTitle.innerHTML = 'A las 20:41,<br><em>subes la foto.</em>';
+  sceneBody.textContent = 'El caso es ficticio. La imagen muestra una hora, una calle y una ventana encendida. ¿Qué harías antes de compartirla?';
   choices.querySelectorAll('.choice').forEach((button) => button.setAttribute('aria-pressed', 'false'));
   document.querySelectorAll('.clue-hotspot').forEach((button) => button.setAttribute('aria-expanded', 'false'));
   cluesFound.clear();
@@ -155,8 +155,8 @@ document.querySelectorAll('.choice').forEach((button) => {
 continueButton.addEventListener('click', showNextScene);
 document.querySelector('#restart-story').addEventListener('click', restart);
 
-// Real CC0 ambience is loaded only after an explicit tap. A brighter Web Audio layer
-// is kept as a fallback for browsers that cannot decode Ogg Vorbis.
+// Start the licensed track directly in the tap handler. This keeps the browser's
+// user-gesture permission attached to playback on iOS and Android.
 const soundToggle = document.querySelector('#sound-toggle');
 const heroSoundToggle = document.querySelector('#sound-toggle-hero');
 const soundLabel = document.querySelector('#sound-label');
@@ -164,20 +164,35 @@ const soundState = document.querySelector('#sound-state');
 const heroSoundLabel = document.querySelector('#hero-sound-label');
 const heroSoundState = document.querySelector('#hero-sound-state');
 const soundHint = document.querySelector('.sound-prompt__hint');
-const licensedAmbience = window.Howl ? new window.Howl({
-  src: ['assets/audio/ambiente-cavernas.ogg'],
-  format: ['ogg'],
-  volume: 0.72,
-  loop: true,
-  preload: false,
-  html5: true
-}) : null;
+const licensedAmbience = new Audio('assets/audio/ambiente-cavernas.ogg');
+licensedAmbience.loop = true;
+licensedAmbience.preload = 'none';
+licensedAmbience.volume = 0.72;
 let ambientOn = false;
 let audioContext = null;
 let soundMaster = null;
 let fallbackVoices = [];
 let activeAudioMode = 'none';
 let audioPending = false;
+let audioRequest = 0;
+
+function updateSoundControls({ active, pending = false, mode = 'none' }) {
+  ambientOn = active;
+  audioPending = pending;
+  activeAudioMode = mode;
+  const label = pending ? 'Cargando ambiente' : active ? 'Apagar ambiente' : 'Activar ambiente';
+  const heroLabel = pending ? 'Cargando ambiente' : active ? 'Apagar ambiente' : 'Escuchar con ambiente';
+  const state = pending ? '…' : active ? 'ON' : 'OFF';
+  soundLabel.textContent = label;
+  soundState.textContent = state;
+  heroSoundLabel.textContent = heroLabel;
+  heroSoundState.textContent = state;
+  soundToggle.setAttribute('aria-label', active ? 'Apagar ambiente sonoro' : 'Activar ambiente sonoro');
+  heroSoundToggle.setAttribute('aria-label', active ? 'Apagar ambiente sonoro' : 'Activar ambiente sonoro');
+  soundToggle.setAttribute('aria-pressed', String(active));
+  heroSoundToggle.setAttribute('aria-pressed', String(active));
+  opening.classList.toggle('is-audio-on', active);
+}
 
 function createFallbackAmbience() {
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -221,75 +236,67 @@ function createFallbackAmbience() {
   return true;
 }
 
-async function turnSoundOn() {
-  if (ambientOn || audioPending) return;
-  audioPending = true;
-  soundState.textContent = '…';
-  soundLabel.textContent = 'Cargando audio';
+function startSynthFallback() {
   try {
-    if (!licensedAmbience) throw new Error('Howler no está disponible.');
-    const started = new Promise((resolve, reject) => {
-      const timeout = window.setTimeout(() => reject(new Error('El audio tardó demasiado en cargar.')), 9000);
-      licensedAmbience.once('play', () => { clearTimeout(timeout); resolve(); });
-      licensedAmbience.once('playerror', (_id, error) => { clearTimeout(timeout); reject(error); });
-      licensedAmbience.once('loaderror', (_id, error) => { clearTimeout(timeout); reject(error); });
+    if (!createFallbackAmbience()) throw new Error('No hay API de audio disponible.');
+    return audioContext.resume().then(() => {
+      soundMaster.gain.cancelScheduledValues(audioContext.currentTime);
+      soundMaster.gain.setTargetAtTime(0.42, audioContext.currentTime, 0.8);
+      updateSoundControls({ active: true, mode: 'synthesized-fallback' });
+      soundHint.textContent = 'Ambiente activo · puedes apagarlo arriba cuando quieras.';
+      announce('audio', { active: true, mode: 'synthesized-fallback' });
     });
-    licensedAmbience.play();
-    await started;
-    activeAudioMode = 'licensed-track';
-    ambientOn = true;
-    audioPending = false;
-    soundLabel.textContent = 'Apagar ambiente';
-    soundState.textContent = 'ON';
-    soundToggle.setAttribute('aria-label', 'Apagar ambiente sonoro');
-    soundToggle.setAttribute('aria-pressed', 'true');
-    heroSoundLabel.textContent = 'Apagar ambiente';
-    heroSoundState.textContent = 'ON';
-    heroSoundToggle.setAttribute('aria-label', 'Apagar ambiente sonoro');
-    heroSoundToggle.setAttribute('aria-pressed', 'true');
-    soundHint.textContent = 'Ambiente activo · auriculares opcionales · toca arriba para apagar.';
-    opening.classList.add('is-audio-on');
-    announce('audio', { active: true, mode: 'licensed-track' });
-    return;
-  } catch (error) {
-    licensedAmbience?.stop();
-    try {
-      if (!createFallbackAmbience()) throw new Error('No hay API de audio disponible.');
-      await audioContext.resume();
-    } catch (fallbackError) {
-      soundLabel.textContent = 'Audio no disponible';
-      soundState.textContent = 'ERROR';
-      heroSoundLabel.textContent = 'Audio no disponible';
-      heroSoundState.textContent = 'ERROR';
-      audioPending = false;
-      soundToggle.setAttribute('aria-label', 'Audio no disponible');
-      heroSoundToggle.setAttribute('aria-label', 'Audio no disponible');
-      soundHint.textContent = 'Este navegador no permite reproducir el ambiente. La historia sigue disponible.';
-      return;
-    }
-    soundMaster.gain.setTargetAtTime(0.42, audioContext.currentTime, 0.8);
-    activeAudioMode = 'synthesized-fallback';
-    ambientOn = true;
-    audioPending = false;
-    soundLabel.textContent = 'Apagar ambiente';
-    soundState.textContent = 'ON';
-    soundToggle.setAttribute('aria-label', 'Apagar ambiente sonoro');
-    soundToggle.setAttribute('aria-pressed', 'true');
-    heroSoundLabel.textContent = 'Apagar ambiente';
-    heroSoundState.textContent = 'ON';
-    heroSoundToggle.setAttribute('aria-label', 'Apagar ambiente sonoro');
-    heroSoundToggle.setAttribute('aria-pressed', 'true');
-    soundHint.textContent = 'Ambiente sintetizado activo · auriculares opcionales · toca arriba para apagar.';
-    opening.classList.add('is-audio-on');
-    announce('audio', { active: true, mode: 'synthesized-fallback' });
+  } catch {
+    return Promise.reject(new Error('Audio no disponible'));
   }
 }
 
-async function turnSoundOff() {
-  if (activeAudioMode === 'licensed-track') {
-    licensedAmbience?.stop();
+function turnSoundOn() {
+  if (ambientOn || audioPending) return;
+  const request = ++audioRequest;
+  updateSoundControls({ active: false, pending: true });
+
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (AudioContextClass) {
+    try {
+      audioContext = audioContext || new AudioContextClass();
+      // Unlock Web Audio while the trusted tap is still active. This is also the
+      // reliable fallback when a mobile browser cannot decode the OGG soundtrack.
+      audioContext.resume().catch(() => {});
+    } catch {}
   }
+
+  // Call play() before awaiting anything; mobile Safari requires the call to stay
+  // inside the original tap/click. A failed codec or network request gets a synth bed.
+  const playback = licensedAmbience.play();
+  if (!playback || typeof playback.then !== 'function') {
+    updateSoundControls({ active: true, mode: 'licensed-track' });
+    soundHint.textContent = 'Ambiente activo · puedes apagarlo arriba cuando quieras.';
+    announce('audio', { active: true, mode: 'licensed-track' });
+    return;
+  }
+  playback.then(() => {
+    if (request !== audioRequest) return;
+    updateSoundControls({ active: true, mode: 'licensed-track' });
+    soundHint.textContent = 'Ambiente activo · puedes apagarlo arriba cuando quieras.';
+    announce('audio', { active: true, mode: 'licensed-track' });
+  }).catch(() => {
+    if (request !== audioRequest) return;
+    licensedAmbience.pause();
+    startSynthFallback().catch(() => {
+      updateSoundControls({ active: false });
+      soundState.textContent = heroSoundState.textContent = 'ERROR';
+      soundHint.textContent = 'El navegador bloqueó el audio. Toca de nuevo para reintentar; puedes continuar sin sonido.';
+    });
+  });
+}
+
+function turnSoundOff() {
+  audioRequest += 1;
+  licensedAmbience.pause();
+  licensedAmbience.currentTime = 0;
   if (audioContext && soundMaster) {
+    soundMaster.gain.cancelScheduledValues(audioContext.currentTime);
     soundMaster.gain.setTargetAtTime(0.0001, audioContext.currentTime, 0.18);
     window.setTimeout(() => {
       if (!ambientOn) {
@@ -299,37 +306,26 @@ async function turnSoundOff() {
       }
     }, 900);
   }
-  ambientOn = false;
-  audioPending = false;
-  activeAudioMode = 'none';
-  soundLabel.textContent = 'Activar ambiente';
-  soundState.textContent = 'OFF';
-  soundToggle.setAttribute('aria-label', 'Activar ambiente sonoro');
-  soundToggle.setAttribute('aria-pressed', 'false');
-  heroSoundLabel.textContent = 'Escuchar con ambiente';
-  heroSoundState.textContent = 'OFF';
-  heroSoundToggle.setAttribute('aria-label', 'Activar ambiente sonoro');
-  heroSoundToggle.setAttribute('aria-pressed', 'false');
-  soundHint.textContent = 'Pulsa «Activar ambiente» arriba para escuchar la banda sonora. Es opcional y puedes apagarla.';
-  opening.classList.remove('is-audio-on');
+  updateSoundControls({ active: false });
+  soundHint.textContent = 'El sonido es opcional. Actívalo cuando quieras desde aquí o desde el control superior.';
   announce('audio', { active: false });
 }
 
 soundToggle.addEventListener('click', () => {
-  if (ambientOn) turnSoundOff();
+  if (ambientOn || audioPending) turnSoundOff();
   else turnSoundOn();
 });
 heroSoundToggle.addEventListener('click', () => {
-  if (ambientOn) turnSoundOff();
+  if (ambientOn || audioPending) turnSoundOff();
   else turnSoundOn();
 });
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && ambientOn) {
-    if (activeAudioMode === 'licensed-track') licensedAmbience?.pause();
+    if (activeAudioMode === 'licensed-track') licensedAmbience.pause();
     if (activeAudioMode === 'synthesized-fallback') audioContext?.suspend();
   } else if (!document.hidden && ambientOn) {
-    if (activeAudioMode === 'licensed-track' && licensedAmbience?.state() === 'loaded' && !licensedAmbience.playing()) licensedAmbience.play();
+    if (activeAudioMode === 'licensed-track' && licensedAmbience.paused) licensedAmbience.play().catch(() => turnSoundOff());
     if (activeAudioMode === 'synthesized-fallback') audioContext?.resume();
   }
 });
