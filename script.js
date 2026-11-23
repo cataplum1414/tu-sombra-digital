@@ -568,6 +568,7 @@ document.querySelector('#restart-story').addEventListener('click', restart);
 document.querySelector('#share-ending').addEventListener('click', async () => {
   const title = localized('Tu sombra digital · Artículo 12', 'Your Digital Shadow · Article 12');
   const url = new URL(window.location.href);
+  url.searchParams.set('preview', 'articulo-12-cartografo');
   url.hash = 'derecho';
   const text = localized(
     `El artículo 12 de la Declaración Universal de los Derechos Humanos protege tu vida privada, tu domicilio y tus comunicaciones frente a injerencias arbitrarias. ${shareSummary.textContent} Conoce la historia sobre el derecho a la intimidad.`,
