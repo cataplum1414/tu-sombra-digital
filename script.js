@@ -580,8 +580,8 @@ sceneHotspots.addEventListener('click', (event) => {
       playFootsteps(0.58);
     }
   } else if (hotspot.id === 'phone') {
-    navigator.vibrate?.(14);
-    playMessageAlert();
+    navigator.vibrate?.([65, 35, 110]);
+    playPhoneVibration();
   } else if (hotspot.id === 'landmark') {
     navigator.vibrate?.(14);
     playFootsteps(0.58);
@@ -694,6 +694,7 @@ storyMusic.volume = 0.2;
 let ambientOn = false;
 let soundscapeDuckTimer = 0;
 let activeSoundEffect = null;
+let phoneVibrationAudioContext = null;
 let ambienceTargetVolume = 0.24;
 let musicTargetVolume = 0.2;
 const audioFadeFrames = new WeakMap();
@@ -702,7 +703,6 @@ const soundEffects = {
   camera: 'assets/audio/camera-shutter.mp3',
   doorCreak: 'assets/audio/door-creak.mp3',
   footsteps: 'assets/audio/wet-pavement-steps.mp3',
-  message: 'assets/audio/message-alert.mp3',
   cafeDoorbell: 'assets/audio/cafe-doorbell.mp3',
   coffeeCup: 'assets/audio/coffee-cup-setdown.mp3',
   cartographerLaugh: 'assets/audio/cartographer-laugh.mp3',
@@ -882,8 +882,60 @@ function playDoorCreak() {
   playSoundEffect('doorCreak', 0.66);
 }
 
-function playMessageAlert() {
-  playSoundEffect('message', 0.64);
+function playPhoneVibration() {
+  duckSoundscapeFor(900);
+  if (activeSoundEffect) {
+    activeSoundEffect.pause();
+    activeSoundEffect.currentTime = 0;
+    activeSoundEffect = null;
+  }
+
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+
+  try {
+    if (!phoneVibrationAudioContext) phoneVibrationAudioContext = new AudioContextClass();
+    const context = phoneVibrationAudioContext;
+    if (context.state === 'suspended') context.resume().catch(() => {});
+
+    const output = context.createGain();
+    output.gain.value = 0.2;
+    output.connect(context.destination);
+    const start = context.currentTime + 0.01;
+
+    [[0, 0.16], [0.27, 0.21]].forEach(([offset, duration]) => {
+      const pulseStart = start + offset;
+      const pulseEnd = pulseStart + duration;
+      const motor = context.createOscillator();
+      const rattle = context.createOscillator();
+      const filter = context.createBiquadFilter();
+      const envelope = context.createGain();
+
+      motor.type = 'sawtooth';
+      motor.frequency.value = 142;
+      rattle.type = 'triangle';
+      rattle.frequency.value = 196;
+      filter.type = 'lowpass';
+      filter.frequency.value = 520;
+      envelope.gain.setValueAtTime(0.0001, pulseStart);
+      envelope.gain.linearRampToValueAtTime(0.68, pulseStart + 0.022);
+      envelope.gain.setValueAtTime(0.68, pulseEnd - 0.035);
+      envelope.gain.linearRampToValueAtTime(0.0001, pulseEnd);
+
+      motor.connect(filter);
+      rattle.connect(filter);
+      filter.connect(envelope);
+      envelope.connect(output);
+      motor.start(pulseStart);
+      rattle.start(pulseStart);
+      motor.stop(pulseEnd + 0.01);
+      rattle.stop(pulseEnd + 0.01);
+    });
+
+    window.setTimeout(() => output.disconnect(), 850);
+  } catch {
+    navigator.vibrate?.([65, 35, 110]);
+  }
 }
 
 function playCafeDoorbell() {

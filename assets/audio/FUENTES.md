@@ -1,6 +1,6 @@
 # Fuentes y mapa sonoro
 
-La música y los efectos se integran en la historia, no se ofrecen como archivos independientes. La base musical se usa bajo la [licencia gratuita de música de Mixkit](https://mixkit.co/license/modal/musicFree/); los efectos se usan bajo la [licencia gratuita de efectos de Mixkit](https://mixkit.co/license/modal/sfxFree/).
+La música y los efectos descargados se integran en la historia, no se ofrecen como archivos independientes. La música usa la [licencia gratuita de Mixkit](https://mixkit.co/license/modal/musicFree/); los efectos descargados, su [licencia gratuita de efectos](https://mixkit.co/license/modal/sfxFree/). La vibración del móvil se genera en el navegador con Web Audio y no usa un archivo externo.
 
 | Archivo | Uso dentro de la historia | Fuente |
 | --- | --- | --- |
@@ -13,7 +13,7 @@ La música y los efectos se integran en la historia, no se ofrecen como archivos
 | `wet-pavement-steps.mp3` | La protagonista cruza la plaza o vuelve sobre sus pasos; el Cartógrafo se mueve o se aleja por la calle mojada | [Footsteps on heels on the pavement](https://mixkit.co/free-sound-effects/footsteps/) |
 | `cartographer-laugh.mp3` | Risa breve del Cartógrafo al tocar su figura en Calle Mayor y el reflejo | [Troll warrior laugh](https://mixkit.co/free-sound-effects/laugh/) |
 | `cartographer-breath.mp3` | Respiración áspera al tocar la figura quieta frente al portal | [Creepy demon heavy breathing](https://mixkit.co/free-sound-effects/voices/) |
-| `message-alert.mp3` | Solo al tocar el móvil cuando llega o se consulta el mensaje amenazante | [Message pop alert](https://mixkit.co/free-sound-effects/notification/) |
+| Sonido de vibración del móvil | Dos zumbidos cortos, generados con Web Audio, al tocar el móvil. En Android también activa la vibración física cuando el navegador lo permite. | Generado en el proyecto; sin archivo externo. |
 | `cafe-doorbell.mp3` | La protagonista se acerca a la entrada iluminada de la cafetería en Plaza de Cervantes | [Modern classic door bell sound](https://mixkit.co/free-sound-effects/doors/) |
 | `coffee-cup-setdown.mp3` | Paula desliza y deja la taza sobre la mesa | [Dish placed in a wood table](https://mixkit.co/free-sound-effects/kitchen/) |
 | `door-creak.mp3` | El picaporte cede y la puerta del portal se abre unos centímetros; vuelve a sonar si decide entrar | [Creaky door open](https://mixkit.co/free-sound-effects/doors/) |
