@@ -20,6 +20,7 @@ Experiencia interactiva de suspense sobre el artículo 12 de la Declaración Uni
 - `motion.js`: transiciones visuales.
 - `assets/story/`: imágenes WebP de las escenas.
 - `assets/audio/`: ambientes y efectos de sonido. Consulta `assets/audio/FUENTES.md` para créditos y licencias.
+- `assets/justif/`: Justif 0.9.2 y patrones de división de palabras en español; consulta su atribución y licencias en `assets/justif/README.md`.
 - `CREDITOS.md`: música, licencias y referencias visuales.
 
 ## Publicación

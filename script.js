@@ -1,3 +1,6 @@
+import { justify } from './assets/justif/dist/index.js';
+import { hyphenateEs } from './assets/justif/dist/hyphenate/es.js';
+
 const opening = document.querySelector('.opening');
 const story = document.querySelector('.story');
 const reveal = document.querySelector('.reveal');
@@ -22,6 +25,16 @@ const shareSummary = document.querySelector('#share-summary');
 const shareStatus = document.querySelector('#share-status');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const scrollBehavior = reduceMotion ? 'auto' : 'smooth';
+let textLayoutController;
+
+function applyTextLayout() {
+  textLayoutController?.destroy();
+  const paragraphs = [...document.querySelectorAll('.copy-justify')]
+    .filter((paragraph) => paragraph.getClientRects().length > 0);
+  textLayoutController = paragraphs.length
+    ? justify(paragraphs, { hyphenate: hyphenateEs })
+    : undefined;
+}
 
 const modeNormal = document.querySelector('#mode-normal');
 const modeImmersive = document.querySelector('#mode-immersive');
@@ -208,6 +221,8 @@ function sceneValue(value) {
 }
 
 function renderScene(index) {
+  textLayoutController?.destroy();
+  textLayoutController = undefined;
   const scene = scenes[index];
   currentScene = index;
   const hotspots = sceneValue(scene.hotspots);
@@ -234,6 +249,7 @@ function renderScene(index) {
   choices.hidden = false;
   choices.classList.remove('has-selection');
   continueButton.hidden = true;
+  applyTextLayout();
   updateProgress(index + 1);
   document.querySelector('.story__soundline').innerHTML = `<i></i> EL CARTÓGRAFO · ARCHIVO 0${index + 1}`;
   window.scrollTo({ top: 0, behavior: scrollBehavior });
@@ -242,6 +258,8 @@ function renderScene(index) {
 }
 
 function renderEnding() {
+  textLayoutController?.destroy();
+  textLayoutController = undefined;
   const endedInCafe = ['share-private', 'post-cafe', 'return-light'].includes(lastDecision);
   const choseSupport = ['share-private', 'return-light'].includes(lastDecision);
   const finalImage = endedInCafe ? 'assets/story/alcala-cafe.webp' : 'assets/story/alcala-portal.webp';
@@ -288,6 +306,7 @@ function renderEnding() {
   shareStatus.textContent = '';
   story.hidden = true;
   reveal.hidden = false;
+  applyTextLayout();
   setLocation('derecho');
   announce('ending', { risk: riskScore, decision: lastDecision, decisions: [...decisions] });
   endingTitle.focus({ preventScroll: true });
@@ -336,6 +355,7 @@ function restart() {
   updateSoundtrackMood(tensionLevel);
   history.replaceState(null, '', '#inicio');
   announce('reset');
+  applyTextLayout();
   window.scrollTo({ top: 0, behavior: scrollBehavior });
   document.querySelector('#opening-title').focus({ preventScroll: true });
 }
@@ -351,6 +371,7 @@ sceneHotspots.addEventListener('click', (event) => {
   if (!hotspot) return;
   sceneClue.textContent = hotspot.response;
   sceneClue.hidden = false;
+  applyTextLayout();
   const isThreat = hotspot.id === 'cartographer';
   if (isThreat) {
     cartographerNoticed = true;
@@ -711,3 +732,7 @@ document.addEventListener('visibilitychange', () => {
     if (storyMusic.currentTime > 0) storyMusic.play().catch(() => {});
   }
 });
+
+document.querySelector('.ending__details').addEventListener('toggle', applyTextLayout);
+
+applyTextLayout();

@@ -937,3 +937,12 @@ body { background:#080606; color:#f2e8df; }
   .cinematic-story .choices { position:relative; z-index:1; }
   .cinematic-story .story__fiction-note { padding-bottom:5px; }
 }
+
+/* Spanish-aware justification keeps long copy even without wide word gaps. */
+.copy-justify {
+  text-align: justify;
+  text-align-last: left;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-wrap: normal;
+}
