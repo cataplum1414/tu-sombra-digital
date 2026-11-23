@@ -35,6 +35,7 @@ let viewMode = 'normal';
 
 let currentScene = -1;
 let riskScore = 0;
+let tensionLevel = 1;
 let lastDecision = '';
 let cartographerNoticed = false;
 let cafeEntranceRang = false;
@@ -52,7 +53,7 @@ const scenes = [
     hotspots: [
       { id: 'protagonist', label: 'La chica', x: 20, y: 45, align: 'right', response: 'El flash salta: el Cartógrafo acaba de tomar una foto desde el otro lado de Calle Mayor. La protagonista decide qué pista compartir y a quién pedir apoyo.' },
       { id: 'landmark', label: 'Casa Cervantes', x: 53, y: 46, align: 'center', response: 'Unos pasos húmedos resuenan bajo los soportales. Estás frente a la Casa Natal de Cervantes, Calle Mayor 48; la fachada puede ubicar la foto aunque no añadas una etiqueta.' },
-      { id: 'cartographer', label: 'El Cartógrafo', x: 74, y: 57, align: 'left', response: 'Lo señalas. La imagen da un salto: el encapuchado ya no está junto al farol; aparece en el reflejo, detrás de ti. Ha notado que lo viste.' }
+      { id: 'cartographer', label: 'El Cartógrafo', x: 74, y: 57, align: 'left', response: 'Lo señalas. Desde debajo de la capucha se escapa una risa breve. La imagen da un salto: ya no está junto al farol; aparece en el reflejo, detrás de ti. Ha notado que lo viste.' }
     ],
     choices: [
       { id: 'live-location', risk: 1, label: 'Subirla ahora con la ubicación en directo' },
@@ -73,7 +74,7 @@ const scenes = [
     hotspots: [
       { id: 'protagonist', label: 'La chica', x: 20, y: 45, align: 'right', response: 'Un destello cruza el cristal. Ella reconoce al Cartógrafo; no tiene que responder a quien la intimida.' },
       { id: 'phone', label: 'El móvil', x: 51, y: 72, align: 'center', response: 'El móvil vibra con otro mensaje. La hora en pantalla y el reflejo del escaparate dan pistas sobre tu rutina; nadie tuvo que hackear el teléfono.' },
-      { id: 'cartographer', label: 'El reflejo', x: 79, y: 44, align: 'left', response: 'Tocas el reflejo. Por un instante, la figura se mueve antes que tú. El cristal la devuelve demasiado cerca.' }
+      { id: 'cartographer', label: 'El reflejo', x: 79, y: 44, align: 'left', response: 'Tocas el reflejo. Su risa suena detrás de ti; en el cristal, la figura se mueve antes que tú. Está demasiado cerca.' }
     ],
     choices: [
       { id: 'reply-routine', risk: 1, label: 'Responderle y confirmar a qué hora sales' },
@@ -121,7 +122,7 @@ const scenes = [
     ] : [
       { id: 'protagonist', label: 'La chica', x: 22, y: 47, align: 'right', response: 'Retrocedes desde el portal. Puedes cambiar de rumbo, llamar a Paula y volver a la plaza iluminada.' },
       { id: 'door', label: 'El picaporte', x: 88, y: 69, align: 'left', response: 'El picaporte cede y la puerta cruje al abrirse unos centímetros. Aún puedes retroceder: entrar en un portal desconocido no te protege; la cafetería y las calles con gente siguen siendo una opción.' },
-      { id: 'cartographer', label: 'La figura', x: 65, y: 49, align: 'left', response: 'No se oye nada. El encapuchado sigue al otro lado de la calle: la amenaza está en la información que reunió, no en una capacidad mágica para leer tu móvil.' }
+      { id: 'cartographer', label: 'La figura', x: 65, y: 49, align: 'left', response: 'Una respiración áspera raspa el silencio bajo la capucha. El encapuchado sigue al otro lado de la calle: la amenaza está en la información que reunió, no en una capacidad mágica para leer tu móvil.' }
     ],
     choices: () => decisions.includes('go-cafe') ? [
       { id: 'share-private', risk: 0, label: 'Guardar la prueba y compartir tu ubicación solo con Paula' },
@@ -279,11 +280,14 @@ function goToStory() {
   opening.hidden = true;
   story.hidden = false;
   riskScore = 0;
+  tensionLevel = 1;
   lastDecision = '';
   cartographerNoticed = false;
   cafeEntranceRang = false;
   decisions.length = 0;
   story.dataset.risk = '0';
+  story.dataset.tension = '1';
+  updateSoundtrackMood(tensionLevel);
   story.classList.remove('is-revealing');
   setLocation('recorrido');
   renderScene(0);
@@ -302,13 +306,16 @@ function restart() {
   story.hidden = true;
   opening.hidden = false;
   riskScore = 0;
+  tensionLevel = 1;
   lastDecision = '';
   cartographerNoticed = false;
   cafeEntranceRang = false;
   currentScene = -1;
   decisions.length = 0;
   story.dataset.risk = '0';
+  story.dataset.tension = '1';
   story.dataset.lastDecision = '';
+  updateSoundtrackMood(tensionLevel);
   history.replaceState(null, '', '#inicio');
   announce('reset');
   window.scrollTo({ top: 0, behavior: scrollBehavior });
@@ -344,7 +351,9 @@ sceneHotspots.addEventListener('click', (event) => {
   }
   if (isThreat) {
     navigator.vibrate?.([20, 28, 42]);
-    if (currentScene !== 3 || decisions.includes('go-cafe')) playFootsteps(0.34);
+    if (currentScene <= 1) playCartographerLaugh();
+    else if (currentScene === 3 && !decisions.includes('go-cafe')) playCartographerBreath();
+    else if (currentScene !== 3 || decisions.includes('go-cafe')) playFootsteps(0.58);
   } else if (hotspot.id === 'door') {
     navigator.vibrate?.(42);
     playDoorCreak();
@@ -356,14 +365,14 @@ sceneHotspots.addEventListener('click', (event) => {
       sceneImageWrap.classList.add('is-camera-flash');
       playCameraFlash();
     } else {
-      playFootsteps(0.34);
+      playFootsteps(0.58);
     }
   } else if (hotspot.id === 'phone') {
     navigator.vibrate?.(14);
     playMessageAlert();
   } else if (hotspot.id === 'landmark') {
     navigator.vibrate?.(14);
-    playFootsteps(0.34);
+    playFootsteps(0.58);
   } else if (hotspot.id === 'friend') {
     navigator.vibrate?.(14);
     playCoffeeCup();
@@ -380,9 +389,12 @@ choices.addEventListener('click', (event) => {
   if (!button || choices.hidden) return;
   lastDecision = button.dataset.choice;
   riskScore += Number(button.dataset.risk);
+  tensionLevel = Math.max(0, Math.min(3, tensionLevel + (Number(button.dataset.risk) ? 1 : -1)));
   decisions.push(lastDecision);
   story.dataset.risk = String(riskScore);
+  story.dataset.tension = String(tensionLevel);
   story.dataset.lastDecision = lastDecision;
+  updateSoundtrackMood(tensionLevel);
   choices.querySelectorAll('[data-choice]').forEach((choice) => {
     choice.setAttribute('aria-pressed', String(choice === button));
     choice.disabled = true;
@@ -430,15 +442,25 @@ const ambienceTracks = {
   street: 'assets/audio/alcala-night-city.mp3',
   cafe: 'assets/audio/cafe-crowd.mp3'
 };
+const scoreTrack = 'assets/audio/soft-hopeful-bed.mp3';
 let currentAmbience = 'street';
 const licensedAmbience = new Audio(ambienceTracks.street);
 licensedAmbience.loop = true;
 licensedAmbience.preload = 'none';
-licensedAmbience.volume = 0.34;
+licensedAmbience.volume = 0.24;
+const storyMusic = new Audio(scoreTrack);
+storyMusic.loop = true;
+storyMusic.preload = 'none';
+storyMusic.volume = 0.2;
 let ambientOn = false;
-let ambienceDuckTimer = 0;
+let soundscapeDuckTimer = 0;
 let activeSoundEffect = null;
-let ambienceFadeFrame = 0;
+let ambienceTargetVolume = 0.24;
+let musicTargetVolume = 0.2;
+let audioContext = null;
+let tensionGain = null;
+let tensionFilter = null;
+const audioFadeFrames = new WeakMap();
 
 const soundEffects = {
   camera: 'assets/audio/camera-shutter.mp3',
@@ -446,7 +468,9 @@ const soundEffects = {
   footsteps: 'assets/audio/wet-pavement-steps.mp3',
   message: 'assets/audio/message-alert.mp3',
   cafeDoorbell: 'assets/audio/cafe-doorbell.mp3',
-  coffeeCup: 'assets/audio/coffee-cup-setdown.mp3'
+  coffeeCup: 'assets/audio/coffee-cup-setdown.mp3',
+  cartographerLaugh: 'assets/audio/cartographer-laugh.mp3',
+  cartographerBreath: 'assets/audio/cartographer-breath.mp3'
 };
 
 function setAmbientTrack(name) {
@@ -466,6 +490,7 @@ function playSoundEffect(name, volume = 0.46, delay = 0, maxDuration = 0) {
   const source = soundEffects[name];
   if (!source) return;
   const play = () => {
+    duckSoundscapeFor(['cartographerLaugh', 'cartographerBreath'].includes(name) ? 2400 : 900);
     if (activeSoundEffect) {
       activeSoundEffect.pause();
       activeSoundEffect.currentTime = 0;
@@ -492,16 +517,21 @@ function playSoundEffect(name, volume = 0.46, delay = 0, maxDuration = 0) {
 
 function updateSoundControls(active, mode = 'none') {
   ambientOn = active;
-  soundLabel.textContent = 'Ambiente';
+  soundLabel.textContent = 'Música';
   soundState.textContent = active ? 'ON' : 'OFF';
   soundToggle.setAttribute('aria-pressed', String(active));
-  soundToggle.setAttribute('aria-label', active ? 'Apagar música de ambiente; los efectos al tocar siguen activos' : 'Activar música de ambiente; los efectos al tocar siguen activos');
+  soundToggle.setAttribute('aria-label', active ? 'Apagar música y ambiente; los efectos al tocar siguen activos' : 'Activar música y ambiente; los efectos al tocar siguen activos');
   opening.classList.toggle('is-audio-on', active);
   announce('audio', { active, mode });
 }
 
 function turnSoundOn() {
   if (ambientOn) return;
+  initTensionLayer();
+  updateSoundtrackMood(tensionLevel);
+  storyMusic.volume = musicTargetVolume;
+  storyMusic.play().catch(() => {});
+  audioContext?.resume().catch(() => {});
   const playback = licensedAmbience.play();
   if (!playback?.then) {
     updateSoundControls(true, 'licensed-track');
@@ -516,60 +546,122 @@ function turnSoundOn() {
 }
 
 function turnSoundOff() {
-  window.cancelAnimationFrame(ambienceFadeFrame);
-  window.clearTimeout(ambienceDuckTimer);
+  window.clearTimeout(soundscapeDuckTimer);
+  cancelAudioFade(licensedAmbience);
+  cancelAudioFade(storyMusic);
   licensedAmbience.pause();
+  storyMusic.pause();
   licensedAmbience.currentTime = 0;
-  licensedAmbience.volume = 0.34;
+  storyMusic.currentTime = 0;
+  licensedAmbience.volume = ambienceTargetVolume;
+  storyMusic.volume = musicTargetVolume;
+  audioContext?.suspend().catch(() => {});
   updateSoundControls(false);
 }
 
-function duckAmbienceFor(milliseconds, level = 0.24) {
-  if (licensedAmbience.paused) return;
-  fadeAmbienceTo(level, 120);
-  window.clearTimeout(ambienceDuckTimer);
-  ambienceDuckTimer = window.setTimeout(() => {
-    if (ambientOn && !licensedAmbience.paused) fadeAmbienceTo(0.34, 320);
-  }, milliseconds);
+function cancelAudioFade(audio) {
+  const frame = audioFadeFrames.get(audio);
+  if (frame) window.cancelAnimationFrame(frame);
+  audioFadeFrames.delete(audio);
 }
 
-function fadeAmbienceTo(target, duration) {
-  window.cancelAnimationFrame(ambienceFadeFrame);
-  const startVolume = licensedAmbience.volume;
+function fadeAudioTo(audio, target, duration = 700) {
+  cancelAudioFade(audio);
+  const startVolume = audio.volume;
   const startedAt = performance.now();
   const step = (now) => {
     const progress = Math.min((now - startedAt) / duration, 1);
-    licensedAmbience.volume = startVolume + (target - startVolume) * progress;
-    if (progress < 1) ambienceFadeFrame = window.requestAnimationFrame(step);
+    audio.volume = startVolume + (target - startVolume) * progress;
+    if (progress < 1) audioFadeFrames.set(audio, window.requestAnimationFrame(step));
+    else audioFadeFrames.delete(audio);
   };
-  ambienceFadeFrame = window.requestAnimationFrame(step);
+  audioFadeFrames.set(audio, window.requestAnimationFrame(step));
+}
+
+function initTensionLayer() {
+  if (audioContext || !(window.AudioContext || window.webkitAudioContext)) return;
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  audioContext = new AudioContextClass();
+  tensionFilter = audioContext.createBiquadFilter();
+  tensionFilter.type = 'lowpass';
+  tensionFilter.frequency.value = 240;
+  tensionFilter.Q.value = 0.7;
+  tensionGain = audioContext.createGain();
+  tensionGain.gain.value = 0;
+  tensionFilter.connect(tensionGain);
+  tensionGain.connect(audioContext.destination);
+
+  [[55, 'sine', 0.32], [58.27, 'sine', 0.16], [110, 'triangle', 0.12], [116.54, 'triangle', 0.08]]
+    .forEach(([frequency, type, volume]) => {
+      const oscillator = audioContext.createOscillator();
+      const oscillatorGain = audioContext.createGain();
+      oscillator.type = type;
+      oscillator.frequency.value = frequency;
+      oscillatorGain.gain.value = volume;
+      oscillator.connect(oscillatorGain);
+      oscillatorGain.connect(tensionFilter);
+      oscillator.start();
+    });
+}
+
+function updateSoundtrackMood(level) {
+  const intensity = Math.max(0, Math.min(3, Number(level) || 0));
+  musicTargetVolume = [0.2, 0.16, 0.12, 0.085][intensity];
+  if (storyMusic) {
+    if (ambientOn && !storyMusic.paused) fadeAudioTo(storyMusic, musicTargetVolume, 1500);
+    else storyMusic.volume = musicTargetVolume;
+  }
+  if (tensionGain && audioContext) {
+    const gainTarget = [0, 0.018, 0.045, 0.075][intensity];
+    tensionGain.gain.setTargetAtTime(gainTarget, audioContext.currentTime, 1.4);
+    tensionFilter.frequency.setTargetAtTime(240 + intensity * 105, audioContext.currentTime, 1.6);
+  }
+}
+
+function duckSoundscapeFor(milliseconds = 900) {
+  if (!ambientOn) return;
+  fadeAudioTo(licensedAmbience, ambienceTargetVolume * 0.26, 80);
+  fadeAudioTo(storyMusic, musicTargetVolume * 0.18, 80);
+  if (tensionGain && audioContext) tensionGain.gain.setTargetAtTime(0.008, audioContext.currentTime, 0.08);
+  window.clearTimeout(soundscapeDuckTimer);
+  soundscapeDuckTimer = window.setTimeout(() => {
+    if (!ambientOn) return;
+    if (!licensedAmbience.paused) fadeAudioTo(licensedAmbience, ambienceTargetVolume, 600);
+    if (!storyMusic.paused) fadeAudioTo(storyMusic, musicTargetVolume, 600);
+    updateSoundtrackMood(tensionLevel);
+  }, milliseconds);
 }
 
 function playCameraFlash(volume = 0.55) {
-  duckAmbienceFor(350, 0.2);
   playSoundEffect('camera', volume);
 }
 
-function playFootsteps(volume = 0.4) {
-  duckAmbienceFor(900, 0.2);
+function playFootsteps(volume = 0.62) {
   playSoundEffect('footsteps', volume);
 }
 
 function playDoorCreak() {
-  duckAmbienceFor(900, 0.18);
-  playSoundEffect('doorCreak', 0.48);
+  playSoundEffect('doorCreak', 0.66);
 }
 
 function playMessageAlert() {
-  playSoundEffect('message', 0.38);
+  playSoundEffect('message', 0.64);
 }
 
 function playCafeDoorbell() {
-  playSoundEffect('cafeDoorbell', 0.42);
+  playSoundEffect('cafeDoorbell', 0.62);
 }
 
 function playCoffeeCup() {
-  playSoundEffect('coffeeCup', 0.36);
+  playSoundEffect('coffeeCup', 0.62);
+}
+
+function playCartographerLaugh() {
+  playSoundEffect('cartographerLaugh', 0.58);
+}
+
+function playCartographerBreath() {
+  playSoundEffect('cartographerBreath', 0.64);
 }
 
 function toggleSoundFromControl() {
@@ -586,7 +678,11 @@ soundToggle.addEventListener('click', toggleSoundFromControl);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && ambientOn) {
     licensedAmbience.pause();
+    storyMusic.pause();
+    audioContext?.suspend().catch(() => {});
   } else if (!document.hidden && ambientOn) {
     if (licensedAmbience.currentTime > 0) licensedAmbience.play().catch(() => turnSoundOff());
+    if (storyMusic.currentTime > 0) storyMusic.play().catch(() => {});
+    audioContext?.resume().catch(() => {});
   }
 });

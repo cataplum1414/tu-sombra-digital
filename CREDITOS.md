@@ -2,8 +2,8 @@
 
 ## Música y efectos
 
-- La ambientación cambia de una calle urbana mojada a un café con gente según la escena; la música de ambiente puede apagarse.
-- Cada sonido sigue la acción: obturador al capturar una imagen, pasos sobre calle mojada al avanzar o seguir a la protagonista, campanilla y voces al entrar en el café, taza en la mesa junto a Paula y puerta al tocar el picaporte. El final mantiene el ambiente del lugar en vez de añadir un pulso de terror genérico.
+- La ambientación cambia de una calle urbana mojada a un café con gente según la escena. Una base suave de [Forest Mist Whispers, de Alejandro Magaña (A. M.)](https://mixkit.co/free-stock-music/mood/calm/) suena con mayor claridad cuando las decisiones reducen el riesgo; una capa de tonos graves generada con Web Audio añade tensión cuando aumenta.
+- Cada efecto sigue la acción: obturador al capturar una imagen, pasos sobre calle mojada al avanzar o seguir a la protagonista, risa del Cartógrafo cuando aparece o se acerca en los primeros encuentros, campanilla y voces al entrar en el café, taza en la mesa junto a Paula y puerta al tocar el picaporte. La mezcla baja la música y el ambiente durante cada efecto.
 - Los efectos al tocar siguen activos aunque se apague la música. Las fuentes y los términos de la licencia están en [`assets/audio/FUENTES.md`](assets/audio/FUENTES.md).
 
 ## Escenas fotográficas
