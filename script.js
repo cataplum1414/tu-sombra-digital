@@ -183,9 +183,7 @@ function renderScene(index) {
   sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash');
   sceneHotspots.classList.remove('is-disturbed', 'is-door-touched');
   sceneHotspots.innerHTML = scene.hotspots.map((hotspot) => `
-    <button class="story__hotspot story__hotspot--${hotspot.align}" type="button" data-hotspot="${hotspot.id}" style="left:${hotspot.x}%;top:${hotspot.y}%" aria-controls="scene-clue" aria-pressed="false" aria-label="Explorar: ${hotspot.label}">
-      <span class="story__hotspot-marker" aria-hidden="true">+</span><span class="story__hotspot-label">${hotspot.label}</span>
-    </button>`).join('');
+    <button class="story__hotspot story__hotspot--${hotspot.id}" type="button" data-hotspot="${hotspot.id}" style="left:${hotspot.x}%;top:${hotspot.y}%" aria-controls="scene-clue" aria-label="Tocar: ${hotspot.label}"></button>`).join('');
   choicePrompt.textContent = scene.prompt;
   choices.innerHTML = scene.choices.map((choice, choiceIndex) => `
     <button class="choice ${choice.risk ? 'choice--danger' : 'choice--safe'}" type="button" data-choice="${choice.id}" data-risk="${choice.risk}" aria-pressed="false">
@@ -277,10 +275,9 @@ document.querySelector('#start-story').addEventListener('click', () => {
 });
 sceneHotspots.addEventListener('click', (event) => {
   const button = event.target.closest('[data-hotspot]');
-  if (!button || button.getAttribute('aria-pressed') === 'true') return;
+  if (!button) return;
   const hotspot = scenes[currentScene]?.hotspots.find((item) => item.id === button.dataset.hotspot);
   if (!hotspot) return;
-  button.setAttribute('aria-pressed', 'true');
   sceneClue.textContent = hotspot.response;
   sceneClue.hidden = false;
   const isThreat = hotspot.id === 'cartographer';
@@ -302,19 +299,19 @@ sceneHotspots.addEventListener('click', (event) => {
   }
   if (isThreat) {
     navigator.vibrate?.([24, 32, 52]);
-    if (ambientOn) playMacabreLaugh();
+    playMacabreLaugh();
   } else if (hotspot.id === 'door') {
     navigator.vibrate?.(42);
-    if (ambientOn) playDoorKnock();
+    playDoorKnock();
   } else if (hotspot.id === 'protagonist' || hotspot.id === 'phone') {
     navigator.vibrate?.(18);
     sceneImageWrap.classList.remove('is-camera-flash');
     void sceneImageWrap.offsetWidth;
     sceneImageWrap.classList.add('is-camera-flash');
-    if (ambientOn) playCameraFlash();
+    playCameraFlash();
   } else if (hotspot.id === 'landmark') {
     navigator.vibrate?.(14);
-    if (ambientOn) playLocationPing();
+    playLocationPing();
   }
   announce('hotspot', { id: hotspot.id, scene: currentScene + 1, threat: isThreat });
 });
@@ -376,11 +373,10 @@ let fallbackVoices = [];
 
 function updateSoundControls(active, mode = 'none') {
   ambientOn = active;
-  const label = active ? 'Silenciar' : 'Audio';
-  soundLabel.textContent = label;
+  soundLabel.textContent = 'Ambiente';
   soundState.textContent = active ? 'ON' : 'OFF';
   soundToggle.setAttribute('aria-pressed', String(active));
-  soundToggle.setAttribute('aria-label', active ? 'Silenciar música y efectos de sonido' : 'Activar música y efectos de sonido');
+  soundToggle.setAttribute('aria-label', active ? 'Apagar música de ambiente; los efectos al tocar siguen activos' : 'Activar música de ambiente; los efectos al tocar siguen activos');
   opening.classList.toggle('is-audio-on', active);
   announce('audio', { active, mode });
 }
@@ -521,7 +517,6 @@ function makeNoiseBuffer(context, seconds) {
 }
 
 function playCameraFlash() {
-  if (!ambientOn) return;
   const context = getSoundContext();
   if (!context) return;
   duckAmbienceFor(420, 0.25);
@@ -555,7 +550,6 @@ function playCameraFlash() {
 }
 
 function playLocationPing() {
-  if (!ambientOn) return;
   const context = getSoundContext();
   if (!context) return;
   const now = context.currentTime;
@@ -574,7 +568,6 @@ function playLocationPing() {
 }
 
 function playMacabreLaugh() {
-  if (!ambientOn) return;
   const context = getSoundContext();
   if (!context) return;
   duckAmbienceFor(1450, 0.14);
@@ -634,7 +627,6 @@ function playMacabreLaugh() {
 }
 
 function playDoorKnock() {
-  if (!ambientOn) return;
   const context = getSoundContext();
   if (!context) return;
   duckAmbienceFor(900, 0.2);
