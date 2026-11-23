@@ -1,29 +1,27 @@
 # Tu sombra digital
 
-Experiencia interactiva de suspense sobre el artículo 12 de la Declaración Universal de los Derechos Humanos. La historia ficticia ocurre de noche en Alcalá de Henares y explora cómo publicaciones, horarios y ubicaciones pueden exponer la intimidad.
+Experiencia interactiva de suspense sobre el artículo 12 de la Declaración Universal de los Derechos Humanos. La historia ficticia transcurre de noche en Alcalá de Henares y muestra cómo una foto, una hora y una rutina pueden revelar la intimidad.
 
 ## Recorrido
 
-- La persona toma tres decisiones consecutivas que cambian el riesgo y el destino narrativo.
-- Cada escena ofrece puntos tocables: la protagonista, el móvil, la puerta y el Cartógrafo revelan pistas; tocar al Cartógrafo desencadena un salto de imagen y cambia el siguiente encuentro.
-- Al entrar desde el botón de inicio comienza la banda sonora CC0. El obturador, la risa distorsionada y los golpes de puerta son efectos sintetizados en el navegador y se pueden silenciar.
-- La ruta nombra lugares concretos: Casa Natal de Cervantes (Calle Mayor 48), Cardenal Sandoval y Rojas junto a la Puerta de Madrid, y Plaza de Cervantes. Las escenas son recreaciones ficticias.
-- Hay desenlaces distintos según el rastro compartido y la respuesta ante una persona desconocida.
-- El final presenta una explicación breve del artículo 12 y un botón para compartirla. Los consejos y el texto oficial completo quedan desplegables para no interrumpir el cierre.
-- Todos los desenlaces mantienen recomendaciones prácticas de privacidad y el enlace a ATLAS ONU.
-- La música es opcional y solo empieza tras una acción explícita. La historia no solicita permisos de cámara o ubicación ni guarda elecciones.
-- Las escenas fotográficas son recreaciones generadas para la ficción; no son pruebas documentales.
+- Cuatro decisiones cambian el rumbo y el desenlace.
+- La historia avanza desde la Casa Natal de Cervantes, en Calle Mayor, hasta Plaza de Cervantes; la ruta de riesgo continúa hacia Sandoval y Rojas.
+- La tercera escena ocurre en Plaza de Cervantes: primero se ve la cafetería desde fuera; entrar lleva al interior y tomar el atajo lleva a un portal de Cardenal Sandoval y Rojas.
+- Los personajes y objetos de cada fotografía son zonas táctiles invisibles: cada toque repite su sonido y vibración compatible con el dispositivo.
+- La música de ambiente es opcional. Los sonidos de interacción se oyen aunque la música esté apagada.
+- La historia no solicita permisos de cámara o ubicación ni guarda elecciones. Las fotografías son recreaciones ficticias, no pruebas documentales.
+- El final resume el artículo 12, ofrece consejos breves de privacidad y enlaza el texto oficial y ATLAS ONU.
 
 ## Archivos
 
-- `index.html`: texto, escenas, artículo 12, consejos y referencias.
-- `styles.css`: dirección visual de thriller y adaptación a móvil, horizontal y movimiento reducido.
-- `script.js`: sonido, decisiones, cambios de escena y desenlaces.
-- `motion.js`: transiciones fotográficas y respuesta visual a las decisiones.
-- `assets/story/`: imágenes fotográficas optimizadas en WebP.
-- `assets/audio/ambiente-cavernas.ogg`: loop de ambiente CC0 que se carga al pedir sonido.
-- `CREDITOS.md`: atribución musical, licencia y referencias de diseño.
+- `index.html`: portada, escenas y contenido sobre el derecho.
+- `styles.css`: dirección visual y adaptación a pantallas pequeñas.
+- `script.js`: decisiones, escenas, efectos de audio y desenlaces.
+- `motion.js`: transiciones visuales.
+- `assets/story/`: imágenes WebP de las escenas.
+- `assets/audio/`: ambientes y efectos de sonido. Consulta `assets/audio/FUENTES.md` para créditos y licencias.
+- `CREDITOS.md`: música, licencias y referencias visuales.
 
 ## Publicación
 
-El sitio es estático y se publica con GitHub Pages desde la rama `main` y la carpeta raíz. El QR del cartel debe apuntar a la URL pública del proyecto, no a una ruta local del ordenador.
+El sitio es estático y se publica con GitHub Pages desde `main` y la raíz del repositorio. El QR del cartel debe apuntar a la URL pública, no a una ruta local.

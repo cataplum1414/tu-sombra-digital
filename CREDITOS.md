@@ -1,18 +1,14 @@
 ﻿# Créditos de medios y recursos
 
-## Ambiente sonoro
+## Música y efectos
 
-- **Ancient caverns (horror ambient loop)**, de congusbongus, publicada en OpenGameArt bajo **CC0 1.0**.
-- Fuente: https://opengameart.org/content/ancient-caverns-horror-ambient-loop
-- Registro de procedencia: https://github.com/euuuuuuan/moonshard-warden-public/blob/main/CREDITS.md
-- Licencia CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
-- Archivo incluido: `assets/audio/ambiente-cavernas.ogg` · SHA-256: `5c841ef1a7bacd2a038801ecee0741e200d1cf1cd08f36a6a89cce95bcfb6a8a`
-- La pista empieza tras una acción del usuario (Entrar en la historia o tocar un control de audio). Si el navegador no puede decodificarla, se intenta activar una atmósfera sintetizada de respaldo.
-- Al tocar «Entrar en la historia» se inicia el ambiente desde esa acción del usuario. El obturador y destello, la risa distorsionada del Cartógrafo y los golpes de puerta se sintetizan con Web Audio en el navegador; no dependen de muestras externas. Se pueden apagar con el control de audio.
+- La ambientación cambia de una calle urbana mojada a un café con gente según la escena; la música de ambiente puede apagarse.
+- El obturador marca los momentos de vigilancia; las alertas, los pasos, los golpes de puerta, el ambiente de calle y cafetería y el pulso final son grabaciones integradas desde Mixkit. Se retiró la risa de monstruo para mantener el tono realista de la historia.
+- Los efectos al tocar siguen activos aunque se apague la música. Las fuentes y los términos de la licencia están en [`assets/audio/FUENTES.md`](assets/audio/FUENTES.md).
 
 ## Escenas fotográficas
 
-- `assets/story/cartografo-portada.webp`, `cartografo-horizontal.webp`, `alcala-night.webp`, `alcala-reflection.webp`, `alcala-portal.webp` y `alcala-cafe.webp` son imágenes creadas con ImageGen para esta ficción interactiva. La portada presenta al Cartógrafo encapuchado en primer plano y tiene encuadres separados para móvil vertical y apaisado.
+- `assets/story/cartografo-portada.webp`, `cartografo-horizontal.webp`, `alcala-night.webp`, `alcala-reflection.webp`, `alcala-plaza-exterior.webp`, `alcala-portal.webp` y `alcala-cafe.webp` son imágenes creadas con ImageGen para esta ficción interactiva. La tercera escena muestra la plaza y la entrada de la cafetería desde fuera; al entrar, la historia pasa al interior.
 - En la portada, un movimiento lento de cámara y dos pequeños tirones de imagen sugieren una presencia que observa; se desactivan si el dispositivo solicita movimiento reducido.
 - Son recreaciones visuales ambientadas en Alcalá de Henares; no son fotografías documentales ni representan hechos o personas reales. La página lo indica junto a la historia.
 - Las imágenes se guardan en el propio repositorio para cargar desde GitHub Pages sin depender de un servicio externo.

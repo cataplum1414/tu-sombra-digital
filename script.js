@@ -37,7 +37,6 @@ let currentScene = -1;
 let riskScore = 0;
 let lastDecision = '';
 let cartographerNoticed = false;
-let doorTapped = false;
 let soundOptedOut = false;
 const decisions = [];
 
@@ -46,17 +45,17 @@ const scenes = [
     image: 'assets/story/alcala-night.webp',
     place: 'CALLE MAYOR · CASA CERVANTES',
     kicker: 'CALLE MAYOR · 23:17',
-    title: 'Ya es pública.',
-    body: 'Casa Natal de Cervantes, Calle Mayor 48. La foto ya revela dónde y cuándo.',
-    prompt: '¿La publicas con ubicación?',
+    title: 'Estás a punto de publicarla.',
+    body: '23:17. Estás frente a la Casa Natal de Cervantes, en Calle Mayor 48. La fachada y la hora podrían revelar dónde estás, aunque no escribas la dirección.',
+    prompt: '¿Qué haces antes de subir la foto?',
     hotspots: [
       { id: 'protagonist', label: 'La chica', x: 20, y: 45, align: 'right', response: 'El flash salta: el Cartógrafo acaba de tomar una foto desde el otro lado de Calle Mayor. La protagonista decide qué pista compartir y a quién pedir apoyo.' },
       { id: 'landmark', label: 'Casa Cervantes', x: 53, y: 46, align: 'center', response: 'Estás en el casco histórico, frente a la Casa Natal de Cervantes, en Calle Mayor 48. La fachada de una foto puede revelar el lugar aunque no añadas una etiqueta.' },
       { id: 'cartographer', label: 'El Cartógrafo', x: 74, y: 57, align: 'left', response: 'Lo señalas. La imagen da un salto: el encapuchado ya no está junto al farol; aparece en el reflejo, detrás de ti. Ha notado que lo viste.' }
     ],
     choices: [
-      { id: 'live-location', risk: 1, label: 'Publicarla ahora con la ubicación' },
-      { id: 'remove-location', risk: 0, label: 'Quitar la ubicación y esperar a mañana' }
+      { id: 'live-location', risk: 1, label: 'Subirla ahora con la ubicación en directo' },
+      { id: 'remove-location', risk: 0, label: 'Quitar la ubicación y publicarla mañana' }
     ]
   },
   {
@@ -67,7 +66,7 @@ const scenes = [
     body: () => cartographerNoticed
         ? 'Después de señalarlo, reaparece en el cristal de un edificio de Calle Mayor, mucho más cerca. Llega: «Sé por dónde vuelves».'
       : riskScore
-        ? 'La hora y la ubicación apuntan a Calle Mayor. Frente a la Casa Natal llega un mensaje: «Sé por dónde vuelves».'
+        ? 'Publicaste la hora y la ubicación en directo. Frente a la Casa Natal llega un mensaje: «Sé por dónde vuelves».'
         : 'Quitaste la etiqueta, pero la fachada y la hora siguen dando pistas. Frente a la Casa Natal llega: «Sé por dónde vuelves».',
     prompt: 'El Cartógrafo quiere confirmar tu rutina. ¿Qué haces?',
     hotspots: [
@@ -81,22 +80,54 @@ const scenes = [
     ]
   },
   {
-    image: 'assets/story/alcala-portal.webp',
-    place: 'SANDOVAL Y ROJAS · PUERTA DE MADRID',
-    kicker: 'RUMBO A PUERTA DE MADRID · 23:41',
-    title: 'La ciudad se queda en silencio.',
-    body: () => riskScore > 1
-      ? 'Varias pistas te han llevado de Calle Mayor a Sandoval y Rojas. Ya distingues la Puerta de Madrid; llega otro mensaje: «Vas hacia la muralla».'
-      : 'En Sandoval y Rojas, junto a la Puerta de Madrid, la figura sigue al otro lado. El café abierto de Plaza de Cervantes ofrece un lugar atendido.',
-    prompt: 'Tienes una última decisión. ¿Hacia dónde vas?',
+    image: 'assets/story/alcala-plaza-exterior.webp',
+    ambience: 'street',
+    place: 'PLAZA DE CERVANTES · CAFETERÍA ABIERTA',
+    kicker: 'PLAZA DE CERVANTES · 23:32',
+    title: 'La luz sigue encendida.',
+    body: () => decisions.includes('block-save')
+      ? 'Cruzas desde Calle Mayor hasta Plaza de Cervantes. Paula contesta: «Estoy llegando; quédate donde haya gente». La cafetería sigue abierta. Bajo los soportales, al otro lado de la plaza, espera el encapuchado.'
+      : 'Llegas a Plaza de Cervantes. Junto a la estatua de Cervantes ves una cafetería iluminada, con gente dentro. No has avisado a nadie. El mensaje vuelve a encender la pantalla: «Te vi junto a la Casa de Cervantes».',
+    prompt: () => decisions.includes('block-save')
+      ? 'Paula viene hacia la cafetería. ¿Esperas dentro o tomas el atajo?'
+      : 'La cafetería está abierta. ¿Pides ayuda o tomas el atajo?',
     hotspots: [
-      { id: 'protagonist', label: 'La chica', x: 23, y: 46, align: 'right', response: 'El flash ilumina el pomo. Ella decide no entrar sola y avisar a alguien de confianza.' },
-      { id: 'door', label: 'El picaporte', x: 87, y: 68, align: 'left', response: 'Tocas el pomo. No cede. Un portal identifica un domicilio: no publiques la entrada ni te quedes ahí si no te sientes segura.' },
-      { id: 'cartographer', label: 'El Cartógrafo', x: 64, y: 48, align: 'left', response: 'Lo tocas en la pantalla. El encapuchado avanza hasta el borde de la luz; la figura sigue siendo ficción, pero la pista que le diste era real.' }
+      { id: 'cafe', label: 'La cafetería', x: 21, y: 57, align: 'right', response: 'La puerta abierta deja salir luz y voces. Dentro hay gente; puedes pedir ayuda sin entregar tus contraseñas ni publicar tu ubicación.' },
+      { id: 'protagonist', label: 'La chica', x: 52, y: 75, align: 'center', response: 'Aún estás en la plaza. Puedes entrar donde hay gente, llamar a Paula y decidir con calma qué compartir.' },
+      { id: 'cartographer', label: 'La figura', x: 75, y: 56, align: 'left', response: 'Bajo los soportales, la figura parece estar mirando hacia ti. Cuando la luz de la plaza parpadea, ya no está junto a la farola.' }
     ],
-    choices: [
-      { id: 'take-shortcut', risk: 1, label: 'Ir sola al portal por la calle vacía' },
-      { id: 'go-cafe', risk: 0, label: 'Entrar al café abierto y llamar a alguien de confianza' }
+    choices: () => [
+      { id: 'go-cafe', risk: 0, label: decisions.includes('block-save') ? 'Entrar y esperar a Paula con gente alrededor' : 'Entrar y escribir a Paula para que venga' },
+      { id: 'take-shortcut', risk: 1, label: 'Salir sola por Cardenal Sandoval y Rojas para despistarlo' }
+    ]
+  },
+  {
+    image: () => decisions.includes('go-cafe') ? 'assets/story/alcala-cafe.webp' : 'assets/story/alcala-portal.webp',
+    ambience: () => decisions.includes('go-cafe') ? 'cafe' : 'street',
+    place: () => decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES · DENTRO DEL CAFÉ' : 'CARDENAL SANDOVAL Y ROJAS · UN PORTAL',
+    kicker: () => decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES · 23:38' : 'SANDOVAL Y ROJAS · 23:41',
+    title: () => decisions.includes('go-cafe') ? 'No estás sola.' : 'El atajo termina en una puerta.',
+    body: () => decisions.includes('go-cafe')
+      ? 'Entras en la cafetería que viste desde la Plaza de Cervantes. Paula llega y te hace un sitio; detrás del cristal, la calle sigue mojada. Te pide que compartas tu ubicación solo con ella mientras vuelve a casa.'
+      : 'Dejas atrás la Plaza de Cervantes y tomas la calle Cardenal Sandoval y Rojas. El portal está entornado; la luz del zaguán no alcanza la acera. La hora y la ruta de la publicación bastaron para que el Cartógrafo pareciera conocer tu rutina. Aún puedes volver a la plaza iluminada.',
+    prompt: () => decisions.includes('go-cafe')
+      ? 'Llega una última notificación. ¿Qué compartes ahora?'
+      : '¿Qué haces al llegar al portal?',
+    hotspots: () => decisions.includes('go-cafe') ? [
+      { id: 'friend', label: 'Paula', x: 60, y: 58, align: 'right', response: 'Paula deja el teléfono boca abajo y se queda contigo. Pedir apoyo no requiere entregar todas tus cuentas: basta con contar lo que pasó y qué necesitas.' },
+      { id: 'phone', label: 'La notificación', x: 28, y: 84, align: 'left', response: 'El mensaje exige saber dónde estás. No contestar y guardar una captura conserva una prueba sin abrir otro dato privado.' },
+      { id: 'cartographer', label: 'El cristal', x: 88, y: 45, align: 'left', response: 'Afuera solo queda la calle mojada. La amenaza no convierte en culpable a quien compartió una foto: la responsabilidad de invadir la intimidad es de quien lo hace.' }
+    ] : [
+      { id: 'protagonist', label: 'La chica', x: 22, y: 47, align: 'right', response: 'Se detiene antes de tocar el portal. Puede cambiar de rumbo, llamar a Paula y volver a la plaza iluminada.' },
+      { id: 'door', label: 'El picaporte', x: 88, y: 69, align: 'left', response: 'El metal está frío. Entrar en un portal desconocido no te protege; la cafetería y las calles con gente siguen siendo una opción.' },
+      { id: 'cartographer', label: 'La figura', x: 65, y: 49, align: 'left', response: 'El encapuchado no cruza la calle. El peligro de la escena es la información que reunió, no una capacidad mágica para leer tu móvil.' }
+    ],
+    choices: () => decisions.includes('go-cafe') ? [
+      { id: 'share-private', risk: 0, label: 'Guardar la prueba y compartir tu ubicación solo con Paula' },
+      { id: 'post-cafe', risk: 1, label: 'Subir otra story en directo mostrando el café' }
+    ] : [
+      { id: 'return-light', risk: 0, label: 'Volver a la plaza y llamar a Paula desde la cafetería' },
+      { id: 'open-portal', risk: 1, label: 'Entrar sola en el portal para esconderte' }
     ]
   }
 ];
@@ -167,25 +198,32 @@ window.addEventListener('orientationchange', syncRotationGuide, { passive: true 
 screen.orientation?.addEventListener?.('change', syncRotationGuide);
 
 function updateProgress(number) {
-  progressNumber.textContent = `DECISIÓN ${number} DE 3`;
+  progressNumber.textContent = `DECISIÓN ${number} DE ${scenes.length}`;
+}
+
+function sceneValue(value) {
+  return typeof value === 'function' ? value() : value;
 }
 
 function renderScene(index) {
   const scene = scenes[index];
   currentScene = index;
-  sceneImage.src = scene.image;
-  sceneKicker.textContent = scene.kicker;
-  scenePlace.textContent = scene.place;
-  sceneTitle.textContent = scene.title;
-  sceneBody.textContent = typeof scene.body === 'function' ? scene.body() : scene.body;
+  const hotspots = sceneValue(scene.hotspots);
+  const sceneChoices = sceneValue(scene.choices);
+  sceneImage.src = sceneValue(scene.image);
+  setAmbientTrack(sceneValue(scene.ambience) || 'street');
+  sceneKicker.textContent = sceneValue(scene.kicker);
+  scenePlace.textContent = sceneValue(scene.place);
+  sceneTitle.textContent = sceneValue(scene.title);
+  sceneBody.textContent = sceneValue(scene.body);
   sceneClue.hidden = true;
   sceneClue.textContent = '';
   sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash');
   sceneHotspots.classList.remove('is-disturbed', 'is-door-touched');
-  sceneHotspots.innerHTML = scene.hotspots.map((hotspot) => `
+  sceneHotspots.innerHTML = hotspots.map((hotspot) => `
     <button class="story__hotspot story__hotspot--${hotspot.id}" type="button" data-hotspot="${hotspot.id}" style="left:${hotspot.x}%;top:${hotspot.y}%" aria-controls="scene-clue" aria-label="Tocar: ${hotspot.label}"></button>`).join('');
-  choicePrompt.textContent = scene.prompt;
-  choices.innerHTML = scene.choices.map((choice, choiceIndex) => `
+  choicePrompt.textContent = sceneValue(scene.prompt);
+  choices.innerHTML = sceneChoices.map((choice, choiceIndex) => `
     <button class="choice ${choice.risk ? 'choice--danger' : 'choice--safe'}" type="button" data-choice="${choice.id}" data-risk="${choice.risk}" aria-pressed="false">
       <span class="choice__mark" aria-hidden="true">${String.fromCharCode(65 + choiceIndex)}</span>
       <span>${choice.label}</span>
@@ -202,23 +240,30 @@ function renderScene(index) {
 }
 
 function renderEnding() {
-  const choseSupport = lastDecision === 'go-cafe';
-  const finalImage = choseSupport ? 'assets/story/alcala-cafe.webp' : 'assets/story/alcala-portal.webp';
+  const endedInCafe = ['share-private', 'post-cafe', 'return-light'].includes(lastDecision);
+  const choseSupport = ['share-private', 'return-light'].includes(lastDecision);
+  const finalImage = endedInCafe ? 'assets/story/alcala-cafe.webp' : 'assets/story/alcala-portal.webp';
+  setAmbientTrack(endedInCafe ? 'cafe' : 'street');
   endingBackdrop.style.backgroundImage = `url("${finalImage}")`;
-  endingKicker.textContent = choseSupport ? 'PLAZA DE CERVANTES · 23:48' : 'CARDENAL SANDOVAL Y ROJAS · 23:48';
-  endingTitle.innerHTML = choseSupport ? 'No llegaste<br><em>sola.</em>' : 'El rastro<br><em>llegó a tu puerta.</em>';
-  endingOutcome.textContent = riskScore === 0
-    ? 'Quitaste la ubicación, no confirmaste tu horario y pediste compañía. Cerraste varias pistas. Tu intimidad merece respeto en cualquier final.'
-    : riskScore === 1
-      ? choseSupport
-        ? 'Una pista quedó expuesta. Entrar a un lugar atendido y avisar a alguien frenó el rastro. Nada de esto te hace responsable de una invasión.'
-        : 'Una pista bastó para acercar al Cartógrafo. Publicar jamás autoriza a seguirte; la invasión es responsabilidad de quien la comete.'
+  endingKicker.textContent = endedInCafe ? 'PLAZA DE CERVANTES · CAFÉ · 23:48' : 'CARDENAL SANDOVAL Y ROJAS · 23:48';
+  endingTitle.innerHTML = lastDecision === 'post-cafe'
+    ? 'La foto<br><em>reabre el rastro.</em>'
+    : lastDecision === 'return-light'
+      ? 'Volviste<br><em>a la luz.</em>'
       : choseSupport
-        ? 'El Cartógrafo unió hora, lugar y rutina. Cambiaste el destino y pediste apoyo. Compartir nunca justifica que invadan tu intimidad.'
-        : 'El Cartógrafo unió hora, lugar y rutina. Esto es ficción: ninguna publicación da permiso para vigilarte.';
-  if (doorTapped) endingOutcome.textContent = `${endingOutcome.textContent} La puerta no cedió; pedir apoyo seguía siendo una opción.`;
+        ? 'No llegaste<br><em>sola.</em>'
+        : 'El rastro<br><em>llegó a la puerta.</em>';
+  endingOutcome.textContent = lastDecision === 'post-cafe'
+    ? 'La nueva story enseña el café y la hora en directo. La exposición aumentó, pero eso nunca convierte la vigilancia en culpa de quien publica: la responsabilidad de invadir tu intimidad es de quien lo hace.'
+    : lastDecision === 'open-portal'
+      ? 'Abrir un portal desconocido no te habría protegido. Puedes pedir ayuda y volver a un lugar atendido. Seguirte sigue siendo responsabilidad del Cartógrafo, no tuya.'
+      : riskScore === 0
+        ? 'Quitaste la ubicación, no confirmaste tu horario, entraste en un lugar con gente y avisaste a Paula en privado. Cerraste varias pistas; el derecho a la intimidad merece protección en cualquier final.'
+        : choseSupport
+          ? 'Una pista quedó expuesta. Cambiaste de rumbo y buscaste compañía. Compartir una foto nunca da permiso para vigilarte: la responsabilidad es de quien invade la intimidad.'
+          : 'El Cartógrafo reunió hora, lugar y rutina. Esto es ficción: publicar no autoriza a nadie a seguirte ni convierte en culpable a quien comparte una foto.';
   shareSummary.textContent = choseSupport
-    ? 'Elegí apoyo en Plaza de Cervantes. La intimidad también es libertad.'
+    ? 'Elegí pedir apoyo en Alcalá. La intimidad también es libertad.'
     : 'Mi ruta llegó al portal. La intimidad también es libertad.';
   shareStatus.textContent = '';
   story.hidden = true;
@@ -235,7 +280,6 @@ function goToStory() {
   riskScore = 0;
   lastDecision = '';
   cartographerNoticed = false;
-  doorTapped = false;
   decisions.length = 0;
   story.dataset.risk = '0';
   story.classList.remove('is-revealing');
@@ -258,7 +302,6 @@ function restart() {
   riskScore = 0;
   lastDecision = '';
   cartographerNoticed = false;
-  doorTapped = false;
   currentScene = -1;
   decisions.length = 0;
   story.dataset.risk = '0';
@@ -276,7 +319,7 @@ document.querySelector('#start-story').addEventListener('click', () => {
 sceneHotspots.addEventListener('click', (event) => {
   const button = event.target.closest('[data-hotspot]');
   if (!button) return;
-  const hotspot = scenes[currentScene]?.hotspots.find((item) => item.id === button.dataset.hotspot);
+  const hotspot = sceneValue(scenes[currentScene]?.hotspots)?.find((item) => item.id === button.dataset.hotspot);
   if (!hotspot) return;
   sceneClue.textContent = hotspot.response;
   sceneClue.hidden = false;
@@ -290,7 +333,6 @@ sceneHotspots.addEventListener('click', (event) => {
     sceneHotspots.classList.add('is-disturbed');
   }
   if (hotspot.id === 'door') {
-    doorTapped = true;
     sceneImageWrap.classList.remove('is-door-touched');
     sceneHotspots.classList.remove('is-door-touched');
     void sceneImageWrap.offsetWidth;
@@ -299,19 +341,28 @@ sceneHotspots.addEventListener('click', (event) => {
   }
   if (isThreat) {
     navigator.vibrate?.([24, 32, 52]);
-    playMacabreLaugh();
+    playCameraFlash(0.38);
   } else if (hotspot.id === 'door') {
     navigator.vibrate?.(42);
     playDoorKnock();
-  } else if (hotspot.id === 'protagonist' || hotspot.id === 'phone') {
+  } else if (hotspot.id === 'protagonist') {
     navigator.vibrate?.(18);
     sceneImageWrap.classList.remove('is-camera-flash');
     void sceneImageWrap.offsetWidth;
     sceneImageWrap.classList.add('is-camera-flash');
     playCameraFlash();
+  } else if (hotspot.id === 'phone') {
+    navigator.vibrate?.(14);
+    playMessageAlert();
   } else if (hotspot.id === 'landmark') {
     navigator.vibrate?.(14);
     playLocationPing();
+  } else if (hotspot.id === 'friend') {
+    navigator.vibrate?.(14);
+    playCafeClink();
+  } else if (hotspot.id === 'cafe') {
+    navigator.vibrate?.(14);
+    playCafeClink();
   }
   announce('hotspot', { id: hotspot.id, scene: currentScene + 1, threat: isThreat });
 });
@@ -332,7 +383,11 @@ choices.addEventListener('click', (event) => {
   continueButton.hidden = false;
   continueLabel.textContent = currentScene === scenes.length - 1 ? 'Ver cómo termina' : 'Continuar';
   announce('choice', { choice: lastDecision, risk: riskScore, scene: currentScene + 1 });
-  navigator.vibrate?.(lastDecision === 'take-shortcut' ? [35, 45, 70] : 24);
+  navigator.vibrate?.(Number(button.dataset.risk) ? [35, 45, 70] : 24);
+  if (['live-location', 'reply-routine', 'share-private'].includes(lastDecision)) playMessageAlert();
+  else if (['take-shortcut', 'return-light'].includes(lastDecision)) playFootsteps();
+  else if (['block-save', 'post-cafe'].includes(lastDecision)) playCameraFlash();
+  else if (lastDecision === 'open-portal') playDoorCreak();
 });
 continueButton.addEventListener('click', showNextScene);
 document.querySelector('#restart-story').addEventListener('click', restart);
@@ -362,14 +417,70 @@ document.querySelector('#share-ending').addEventListener('click', async () => {
 const soundToggle = document.querySelector('#sound-toggle');
 const soundLabel = document.querySelector('#sound-label');
 const soundState = document.querySelector('#sound-state');
-const licensedAmbience = new Audio('assets/audio/ambiente-cavernas.ogg');
+const ambienceTracks = {
+  street: 'assets/audio/alcala-night-city.mp3',
+  cafe: 'assets/audio/cafe-crowd.mp3'
+};
+let currentAmbience = 'street';
+const licensedAmbience = new Audio(ambienceTracks.street);
 licensedAmbience.loop = true;
 licensedAmbience.preload = 'none';
-licensedAmbience.volume = 0.72;
+licensedAmbience.volume = 0.34;
 let ambientOn = false;
-let audioContext = null;
-let soundMaster = null;
-let fallbackVoices = [];
+let ambienceDuckTimer = 0;
+let activeSoundEffect = null;
+let ambienceFadeFrame = 0;
+
+const soundEffects = {
+  camera: 'assets/audio/camera-shutter.mp3',
+  doorKnock: 'assets/audio/door-knock.mp3',
+  doorCreak: 'assets/audio/door-creak.mp3',
+  footsteps: 'assets/audio/wet-pavement-steps.mp3',
+  message: 'assets/audio/message-alert.mp3',
+  cafe: 'assets/audio/cafe-glass-clink.mp3',
+  heartbeat: 'assets/audio/ending-heartbeat.mp3'
+};
+
+function setAmbientTrack(name) {
+  const nextName = name in ambienceTracks ? name : 'street';
+  if (currentAmbience === nextName) return;
+  const resume = ambientOn && !licensedAmbience.paused;
+  licensedAmbience.pause();
+  currentAmbience = nextName;
+  licensedAmbience.src = ambienceTracks[nextName];
+  if (resume) {
+    licensedAmbience.load();
+    licensedAmbience.play().catch(() => turnSoundOff());
+  }
+}
+
+function playSoundEffect(name, volume = 0.46, delay = 0, maxDuration = 0) {
+  const source = soundEffects[name];
+  if (!source) return;
+  const play = () => {
+    if (activeSoundEffect) {
+      activeSoundEffect.pause();
+      activeSoundEffect.currentTime = 0;
+    }
+    const effect = new Audio(source);
+    effect.volume = volume;
+    activeSoundEffect = effect;
+    effect.addEventListener('ended', () => {
+      if (activeSoundEffect === effect) activeSoundEffect = null;
+    }, { once: true });
+    if (maxDuration) window.setTimeout(() => {
+      if (activeSoundEffect === effect) {
+        effect.pause();
+        activeSoundEffect = null;
+      }
+    }, maxDuration);
+    effect.play().catch(() => {
+      if (activeSoundEffect === effect) activeSoundEffect = null;
+    });
+  };
+  if (delay) window.setTimeout(play, delay);
+  else play();
+}
 
 function updateSoundControls(active, mode = 'none') {
   ambientOn = active;
@@ -381,271 +492,85 @@ function updateSoundControls(active, mode = 'none') {
   announce('audio', { active, mode });
 }
 
-function startSynthFallback() {
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return Promise.reject(new Error('Audio no disponible'));
-  audioContext = audioContext || new AudioContextClass();
-  soundMaster = audioContext.createGain();
-  soundMaster.gain.value = 0.0001;
-  soundMaster.connect(audioContext.destination);
-  [[55, 'sine', 0.12], [82.4, 'triangle', 0.035], [110, 'sine', 0.02]].forEach(([frequency, type, volume]) => {
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    oscillator.type = type;
-    oscillator.frequency.value = frequency;
-    gain.gain.value = volume;
-    oscillator.connect(gain);
-    gain.connect(soundMaster);
-    oscillator.start();
-    fallbackVoices.push(oscillator);
-  });
-  return audioContext.resume().then(() => {
-    soundMaster.gain.setTargetAtTime(0.52, audioContext.currentTime, 0.65);
-    updateSoundControls(true, 'synthesized-fallback');
-  });
-}
-
 function turnSoundOn() {
   if (ambientOn) return;
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (AudioContextClass) {
-    try {
-      audioContext = audioContext || new AudioContextClass();
-      audioContext.resume().catch(() => {});
-    } catch {}
-  }
   const playback = licensedAmbience.play();
   if (!playback?.then) {
     updateSoundControls(true, 'licensed-track');
     return;
   }
   playback.then(() => updateSoundControls(true, 'licensed-track'))
-    .catch(() => startSynthFallback().catch(() => {
+    .catch(() => {
       soundLabel.textContent = 'Reintentar';
       soundState.textContent = 'OFF';
-      soundToggle.setAttribute('aria-label', 'No se pudo iniciar el audio. Toca para reintentar.');
-    }));
+      soundToggle.setAttribute('aria-label', 'No se pudo iniciar la música de ambiente. Toca para reintentar. Los efectos al tocar siguen activos.');
+    });
 }
 
 function turnSoundOff() {
+  window.cancelAnimationFrame(ambienceFadeFrame);
+  window.clearTimeout(ambienceDuckTimer);
   licensedAmbience.pause();
   licensedAmbience.currentTime = 0;
-  licensedAmbience.volume = 0.72;
-  if (audioContext && soundMaster) {
-    soundMaster.gain.setTargetAtTime(0.0001, audioContext.currentTime, 0.18);
-    window.setTimeout(() => {
-      if (ambientOn) return;
-      fallbackVoices.forEach((voice) => { try { voice.stop(); } catch {} });
-      fallbackVoices = [];
-      audioContext.suspend();
-    }, 900);
-  }
+  licensedAmbience.volume = 0.34;
   updateSoundControls(false);
 }
 
 function playEndingImpact() {
-  if (!ambientOn) return;
-  const savedVolume = licensedAmbience.volume;
-  if (licensedAmbience.paused === false) licensedAmbience.volume = 0.07;
-  window.setTimeout(() => {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) return;
-    audioContext = audioContext || new AudioContextClass();
-    audioContext.resume().then(() => {
-      const now = audioContext.currentTime;
-      const oscillator = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      const noise = audioContext.createBufferSource();
-      const filter = audioContext.createBiquadFilter();
-      const noiseGain = audioContext.createGain();
-      const buffer = audioContext.createBuffer(1, Math.ceil(audioContext.sampleRate * 0.32), audioContext.sampleRate);
-      const samples = buffer.getChannelData(0);
-      for (let index = 0; index < samples.length; index += 1) samples[index] = (Math.random() * 2 - 1) * (1 - index / samples.length);
-      noise.buffer = buffer;
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(550, now);
-      filter.frequency.exponentialRampToValueAtTime(90, now + 0.26);
-      noiseGain.gain.setValueAtTime(0.0001, now);
-      noiseGain.gain.linearRampToValueAtTime(0.2, now + 0.01);
-      noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-      noise.connect(filter);
-      filter.connect(noiseGain);
-      noiseGain.connect(audioContext.destination);
-      oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(132, now);
-      oscillator.frequency.exponentialRampToValueAtTime(42, now + 0.31);
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.linearRampToValueAtTime(0.32, now + 0.012);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.46);
-      oscillator.connect(gain);
-      gain.connect(audioContext.destination);
-      noise.start(now);
-      oscillator.start(now);
-      noise.stop(now + 0.32);
-      oscillator.stop(now + 0.48);
-      window.setTimeout(() => {
-        if (ambientOn && licensedAmbience.paused === false) licensedAmbience.volume = savedVolume;
-      }, 650);
-    }).catch(() => {});
-  }, 320);
+  playSoundEffect('heartbeat', 0.4, 0, 3600);
 }
 
-function getSoundContext() {
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return null;
-  audioContext = audioContext || new AudioContextClass();
-  if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
-  return audioContext;
-}
-
-function duckAmbienceFor(milliseconds, level = 0.16) {
+function duckAmbienceFor(milliseconds, level = 0.24) {
   if (licensedAmbience.paused) return;
-  licensedAmbience.volume = Math.min(licensedAmbience.volume, level);
-  window.setTimeout(() => {
-    if (ambientOn && !licensedAmbience.paused) licensedAmbience.volume = 0.72;
+  fadeAmbienceTo(level, 120);
+  window.clearTimeout(ambienceDuckTimer);
+  ambienceDuckTimer = window.setTimeout(() => {
+    if (ambientOn && !licensedAmbience.paused) fadeAmbienceTo(0.34, 320);
   }, milliseconds);
 }
 
-function makeNoiseBuffer(context, seconds) {
-  const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * seconds), context.sampleRate);
-  const samples = buffer.getChannelData(0);
-  for (let index = 0; index < samples.length; index += 1) {
-    const fade = 1 - index / samples.length;
-    samples[index] = (Math.random() * 2 - 1) * fade;
-  }
-  return buffer;
+function fadeAmbienceTo(target, duration) {
+  window.cancelAnimationFrame(ambienceFadeFrame);
+  const startVolume = licensedAmbience.volume;
+  const startedAt = performance.now();
+  const step = (now) => {
+    const progress = Math.min((now - startedAt) / duration, 1);
+    licensedAmbience.volume = startVolume + (target - startVolume) * progress;
+    if (progress < 1) ambienceFadeFrame = window.requestAnimationFrame(step);
+  };
+  ambienceFadeFrame = window.requestAnimationFrame(step);
 }
 
-function playCameraFlash() {
-  const context = getSoundContext();
-  if (!context) return;
-  duckAmbienceFor(420, 0.25);
-  const now = context.currentTime;
-  const noise = context.createBufferSource();
-  const highPass = context.createBiquadFilter();
-  const hissGain = context.createGain();
-  noise.buffer = makeNoiseBuffer(context, 0.12);
-  highPass.type = 'highpass';
-  highPass.frequency.setValueAtTime(1250, now);
-  hissGain.gain.setValueAtTime(0.0001, now);
-  hissGain.gain.linearRampToValueAtTime(0.22, now + 0.004);
-  hissGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.11);
-  noise.connect(highPass);
-  highPass.connect(hissGain);
-  hissGain.connect(context.destination);
-  noise.start(now);
-  noise.stop(now + 0.12);
-
-  const click = context.createOscillator();
-  const clickGain = context.createGain();
-  click.type = 'square';
-  click.frequency.setValueAtTime(1850, now);
-  click.frequency.exponentialRampToValueAtTime(520, now + 0.035);
-  clickGain.gain.setValueAtTime(0.055, now);
-  clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
-  click.connect(clickGain);
-  clickGain.connect(context.destination);
-  click.start(now);
-  click.stop(now + 0.05);
+function playCameraFlash(volume = 0.55) {
+  duckAmbienceFor(350, 0.2);
+  playSoundEffect('camera', volume);
 }
 
 function playLocationPing() {
-  const context = getSoundContext();
-  if (!context) return;
-  const now = context.currentTime;
-  const ping = context.createOscillator();
-  const gain = context.createGain();
-  ping.type = 'sine';
-  ping.frequency.setValueAtTime(690, now);
-  ping.frequency.exponentialRampToValueAtTime(430, now + 0.28);
-  gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.linearRampToValueAtTime(0.075, now + 0.015);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
-  ping.connect(gain);
-  gain.connect(context.destination);
-  ping.start(now);
-  ping.stop(now + 0.35);
-}
-
-function playMacabreLaugh() {
-  const context = getSoundContext();
-  if (!context) return;
-  duckAmbienceFor(1450, 0.14);
-  const now = context.currentTime;
-  const voice = context.createOscillator();
-  const formant = context.createBiquadFilter();
-  const voiceGain = context.createGain();
-  const breath = context.createBufferSource();
-  const breathFormant = context.createBiquadFilter();
-  const breathGain = context.createGain();
-  const delay = context.createDelay(0.35);
-  const echoGain = context.createGain();
-  voice.type = 'sawtooth';
-  formant.type = 'bandpass';
-  formant.Q.setValueAtTime(2.2, now);
-  breath.buffer = makeNoiseBuffer(context, 0.92);
-  breathFormant.type = 'bandpass';
-  breathFormant.Q.setValueAtTime(0.9, now);
-  delay.delayTime.setValueAtTime(0.21, now);
-  echoGain.gain.setValueAtTime(0.16, now);
-  voice.connect(formant);
-  formant.connect(voiceGain);
-  voiceGain.connect(context.destination);
-  voiceGain.connect(delay);
-  delay.connect(echoGain);
-  echoGain.connect(context.destination);
-  breath.connect(breathFormant);
-  breathFormant.connect(breathGain);
-  breathGain.connect(context.destination);
-
-  const laughs = [
-    { offset: 0.02, pitch: 176, endPitch: 132, formant: 620, length: 0.17 },
-    { offset: 0.28, pitch: 158, endPitch: 118, formant: 530, length: 0.17 },
-    { offset: 0.56, pitch: 139, endPitch: 94, formant: 440, length: 0.22 }
-  ];
-  laughs.forEach(({ offset, pitch, endPitch, formant: vowel, length }) => {
-    const start = now + offset;
-    voice.frequency.setValueAtTime(pitch, start);
-    voice.frequency.exponentialRampToValueAtTime(endPitch, start + length);
-    formant.frequency.setValueAtTime(vowel, start);
-    formant.frequency.exponentialRampToValueAtTime(vowel * 0.82, start + length);
-    voiceGain.gain.setValueAtTime(0.0001, start);
-    voiceGain.gain.linearRampToValueAtTime(0.15, start + 0.025);
-    voiceGain.gain.exponentialRampToValueAtTime(0.0001, start + length);
-    breathFormant.frequency.setValueAtTime(vowel * 1.3, start);
-    breathGain.gain.setValueAtTime(0.0001, start);
-    breathGain.gain.linearRampToValueAtTime(0.055, start + 0.02);
-    breathGain.gain.exponentialRampToValueAtTime(0.0001, start + length * 0.9);
-  });
-  voice.start(now);
-  breath.start(now);
-  voice.stop(now + 0.86);
-  breath.stop(now + 0.9);
-  window.setTimeout(() => {
-    try { delay.disconnect(); echoGain.disconnect(); } catch {}
-  }, 1200);
+  playSoundEffect('message', 0.38);
 }
 
 function playDoorKnock() {
-  const context = getSoundContext();
-  if (!context) return;
+  duckAmbienceFor(600, 0.18);
+  playSoundEffect('doorKnock', 0.5);
+}
+
+function playFootsteps() {
   duckAmbienceFor(900, 0.2);
-  const now = context.currentTime;
-  [0, 0.2].forEach((offset, index) => {
-    const start = now + offset;
-    const thud = context.createOscillator();
-    const thudGain = context.createGain();
-    thud.type = 'sine';
-    thud.frequency.setValueAtTime(index === 0 ? 92 : 78, start);
-    thud.frequency.exponentialRampToValueAtTime(48, start + 0.13);
-    thudGain.gain.setValueAtTime(0.0001, start);
-    thudGain.gain.linearRampToValueAtTime(index === 0 ? 0.24 : 0.19, start + 0.008);
-    thudGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.16);
-    thud.connect(thudGain);
-    thudGain.connect(context.destination);
-    thud.start(start);
-    thud.stop(start + 0.17);
-  });
+  playSoundEffect('footsteps', 0.4);
+}
+
+function playDoorCreak() {
+  duckAmbienceFor(900, 0.18);
+  playSoundEffect('doorCreak', 0.48);
+}
+
+function playMessageAlert() {
+  playSoundEffect('message', 0.38);
+}
+
+function playCafeClink() {
+  playSoundEffect('cafe', 0.38);
 }
 
 function toggleSoundFromControl() {
@@ -660,14 +585,12 @@ function toggleSoundFromControl() {
 
 soundToggle.addEventListener('click', toggleSoundFromControl);
 window.addEventListener('story:ending', (event) => {
-  if (event.detail.decision === 'take-shortcut') playEndingImpact();
+  if (event.detail.risk > 0) playEndingImpact();
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && ambientOn) {
     licensedAmbience.pause();
-    audioContext?.suspend();
   } else if (!document.hidden && ambientOn) {
     if (licensedAmbience.currentTime > 0) licensedAmbience.play().catch(() => turnSoundOff());
-    audioContext?.resume();
   }
 });
