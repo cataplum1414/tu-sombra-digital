@@ -711,7 +711,8 @@ body { background:#080606; color:#f2e8df; }
 .story__hotspots { position:absolute; z-index:3; inset:0; pointer-events:none; }
 .story__hotspot { position:absolute; display:grid; place-items:center; width:48px; height:48px; padding:0; border:0; background:transparent; color:#fff5ed; cursor:pointer; transform:translate(-50%,-50%); pointer-events:auto; touch-action:manipulation; }
 .story__hotspot:focus-visible { outline:2px solid #fff; outline-offset:3px; border-radius:50%; }
-.story__hotspot-marker { display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(255,235,222,.9); border-radius:50%; background:rgba(116,8,13,.74); box-shadow:0 0 0 4px rgba(225,33,39,.16),0 0 22px rgba(225,33,39,.6); color:#fff; font:500 1.25rem/1 Arial,sans-serif; animation:hotspot-pulse 2.1s ease-in-out infinite; }
+.story__hotspot-marker { display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(255,235,222,.9); border-radius:50%; background:rgba(116,8,13,.56); box-shadow:0 0 0 4px rgba(225,33,39,.16),0 0 22px rgba(225,33,39,.6); color:#fff; font-size:0; animation:hotspot-pulse 2.1s ease-in-out infinite; }
+.story__hotspot-marker::after { content:""; width:8px; height:8px; border:1px solid #fff2e8; border-radius:50%; background:#e32127; box-shadow:0 0 11px rgba(225,33,39,.85); }
 .story__hotspot-label { position:absolute; top:auto; bottom:calc(100% - 2px); left:50%; padding:4px 6px; border:1px solid rgba(240,221,207,.28); background:rgba(8,5,5,.84); color:#f4e5db; font:600 .55rem/1.2 Consolas,monospace; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; transform:translateX(-50%); text-shadow:0 1px 5px #000; }
 .story__hotspot--right .story__hotspot-label { left:100%; transform:none; }
 .story__hotspot--left .story__hotspot-label { left:auto; right:100%; transform:none; }
@@ -721,8 +722,10 @@ body { background:#080606; color:#f2e8df; }
 .story__clue { margin:11px 0; padding:9px 11px; border-left:2px solid #e32127; background:rgba(8,5,5,.82); color:#faeee6; font-size:.78rem; line-height:1.42; }
 .story__image-wrap.is-disturbed { animation:story-contact .55s ease-out; }
 .story__image-wrap.is-disturbed .story__image { transform-origin:76% 48%; animation:cartographer-lunge .88s cubic-bezier(.18,.8,.2,1); }
+.story__hotspots.is-disturbed { animation:story-contact .55s ease-out; }
 .story__image-wrap.is-door-touched { animation:door-response .42s ease-out; }
 .story__image-wrap.is-door-touched .story__image { animation:door-response-image .42s ease-out; }
+.story__hotspots.is-door-touched { animation:door-response .42s ease-out; }
 .story__image-wrap.is-camera-flash::after { content:""; position:absolute; z-index:2; inset:0; background:rgba(255,246,228,.9); pointer-events:none; animation:camera-flash .28s ease-out both; }
 .story__content { width:min(720px,100%); padding:26px 0 0; text-shadow:0 2px 14px rgba(0,0,0,.85); }
 .story__kicker { margin:0 0 8px; color:#f0b9aa; font:700 .7rem Consolas,monospace; letter-spacing:.12em; text-transform:uppercase; }
@@ -870,5 +873,60 @@ body { background:#080606; color:#f2e8df; }
   .cinematic-story .story__image { transform:none; animation:none !important; }
   .story__image-wrap.is-camera-flash::after { animation:none; opacity:0; }
   .story__hotspot-marker { animation:none; }
-  .story__image-wrap.is-disturbed,.story__image-wrap.is-door-touched { animation:none; }
+  .story__image-wrap.is-disturbed,.story__image-wrap.is-door-touched,.story__hotspots.is-disturbed,.story__hotspots.is-door-touched { animation:none; }
+}
+
+/* Put all tap targets inside a photo stage with a fixed size on phones.
+   The copy below it can grow without moving the targets across the text. */
+@media (max-width:680px) {
+  .cinematic-story {
+    display:block;
+    min-height:0;
+    overflow:clip;
+    padding:max(72px,calc(64px + env(safe-area-inset-top))) 0 max(34px,env(safe-area-inset-bottom));
+  }
+  .cinematic-story .story__image-wrap {
+    position:relative;
+    z-index:0;
+    inset:auto;
+    width:100%;
+    height:clamp(290px,40svh,380px);
+    min-height:0;
+  }
+  .cinematic-story .story__image {
+    width:100%;
+    height:100%;
+    min-height:0;
+    object-fit:cover;
+    object-position:center 49%;
+  }
+  .cinematic-story .story__film-grain { z-index:1; }
+  .cinematic-story .story__topline {
+    top:94px;
+    left:18px;
+    right:18px;
+    z-index:4;
+  }
+  .cinematic-story .story__hotspots {
+    inset: max(72px,calc(64px + env(safe-area-inset-top))) 0 auto;
+    z-index:3;
+    height:clamp(290px,40svh,380px);
+  }
+  .cinematic-story .story__hotspot { width:52px; height:52px; }
+  .cinematic-story .story__hotspot-marker { width:30px; height:30px; }
+  .cinematic-story .story__hotspot-label { font-size:.54rem; }
+  .cinematic-story .story__content {
+    position:relative;
+    z-index:2;
+    width:100%;
+    padding:19px 20px 0;
+    background:linear-gradient(180deg,#100b0b 0%,#0a0707 100%);
+    text-shadow:none;
+  }
+  .cinematic-story .story__explore-hint { margin:8px 0 3px; }
+  .cinematic-story .story__body { margin:9px 0 12px; }
+  .cinematic-story .story__clue { position:relative; z-index:1; }
+  .cinematic-story .story__prompt { margin-top:14px; }
+  .cinematic-story .choices { position:relative; z-index:1; }
+  .cinematic-story .story__fiction-note { padding-bottom:5px; }
 }

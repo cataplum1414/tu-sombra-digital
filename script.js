@@ -50,9 +50,9 @@ const scenes = [
     body: 'Casa Natal de Cervantes, Calle Mayor 48. La foto ya revela dónde y cuándo.',
     prompt: '¿La publicas con ubicación?',
     hotspots: [
-      { id: 'protagonist', label: 'La protagonista', x: 19, y: 43, align: 'right', response: 'El flash salta: el Cartógrafo acaba de tomar una foto desde el otro lado de Calle Mayor. La protagonista decide qué pista compartir y a quién pedir apoyo.' },
-      { id: 'landmark', label: 'Calle Mayor', x: 49, y: 37, align: 'center', response: 'Estás en el casco histórico, frente a la Casa Natal de Cervantes, en Calle Mayor 48. La fachada de una foto puede revelar el lugar aunque no añadas una etiqueta.' },
-      { id: 'cartographer', label: 'El Cartógrafo', x: 76, y: 48, align: 'left', response: 'Lo señalas. La imagen da un salto: el encapuchado ya no está junto al farol; aparece en el reflejo, detrás de ti. Ha notado que lo viste.' }
+      { id: 'protagonist', label: 'La chica', x: 20, y: 45, align: 'right', response: 'El flash salta: el Cartógrafo acaba de tomar una foto desde el otro lado de Calle Mayor. La protagonista decide qué pista compartir y a quién pedir apoyo.' },
+      { id: 'landmark', label: 'Casa Cervantes', x: 53, y: 46, align: 'center', response: 'Estás en el casco histórico, frente a la Casa Natal de Cervantes, en Calle Mayor 48. La fachada de una foto puede revelar el lugar aunque no añadas una etiqueta.' },
+      { id: 'cartographer', label: 'El Cartógrafo', x: 74, y: 57, align: 'left', response: 'Lo señalas. La imagen da un salto: el encapuchado ya no está junto al farol; aparece en el reflejo, detrás de ti. Ha notado que lo viste.' }
     ],
     choices: [
       { id: 'live-location', risk: 1, label: 'Publicarla ahora con la ubicación' },
@@ -71,9 +71,9 @@ const scenes = [
         : 'Quitaste la etiqueta, pero la fachada y la hora siguen dando pistas. Frente a la Casa Natal llega: «Sé por dónde vuelves».',
     prompt: 'El Cartógrafo quiere confirmar tu rutina. ¿Qué haces?',
     hotspots: [
-      { id: 'protagonist', label: 'La protagonista', x: 21, y: 42, align: 'right', response: 'Un destello cruza el cristal. Ella reconoce al Cartógrafo; no tiene que responder a quien la intimida.' },
-      { id: 'phone', label: 'El móvil', x: 51, y: 67, align: 'center', response: 'La pantalla muestra la hora; el reflejo revela el escaparate. Dos detalles cotidianos pueden ubicar una foto sin que nadie hackee el teléfono.' },
-      { id: 'cartographer', label: 'El reflejo', x: 80, y: 43, align: 'left', response: 'Tocas el reflejo. Por un instante, la figura se mueve antes que tú. El cristal la devuelve demasiado cerca.' }
+      { id: 'protagonist', label: 'La chica', x: 20, y: 45, align: 'right', response: 'Un destello cruza el cristal. Ella reconoce al Cartógrafo; no tiene que responder a quien la intimida.' },
+      { id: 'phone', label: 'El móvil', x: 51, y: 72, align: 'center', response: 'La pantalla muestra la hora; el reflejo revela el escaparate. Dos detalles cotidianos pueden ubicar una foto sin que nadie hackee el teléfono.' },
+      { id: 'cartographer', label: 'El reflejo', x: 79, y: 44, align: 'left', response: 'Tocas el reflejo. Por un instante, la figura se mueve antes que tú. El cristal la devuelve demasiado cerca.' }
     ],
     choices: [
       { id: 'reply-routine', risk: 1, label: 'Responderle y confirmar a qué hora sales' },
@@ -90,9 +90,9 @@ const scenes = [
       : 'En Sandoval y Rojas, junto a la Puerta de Madrid, la figura sigue al otro lado. El café abierto de Plaza de Cervantes ofrece un lugar atendido.',
     prompt: 'Tienes una última decisión. ¿Hacia dónde vas?',
     hotspots: [
-      { id: 'protagonist', label: 'La protagonista', x: 21, y: 47, align: 'right', response: 'El flash ilumina el pomo. Ella decide no entrar sola y avisar a alguien de confianza.' },
-      { id: 'door', label: 'La puerta', x: 86, y: 58, align: 'left', response: 'Tocas el pomo. No cede. Un portal identifica un domicilio: no publiques la entrada ni te quedes ahí si no te sientes segura.' },
-      { id: 'cartographer', label: 'El Cartógrafo', x: 63, y: 48, align: 'left', response: 'Lo tocas en la pantalla. El encapuchado avanza hasta el borde de la luz; la figura sigue siendo ficción, pero la pista que le diste era real.' }
+      { id: 'protagonist', label: 'La chica', x: 23, y: 46, align: 'right', response: 'El flash ilumina el pomo. Ella decide no entrar sola y avisar a alguien de confianza.' },
+      { id: 'door', label: 'El picaporte', x: 87, y: 68, align: 'left', response: 'Tocas el pomo. No cede. Un portal identifica un domicilio: no publiques la entrada ni te quedes ahí si no te sientes segura.' },
+      { id: 'cartographer', label: 'El Cartógrafo', x: 64, y: 48, align: 'left', response: 'Lo tocas en la pantalla. El encapuchado avanza hasta el borde de la luz; la figura sigue siendo ficción, pero la pista que le diste era real.' }
     ],
     choices: [
       { id: 'take-shortcut', risk: 1, label: 'Ir sola al portal por la calle vacía' },
@@ -181,6 +181,7 @@ function renderScene(index) {
   sceneClue.hidden = true;
   sceneClue.textContent = '';
   sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash');
+  sceneHotspots.classList.remove('is-disturbed', 'is-door-touched');
   sceneHotspots.innerHTML = scene.hotspots.map((hotspot) => `
     <button class="story__hotspot story__hotspot--${hotspot.align}" type="button" data-hotspot="${hotspot.id}" style="left:${hotspot.x}%;top:${hotspot.y}%" aria-controls="scene-clue" aria-pressed="false" aria-label="Explorar: ${hotspot.label}">
       <span class="story__hotspot-marker" aria-hidden="true">+</span><span class="story__hotspot-label">${hotspot.label}</span>
@@ -286,14 +287,18 @@ sceneHotspots.addEventListener('click', (event) => {
   if (isThreat) {
     cartographerNoticed = true;
     sceneImageWrap.classList.remove('is-disturbed');
+    sceneHotspots.classList.remove('is-disturbed');
     void sceneImageWrap.offsetWidth;
     sceneImageWrap.classList.add('is-disturbed');
+    sceneHotspots.classList.add('is-disturbed');
   }
   if (hotspot.id === 'door') {
     doorTapped = true;
     sceneImageWrap.classList.remove('is-door-touched');
+    sceneHotspots.classList.remove('is-door-touched');
     void sceneImageWrap.offsetWidth;
     sceneImageWrap.classList.add('is-door-touched');
+    sceneHotspots.classList.add('is-door-touched');
   }
   if (isThreat) {
     navigator.vibrate?.([24, 32, 52]);
@@ -307,6 +312,9 @@ sceneHotspots.addEventListener('click', (event) => {
     void sceneImageWrap.offsetWidth;
     sceneImageWrap.classList.add('is-camera-flash');
     if (ambientOn) playCameraFlash();
+  } else if (hotspot.id === 'landmark') {
+    navigator.vibrate?.(14);
+    if (ambientOn) playLocationPing();
   }
   announce('hotspot', { id: hotspot.id, scene: currentScene + 1, threat: isThreat });
 });
@@ -544,6 +552,25 @@ function playCameraFlash() {
   clickGain.connect(context.destination);
   click.start(now);
   click.stop(now + 0.05);
+}
+
+function playLocationPing() {
+  if (!ambientOn) return;
+  const context = getSoundContext();
+  if (!context) return;
+  const now = context.currentTime;
+  const ping = context.createOscillator();
+  const gain = context.createGain();
+  ping.type = 'sine';
+  ping.frequency.setValueAtTime(690, now);
+  ping.frequency.exponentialRampToValueAtTime(430, now + 0.28);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.linearRampToValueAtTime(0.075, now + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
+  ping.connect(gain);
+  gain.connect(context.destination);
+  ping.start(now);
+  ping.stop(now + 0.35);
 }
 
 function playMacabreLaugh() {
