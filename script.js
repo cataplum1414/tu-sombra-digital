@@ -1,6 +1,6 @@
 import { justify } from './assets/justif/dist/index.js';
 import { hyphenateEs } from './assets/justif/dist/hyphenate/es.js';
-import { getLanguage, setLanguage, text as localized, t } from './language.js?v=mobile-depth-v2';
+import { getLanguage, setLanguage, text as localized, t } from './language.js?v=lenguaje-claro-20261124-v2';
 
 const opening = document.querySelector('.opening');
 const story = document.querySelector('.story');
@@ -64,89 +64,89 @@ const scenes = [
     image: 'assets/story/alcala-night.webp',
     place: copy('CALLE MAYOR · CASA CERVANTES', 'CALLE MAYOR · CERVANTES BIRTHPLACE MUSEUM'),
     kicker: copy('CALLE MAYOR · 23:17', 'CALLE MAYOR · 11:17 P.M.'),
-    title: copy('Estás a punto de publicarla.', 'You are about to post it.'),
-    body: copy('Son las 23:17. Estás frente a la Casa Natal de Cervantes, en el número 48 de la Calle Mayor. La fachada y la hora pueden revelar dónde estás, aunque no escribas la dirección.', '11:17 p.m. You are outside the Cervantes Birthplace Museum at 48 Calle Mayor. The façade and timestamp could reveal where you are, even without a location tag.'),
-    prompt: copy('¿Qué haces antes de subir la foto?', 'What do you do before posting the photo?'),
+    title: copy('¿Subes esta foto ahora?', 'Do you post this photo now?'),
+    body: copy('Son las 23:17. Estás en la Calle Mayor, frente a la Casa Natal de Cervantes, número 48. La foto puede mostrar dónde estás, aunque no añadas la ubicación.', 'It is 11:17 p.m. You are on Calle Mayor, outside Cervantes Birthplace Museum at number 48. The photo can show where you are, even without a location tag.'),
+    prompt: copy('La foto muestra dónde estás. ¿Qué haces?', 'The photo shows where you are. What do you do?'),
     hotspots: [
-      { id: 'protagonist', label: copy('La chica', 'The woman'), x: 20, y: 45, align: 'right', response: copy('El flash salta: el Cartógrafo acaba de fotografiarte desde el otro lado de la Calle Mayor. Ahora decides qué pista compartir y a quién pedir apoyo.', 'A flash bursts: the Cartographer has just taken a picture from across Calle Mayor. She decides what to share and who to ask for help.' ) },
-      { id: 'landmark', label: copy('Casa Cervantes', 'Cervantes House'), x: 53, y: 46, align: 'center', response: copy('Unos pasos húmedos resuenan bajo los soportales. Estás frente a la Casa Natal de Cervantes, en el número 48 de la Calle Mayor. La fachada puede revelar dónde se tomó la foto, aunque no añadas una etiqueta.', 'Wet footsteps echo beneath the arcades. You are outside the Cervantes Birthplace Museum, 48 Calle Mayor. The façade can give away the location even without a tag.') },
-      { id: 'cartographer', label: copy('El Cartógrafo', 'The Cartographer'), x: 74, y: 57, align: 'left', response: copy('Lo señalas. De debajo de la capucha se escapa una risa breve. La imagen da un salto: ya no está junto al farol, sino detrás de ti, en el reflejo. Se ha dado cuenta de que lo has visto.', 'You point at him. A short laugh slips from beneath the hood. The image jolts: he is no longer by the streetlamp. He is behind you in the reflection. He knows you saw him.') }
+      { id: 'protagonist', label: copy('Tú', 'You'), x: 20, y: 45, align: 'right', response: copy('¡Flash! El Cartógrafo te acaba de hacer una foto desde el otro lado de la calle. Tú decides qué publicas y a quién pides ayuda.', 'Flash! The Cartographer just took your picture from across the street. You choose what to post and who to ask for help.') },
+      { id: 'landmark', label: copy('Casa Cervantes', 'Cervantes House'), x: 53, y: 46, align: 'center', response: copy('Estás frente a la Casa Natal de Cervantes, en Calle Mayor 48. El edificio muestra dónde hiciste la foto, aunque quites la ubicación.', 'You are outside Cervantes Birthplace Museum at 48 Calle Mayor. The building shows where you took the photo, even if you remove the location tag.') },
+      { id: 'cartographer', label: copy('El Cartógrafo', 'The Cartographer'), x: 74, y: 57, align: 'left', response: copy('Lo señalas. Se ríe. Parpadeas y ahora aparece detrás de ti, en el reflejo de una ventana. Sabe que lo has visto.', 'You point at him. He laughs. You blink, and now he is behind you in a window reflection. He knows you saw him.') }
     ],
     choices: [
-      { id: 'live-location', risk: 1, label: copy('Subirla ahora con la ubicación en directo', 'Post it now with live location') },
-      { id: 'remove-location', risk: 0, label: copy('Quitar la ubicación y publicarla mañana', 'Remove the location and post tomorrow') }
+      { id: 'live-location', risk: 1, label: copy('Publicarla ahora y mostrar dónde estoy', 'Post it now and show where I am') },
+      { id: 'remove-location', risk: 0, label: copy('Publicarla sin decir dónde estoy', 'Post it without saying where I am') }
     ]
   },
   {
     image: 'assets/story/alcala-reflection.webp',
     place: copy('CALLE MAYOR · CERCA DE CASA CERVANTES', 'CALLE MAYOR · NEAR CERVANTES HOUSE'),
     kicker: copy('CALLE MAYOR · 23:24', 'CALLE MAYOR · 11:24 P.M.'),
-    title: copy('«Sé por dónde vuelves».', '“I know which way you go home.”'),
+    title: copy('«Sé a qué hora vuelves».', '“I know what time you go home.”'),
     body: () => cartographerNoticed
-        ? localized('Después de señalarlo, reaparece mucho más cerca, reflejado en el cristal de un edificio de la Calle Mayor. Entonces recibes un mensaje: «Sé por dónde vuelves».', 'After you point him out, he reappears much closer in a Calle Mayor shop window. A message arrives: “I know which way you go home.”')
+        ? localized('Lo señalaste. Ahora aparece más cerca, en una ventana de la Calle Mayor. Te llega un mensaje: «Sé a qué hora vuelves».', 'You pointed him out. Now he appears closer, in a Calle Mayor window. A message arrives: “I know what time you go home.”')
       : riskScore
-        ? localized('Publicaste la hora y la ubicación en directo. Frente a la Casa Natal de Cervantes recibes un mensaje: «Sé por dónde vuelves».', 'You posted the time and live location. Outside the museum, a message arrives: “I know which way you go home.”')
-        : localized('Quitaste la etiqueta, pero la fachada y la hora siguen dando pistas. Frente a la Casa Natal de Cervantes recibes un mensaje: «Sé por dónde vuelves».', 'You removed the tag, but the façade and timestamp still give clues. Outside the museum, a message arrives: “I know which way you go home.”'),
-    prompt: copy('El Cartógrafo quiere confirmar tu rutina. ¿Qué haces?', 'The Cartographer wants to confirm your routine. What do you do?'),
+        ? localized('Publicaste la hora y el lugar. Frente a la Casa Natal te llega un mensaje: «Sé a qué hora vuelves».', 'You posted the time and place. Outside Cervantes House, a message arrives: “I know what time you go home.”')
+        : localized('Quitaste la ubicación, pero la foto muestra el lugar y la hora. Frente a la Casa Natal te llega un mensaje: «Sé a qué hora vuelves».', 'You removed the location tag, but the photo shows the place and time. Outside Cervantes House, a message arrives: “I know what time you go home.”'),
+    prompt: copy('Te pregunta a qué hora sales. ¿Se lo dices?', 'He asks what time you leave. Do you tell him?'),
     hotspots: [
-      { id: 'protagonist', label: copy('La chica', 'The woman'), x: 20, y: 45, align: 'right', response: copy('Un destello cruza el cristal. Ella reconoce al Cartógrafo; no tiene que responder a quien la intimida.', 'A glint crosses the glass. She recognizes the Cartographer; she does not have to answer someone who is intimidating her.') },
-      { id: 'phone', label: copy('El móvil', 'The phone'), x: 51, y: 72, align: 'center', response: copy('El móvil vibra con otro mensaje. La hora que aparece en pantalla y el reflejo del escaparate dan pistas sobre tu rutina. Nadie tuvo que piratear el teléfono.', 'The phone buzzes with another message. The time on screen and the shop-window reflection reveal part of your routine. No one had to hack your phone.') },
-      { id: 'cartographer', label: copy('El reflejo', 'The reflection'), x: 79, y: 44, align: 'left', response: copy('Tocas el reflejo. Su risa suena detrás de ti; en el cristal, la figura se mueve antes que tú. Está demasiado cerca.', 'You touch the reflection. His laugh comes from behind you. In the glass, the figure moves before you do. He is too close.') }
+      { id: 'protagonist', label: copy('Tú', 'You'), x: 20, y: 45, align: 'right', response: copy('Un destello cruza el cristal. Reconoces al Cartógrafo. No tienes que responder a su mensaje.', 'A flash crosses the glass. You recognize the Cartographer. You do not have to reply to his message.') },
+      { id: 'phone', label: copy('El móvil', 'The phone'), x: 51, y: 72, align: 'center', response: copy('El móvil vibra. La hora de la foto y el lugar pueden mostrar cuándo pasas por aquí. No hace falta entrar en tu móvil para saberlo.', 'Your phone buzzes. The photo time and place can show when you come here. No one needs to get into your phone to learn that.') },
+      { id: 'cartographer', label: copy('El reflejo', 'The reflection'), x: 79, y: 44, align: 'left', response: copy('Tocas el reflejo. Oyes su risa a tu espalda. En el cristal, se mueve antes que tú.', 'You touch the reflection. You hear him laugh behind you. In the glass, he moves before you do.') }
     ],
     choices: [
-      { id: 'reply-routine', risk: 1, label: copy('Responderle y confirmar a qué hora sales', 'Reply and confirm what time you leave') },
-      { id: 'block-save', risk: 0, label: copy('Guardar captura, bloquear y avisar a alguien', 'Save a screenshot, block him and tell someone') }
+      { id: 'reply-routine', risk: 1, label: copy('Decirle a qué hora salgo', 'Tell him what time I leave') },
+      { id: 'block-save', risk: 0, label: copy('Guardar el mensaje y llamar a Paula', 'Save the message and call Paula') }
     ]
   },
   {
     image: 'assets/story/alcala-plaza-exterior.webp',
     ambience: 'street',
-    place: copy('PLAZA DE CERVANTES · CAFETERÍA ABIERTA', 'CERVANTES SQUARE · CAFÉ OPEN'),
+    place: copy('PLAZA DE CERVANTES · CAFÉ ABIERTO', 'CERVANTES SQUARE · CAFÉ OPEN'),
     kicker: copy('PLAZA DE CERVANTES · 23:32', 'CERVANTES SQUARE · 11:32 P.M.'),
-    title: copy('La luz sigue encendida.', 'The light is still on.'),
+    title: copy('Hay un café abierto.', 'There is a café open.'),
     body: () => decisions.includes('block-save')
-      ? localized('Cruzas desde Calle Mayor hasta Plaza de Cervantes. Paula contesta: «Estoy llegando; quédate donde haya gente». La cafetería sigue abierta. Bajo los soportales, al otro lado de la plaza, espera el encapuchado.', 'You cross from Calle Mayor to Cervantes Square. Paula replies: “I’m on my way. Stay where there are people.” The café is still open. Beneath the arcades across the square, the hooded figure is waiting.')
-      : localized('Llegas a Plaza de Cervantes. Junto a la estatua de Cervantes ves una cafetería iluminada, con gente dentro. No has avisado a nadie. El mensaje vuelve a encender la pantalla: «Te vi junto a la Casa de Cervantes».', 'You reach Cervantes Square. Beside the statue, a café glows with people inside. You have not told anyone where you are. Your screen lights up again: “I saw you by Cervantes House.”'),
+      ? localized('Llegas a la Plaza de Cervantes. Paula te escribe: «Voy para allá. Espera dentro del café». El Cartógrafo te mira desde el otro lado de la plaza.', 'You reach Cervantes Square. Paula texts: “I’m coming. Wait inside the café.” The Cartographer watches you from across the square.')
+      : localized('Llegas a la Plaza de Cervantes. Hay un café abierto junto a la estatua. Nadie sabe que estás aquí. Te llega otro mensaje: «Te vi junto a la Casa de Cervantes».', 'You reach Cervantes Square. A café is open beside the statue. No one knows you are here. Another message arrives: “I saw you by Cervantes House.”'),
     prompt: () => decisions.includes('block-save')
-      ? localized('Paula viene hacia la cafetería. ¿Esperas dentro o tomas el atajo?', 'Paula is heading to the café. Do you wait inside or take the shortcut?')
-      : localized('La cafetería está abierta. ¿Pides ayuda o tomas el atajo?', 'The café is open. Do you ask for help or take the shortcut?'),
+      ? localized('Paula viene. ¿La esperas dentro del café o te vas sola?', 'Paula is coming. Do you wait inside the café or leave alone?')
+      : localized('El café está abierto. ¿Entras y llamas a Paula o te vas sola?', 'The café is open. Do you go in and call Paula or leave alone?'),
     hotspots: [
-      { id: 'cafe', label: copy('La cafetería', 'The café'), x: 21, y: 57, align: 'right', response: copy('Te acercas a la entrada. Suena la campanilla y, desde dentro, llegan voces y se escapa la luz. Hay gente en la cafetería; puedes pedir ayuda sin revelar tus contraseñas ni tu ubicación.', 'You approach the entrance. A bell rings; warm light and voices spill onto the square. There are people inside. You can ask for help without sharing passwords or posting your location.') },
-      { id: 'protagonist', label: copy('La chica', 'The woman'), x: 52, y: 75, align: 'center', response: copy('Avanzas unos pasos por la plaza iluminada. Puedes entrar donde hay gente, llamar a Paula y decidir con calma qué compartir.', 'You take a few steps across the lit square. You can go where there are people, call Paula and decide what to share once you feel safe.') },
-      { id: 'cartographer', label: copy('La figura', 'The figure'), x: 75, y: 56, align: 'left', response: copy('Bajo los soportales, la figura parece estar mirando hacia ti. Cuando la luz de la plaza parpadea, ya no está junto a la farola.', 'Under the arcades, the figure seems to be looking straight at you. The square lights flicker. He is no longer beside the lamp.') }
+      { id: 'cafe', label: copy('El café', 'The café'), x: 21, y: 57, align: 'right', response: copy('La puerta del café se abre. Suena una campanilla. Hay gente dentro. Puedes pedir ayuda.', 'The café door opens. A bell rings. People are inside. You can ask for help.') },
+      { id: 'protagonist', label: copy('Tú', 'You'), x: 52, y: 75, align: 'center', response: copy('La plaza está iluminada. Puedes entrar al café y llamar a Paula.', 'The square is lit. You can go into the café and call Paula.') },
+      { id: 'cartographer', label: copy('El Cartógrafo', 'The Cartographer'), x: 75, y: 56, align: 'left', response: copy('La luz parpadea. Cuando vuelve, el Cartógrafo ya no está junto a la farola.', 'The light flickers. When it comes back on, the Cartographer is no longer by the lamp.') }
     ],
     choices: () => [
-      { id: 'go-cafe', risk: 0, label: copy(decisions.includes('block-save') ? 'Entrar y esperar a Paula con gente alrededor' : 'Entrar y escribir a Paula para que venga', decisions.includes('block-save') ? 'Go in and wait for Paula with other people' : 'Go in and text Paula to come meet you') },
-      { id: 'take-shortcut', risk: 1, label: copy('Salir sola por Cardenal Sandoval y Rojas para despistarlo', 'Take Cardenal Sandoval y Rojas alone to lose him') }
+      { id: 'go-cafe', risk: 0, label: copy(decisions.includes('block-save') ? 'Entrar al café y esperar a Paula' : 'Entrar al café y llamar a Paula', decisions.includes('block-save') ? 'Go into the café and wait for Paula' : 'Go into the café and call Paula') },
+      { id: 'take-shortcut', risk: 1, label: copy('Ir sola por Cardenal Sandoval y Rojas', 'Walk alone along Cardenal Sandoval y Rojas') }
     ]
   },
   {
     image: () => decisions.includes('go-cafe') ? 'assets/story/alcala-cafe.webp' : 'assets/story/alcala-portal.webp',
     ambience: () => decisions.includes('go-cafe') ? 'cafe' : 'street',
-    place: () => localized(decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES · DENTRO DEL CAFÉ' : 'CARDENAL SANDOVAL Y ROJAS · UN PORTAL', decisions.includes('go-cafe') ? 'CERVANTES SQUARE · INSIDE THE CAFÉ' : 'CARDENAL SANDOVAL Y ROJAS · A DOORWAY'),
+    place: () => localized(decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES · CAFÉ' : 'CALLE CARDENAL SANDOVAL Y ROJAS · PORTAL', decisions.includes('go-cafe') ? 'CERVANTES SQUARE · CAFÉ' : 'CARDENAL SANDOVAL Y ROJAS · DOORWAY'),
     kicker: () => localized(decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES · 23:38' : 'SANDOVAL Y ROJAS · 23:41', decisions.includes('go-cafe') ? 'CERVANTES SQUARE · 11:38 P.M.' : 'SANDOVAL Y ROJAS · 11:41 P.M.'),
     title: () => localized(decisions.includes('go-cafe') ? 'No estás sola.' : 'El atajo termina en una puerta.', decisions.includes('go-cafe') ? 'You are not alone.' : 'The shortcut ends at a doorway.'),
     body: () => decisions.includes('go-cafe')
-      ? localized('Entras en la cafetería que viste desde la Plaza de Cervantes. Paula llega y te hace un sitio; detrás del cristal, la calle sigue mojada. Te pide que compartas tu ubicación solo con ella hasta que llegues a casa.', 'You enter the café you spotted from Cervantes Square. Paula arrives and makes room for you. Beyond the glass, the street is still wet. She asks you to share your location with her privately until you get home.')
-      : localized('Dejas atrás la Plaza de Cervantes y tomas la calle Cardenal Sandoval y Rojas. El portal está entornado; la luz del zaguán no alcanza la acera. La hora y la ruta de la publicación bastaron para que el Cartógrafo pareciera conocer tu rutina. Aún puedes volver a la plaza iluminada.', 'You leave Cervantes Square and turn onto Cardenal Sandoval y Rojas. A doorway stands ajar; its light does not reach the pavement. A timestamp and a route were enough to make the Cartographer seem to know your routine. You can still return to the lit square.'),
+      ? localized('Entras al café. Paula llega y se sienta contigo. Puedes compartir tu ubicación solo con ella hasta llegar a casa.', 'You go into the café. Paula arrives and sits with you. You can share your location with her only until you get home.')
+      : localized('Vas por Cardenal Sandoval y Rojas. El portal está abierto, oscuro y vacío. La foto y la hora dieron pistas al Cartógrafo. Puedes volver a la plaza, donde hay luz y gente.', 'You walk along Cardenal Sandoval y Rojas. The doorway is open, dark and empty. The photo and time gave the Cartographer clues. You can return to the lit, busy square.'),
     prompt: () => decisions.includes('go-cafe')
-      ? localized('Llega una última notificación. ¿Qué compartes ahora?', 'One last notification arrives. What do you share now?')
-      : localized('¿Qué haces al llegar al portal?', 'What do you do at the doorway?'),
+      ? localized('Paula te escribe otra vez. ¿Qué haces?', 'Paula texts you again. What do you do?')
+      : localized('Llegas al portal. ¿Qué haces?', 'You reach the doorway. What do you do?'),
     hotspots: () => decisions.includes('go-cafe') ? [
-      { id: 'friend', label: copy('Paula', 'Paula'), x: 60, y: 58, align: 'right', response: copy('Paula desliza una taza sobre la mesa y se queda contigo. Pedir apoyo no requiere entregar tus cuentas: basta con contar qué pasó y qué necesitas.', 'Paula slides a cup across the table and stays with you. Asking for support does not mean handing over your accounts. Tell her what happened and what you need.') },
-      { id: 'phone', label: copy('La notificación', 'The notification'), x: 28, y: 84, align: 'left', response: copy('El mensaje exige saber dónde estás. Si no respondes y guardas una captura, conservas una prueba sin revelar más datos personales.', 'The message demands to know where you are. Do not reply. Save a screenshot as evidence without revealing anything else.') },
-      { id: 'cartographer', label: copy('El cristal', 'The glass'), x: 88, y: 45, align: 'left', response: copy('Afuera se oyen pasos que se alejan por la calle mojada. La amenaza no convierte en culpable a quien compartió una foto: la responsabilidad de invadir la intimidad es de quien lo hace.', 'Outside, footsteps fade along the wet street. Sharing a photo does not make you responsible for being threatened. The person invading your privacy is responsible.') }
+      { id: 'friend', label: copy('Paula', 'Paula'), x: 60, y: 58, align: 'right', response: copy('Paula se queda contigo. Cuéntale qué pasó y qué necesitas. No tienes que darle tus contraseñas.', 'Paula stays with you. Tell her what happened and what you need. You do not need to give her your passwords.') },
+      { id: 'phone', label: copy('El mensaje', 'The message'), x: 28, y: 84, align: 'left', response: copy('El mensaje pregunta dónde estás. No contestes. Guarda una captura.', 'The message asks where you are. Do not reply. Save a screenshot.') },
+      { id: 'cartographer', label: copy('La ventana', 'The window'), x: 88, y: 45, align: 'left', response: copy('Oyes pasos que se alejan. Publicar una foto no da permiso para seguirte. La responsabilidad es de quien te sigue.', 'You hear footsteps fading away. Posting a photo does not give anyone permission to follow you. The person following you is responsible.') }
     ] : [
-      { id: 'protagonist', label: copy('La chica', 'The woman'), x: 22, y: 47, align: 'right', response: copy('Retrocedes desde el portal. Puedes cambiar de rumbo, llamar a Paula y volver a la plaza iluminada.', 'You step back from the doorway. You can change course, call Paula and return to the lit square.') },
-      { id: 'door', label: copy('El picaporte', 'The door handle'), x: 88, y: 69, align: 'left', response: copy('El picaporte cede y la puerta cruje al abrirse unos centímetros. Aún puedes retroceder: entrar en un portal desconocido no te protege; la cafetería y las calles con gente siguen siendo una opción.', 'The handle gives way. The door creaks open a few inches. You can still step back: an unfamiliar doorway will not keep you safe. The café and busier streets are still an option.') },
-      { id: 'cartographer', label: copy('La figura', 'The figure'), x: 65, y: 49, align: 'left', response: copy('Una respiración áspera raspa el silencio bajo la capucha. El encapuchado sigue al otro lado de la calle: la amenaza está en la información que reunió, no en una capacidad mágica para leer tu móvil.', 'A rough breath rasps beneath the hood. He is still across the street. The threat comes from the information he pieced together, not from any magic ability to read your phone.') }
+      { id: 'protagonist', label: copy('Tú', 'You'), x: 22, y: 47, align: 'right', response: copy('Aléjate del portal. Llama a Paula y vuelve a la plaza iluminada.', 'Step away from the doorway. Call Paula and return to the lit square.') },
+      { id: 'door', label: copy('La puerta', 'The door'), x: 88, y: 69, align: 'left', response: copy('La puerta se abre un poco. Dentro está oscuro. Puedes volver a la plaza o ir al café, donde hay gente.', 'The door opens a little. It is dark inside. You can return to the square or go to the café, where there are people.') },
+      { id: 'cartographer', label: copy('El Cartógrafo', 'The Cartographer'), x: 65, y: 49, align: 'left', response: copy('Oyes su respiración bajo la capucha. Está al otro lado de la calle. Solo sabe lo que has compartido; no puede leer tu móvil.', 'You hear him breathe under the hood. He is across the street. He only knows what you have shared; he cannot read your phone.') }
     ],
     choices: () => decisions.includes('go-cafe') ? [
-      { id: 'share-private', risk: 0, label: copy('Guardar la prueba y compartir tu ubicación solo con Paula', 'Save the evidence and share your location with Paula only') },
-      { id: 'post-cafe', risk: 1, label: copy('Publicar otra historia en directo mostrando la cafetería', 'Post another live story showing the café') }
+      { id: 'share-private', risk: 0, label: copy('Guardar el mensaje y compartir mi ubicación solo con Paula', 'Save the message and share my location with Paula only') },
+      { id: 'post-cafe', risk: 1, label: copy('Publicar otra foto del café ahora', 'Post another photo of the café now') }
     ] : [
-      { id: 'return-light', risk: 0, label: copy('Volver a la plaza y llamar a Paula desde la cafetería', 'Return to the square and call Paula from the café') },
-      { id: 'open-portal', risk: 1, label: copy('Entrar sola en el portal para esconderte', 'Go into the doorway alone to hide') }
+      { id: 'return-light', risk: 0, label: copy('Volver a la plaza e ir al café para llamar a Paula', 'Return to the square and go to the café to call Paula') },
+      { id: 'open-portal', risk: 1, label: copy('Entrar sola en el portal para esconderme', 'Go into the doorway alone to hide') }
     ]
   }
 ];
@@ -368,37 +368,37 @@ function renderEnding({ languageRefresh = false } = {}) {
   endingBackdrop.style.backgroundImage = `url("${finalImage}")`;
   endingKicker.textContent = localized(endedInCafe ? 'PLAZA DE CERVANTES · CAFÉ · 23:48' : 'CARDENAL SANDOVAL Y ROJAS · 23:48', endedInCafe ? 'CERVANTES SQUARE · CAFÉ · 11:48 P.M.' : 'CARDENAL SANDOVAL Y ROJAS · 11:48 P.M.');
   endingTitle.innerHTML = lastDecision === 'post-cafe'
-    ? localized('La foto<br><em>reabre el rastro.</em>', 'The photo<br><em>reopens the trail.</em>')
+    ? localized('La foto<br><em>da otra pista.</em>', 'The photo<br><em>gives another clue.</em>')
     : lastDecision === 'return-light'
-      ? localized('Volviste<br><em>a la luz.</em>', 'You found<br><em>your way back to the light.</em>')
+      ? localized('Volviste<br><em>a la plaza.</em>', 'You went back<br><em>to the square.</em>')
       : choseSupport
-        ? localized('No llegaste<br><em>sola.</em>', 'You did not arrive<br><em>alone.</em>')
-        : localized('El rastro<br><em>llegó a la puerta.</em>', 'The trail<br><em>reached the door.</em>');
+        ? localized('Llegaste<br><em>con ayuda.</em>', 'You got there<br><em>with help.</em>')
+        : localized('Entraste sola<br><em>al portal.</em>', 'You went inside<br><em>alone.</em>');
   endingOutcome.textContent = lastDecision === 'post-cafe'
-    ? localized('La nueva historia muestra la cafetería y la hora en directo. Ahora se ha expuesto más información, pero eso no te hace responsable de la vigilancia. La responsabilidad de invadir tu intimidad es de quien lo hace.', 'Your new story reveals the café and the live timestamp. More information is exposed, but that never makes you responsible for being watched. The person invading your privacy is responsible.')
+    ? localized('Publicaste otra foto. Se ve qué café es y a qué hora estás allí. Eso no te hace culpable. Nadie tiene derecho a seguirte.', 'You posted another photo. It shows which café you are at and what time it is. That does not make you guilty. No one has the right to follow you.')
     : lastDecision === 'open-portal'
-      ? localized('Abrir un portal desconocido no te habría protegido. Puedes pedir ayuda y volver a un lugar concurrido y seguro. Que el Cartógrafo te siga es responsabilidad suya, no tuya.', 'An unfamiliar doorway would not have kept you safe. You can ask for help and return to a staffed place. The Cartographer is responsible for following you, not you.')
+      ? localized('El portal estaba oscuro y vacío. Puedes volver a la plaza y pedir ayuda. El Cartógrafo es responsable de seguirte. Tú no tienes la culpa.', 'The doorway was dark and empty. You can return to the square and ask for help. The Cartographer is responsible for following you. It is not your fault.')
       : riskScore === 0
-        ? localized('Quitaste la ubicación, no confirmaste tu horario, entraste en un lugar con gente y avisaste a Paula en privado. Redujiste la información disponible. El derecho a la intimidad merece protección en cualquier final.', 'You removed the location, kept your routine private, went somewhere with people and contacted Paula privately. You closed several clues. The right to privacy deserves protection in every ending.')
+        ? localized('Quitaste la ubicación, no dijiste a qué hora salías y pediste ayuda. Así diste menos pistas. Todas las personas tienen derecho a la intimidad.', 'You removed the location, did not say what time you would leave and asked for help. You gave away fewer clues. Everyone has the right to privacy.')
         : choseSupport
-          ? localized('Una pista quedó expuesta. Cambiaste de rumbo y buscaste compañía. Compartir una foto nunca da permiso para vigilarte: la responsabilidad es de quien invade la intimidad.', 'One clue was exposed. You changed course and found someone to stay with you. Sharing a photo never gives anyone permission to follow you. The person invading your privacy is responsible.')
-          : localized('El Cartógrafo dedujo la hora, el lugar y tu rutina. Es ficción: publicar una foto no autoriza a nadie a seguirte ni te hace responsable de la invasión.', 'The Cartographer pieced together a time, a place and a routine. This is fiction: posting does not give anyone permission to follow you, and it never makes the person who posted responsible.');
+          ? localized('Alguien vio la foto. Cambiaste de rumbo y buscaste compañía. Publicar una foto no da permiso para seguirte. La culpa es de quien lo hace.', 'Someone saw the photo. You changed course and found company. Posting a photo does not give anyone permission to follow you. It is their fault.')
+          : localized('El Cartógrafo juntó la hora, el lugar y tus fotos para saber por dónde ibas. Esta historia es inventada. Publicar una foto no da permiso para seguirte.', 'The Cartographer used the time, place and your photos to work out where you were going. This story is fictional. Posting a photo does not give anyone permission to follow you.');
   const answerLabels = {
-    'live-location': copy('publiqué mi ubicación en directo', 'posted my live location'),
-    'remove-location': copy('quité la ubicación y esperé', 'removed the location tag and waited'),
-    'reply-routine': copy('confirmé mi horario', 'confirmed my routine'),
-    'block-save': copy('guardé pruebas, bloqueé y pedí apoyo', 'saved evidence, blocked him and asked for help'),
-    'go-cafe': copy('entré en la cafetería y busqué compañía', 'went into the café and found company'),
-    'take-shortcut': copy('salí sola por el atajo', 'took the shortcut alone'),
+    'live-location': copy('publiqué mi ubicación', 'posted my location'),
+    'remove-location': copy('publiqué sin decir dónde estaba', 'posted without saying where I was'),
+    'reply-routine': copy('dije a qué hora salgo', 'said what time I leave'),
+    'block-save': copy('guardé el mensaje y llamé a Paula', 'saved the message and called Paula'),
+    'go-cafe': copy('entré al café', 'went into the café'),
+    'take-shortcut': copy('fui sola por la otra calle', 'took the other street alone'),
     'share-private': copy('compartí mi ubicación solo con Paula', 'shared my location with Paula only'),
-    'post-cafe': copy('publiqué otra historia en directo', 'posted another live story'),
-    'return-light': copy('volví a la plaza iluminada', 'returned to the lit square'),
+    'post-cafe': copy('publiqué otra foto del café', 'posted another photo of the café'),
+    'return-light': copy('volví a la plaza y llamé a Paula', 'returned to the square and called Paula'),
     'open-portal': copy('entré sola al portal', 'went into the doorway alone')
   };
   const answerRoute = decisions.map((decision, index) => `${index + 1}. ${answerLabels[decision] ? sceneValue(answerLabels[decision]) : localized('elegí una opción', 'chose an option')}`).join(' · ');
   const endingLabels = {
     'share-private': copy('Terminé acompañada en la cafetería.', 'I ended up with company at the café.'),
-    'post-cafe': copy('Llegué a la cafetería, pero volví a publicar en directo.', 'I reached the café, then posted live again.'),
+    'post-cafe': copy('Llegué al café y publiqué otra foto.', 'I reached the café and posted another photo.'),
     'return-light': copy('Volví a la plaza iluminada.', 'I returned to the lit square.'),
     'open-portal': copy('Entré sola al portal.', 'I went into the doorway alone.')
   };
@@ -571,8 +571,8 @@ document.querySelector('#share-ending').addEventListener('click', async () => {
   url.searchParams.set('preview', 'articulo-12-cartografo');
   url.hash = 'derecho';
   const text = localized(
-    `El artículo 12 de la Declaración Universal de los Derechos Humanos protege tu vida privada, tu domicilio y tus comunicaciones frente a injerencias arbitrarias. ${shareSummary.textContent} Conoce la historia sobre el derecho a la intimidad.`,
-    `Article 12 of the Universal Declaration of Human Rights protects your privacy, home and communications from arbitrary interference. ${shareSummary.textContent} Explore the story of the right to privacy.`
+    `El artículo 12 de la Declaración Universal de los Derechos Humanos protege tu vida privada, tu familia, tu casa y tus mensajes. ${shareSummary.textContent}`,
+    `Article 12 of the Universal Declaration of Human Rights protects your private life, family, home and messages. ${shareSummary.textContent}`
   );
   const data = { title, text, url: url.href };
   if (navigator.share) {
