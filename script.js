@@ -608,10 +608,8 @@ function updateWetGlassMood() {
   options.slipRate = .16 + tension * .54;
   options.refractBase = .24 + tension * .22;
   options.refractScale = .34 + tension * .43;
-  options.mistTime = Math.max(5, 17 - tension * 9);
-  options.mistColor = touchedTarget === 'cafe' || touchedTarget === 'friend'
-    ? [.035, .026, .022, .12 + tension * .1]
-    : [.008, .01, .016, .2 + tension * .22];
+  options.dropletSize = tension > .65 ? [14, 30] : [10, 23];
+  options.trailDropDensity = .12 + tension * .12;
   options.motionInterval = tension > .68 ? [.28, .8] : [.5, 1.35];
 }
 
@@ -658,12 +656,12 @@ async function syncWetGlassScene() {
         velocitySpread: .29,
         evaporate: 18,
         xShifting: [0, .045],
-        backgroundBlurSteps: 2,
+        backgroundBlurSteps: 0,
         backgroundWrapMode: 'clamp',
-        mist: true,
-        mistColor: [.008, .01, .016, .32],
-        mistBlurStep: 3,
-        mistTime: 14,
+        mist: false,
+        mistColor: [.008, .01, .016, 0],
+        mistBlurStep: 0,
+        mistTime: 0,
         dropletsPerSeconds: 45,
         dropletSize: [12, 25],
         smoothRaindrop: [.965, .995],

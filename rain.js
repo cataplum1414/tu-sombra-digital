@@ -60,6 +60,7 @@
   }
 
   function paintGlassDrop(drop, time, move) {
+    const coverIsVisible = !opening.hidden && story.hidden;
     const sway = Math.sin(time * .00055 + drop.phase) * drop.radius * .22;
     if (move) {
       drop.y += drop.speed;
@@ -70,22 +71,23 @@
       }
     }
     const x = drop.x + sway;
-    const r = drop.radius;
+    const r = drop.radius * (coverIsVisible ? 1.12 : 1);
+    const alpha = drop.alpha * (coverIsVisible ? 1.55 : 1);
     const gradient = context.createRadialGradient(x - r * .34, drop.y - r * .4, .2, x, drop.y, r * 1.35);
-    gradient.addColorStop(0, `rgba(226,239,245,${drop.alpha * .8})`);
-    gradient.addColorStop(.45, `rgba(127,157,171,${drop.alpha * .35})`);
+    gradient.addColorStop(0, `rgba(226,239,245,${alpha * .8})`);
+    gradient.addColorStop(.45, `rgba(127,157,171,${alpha * .35})`);
     gradient.addColorStop(1, 'rgba(4,8,12,0)');
     context.fillStyle = gradient;
     context.beginPath();
     context.ellipse(x, drop.y, r * .74, r * 1.18, -.12, 0, Math.PI * 2);
     context.fill();
-    context.strokeStyle = `rgba(226,239,245,${drop.alpha * .9})`;
+    context.strokeStyle = `rgba(226,239,245,${alpha * .9})`;
     context.lineWidth = .8;
     context.beginPath();
     context.arc(x - r * .14, drop.y - r * .12, r * .7, Math.PI * 1.1, Math.PI * 1.78);
     context.stroke();
     if (r > 3.4) {
-      context.strokeStyle = `rgba(188,215,227,${drop.alpha * .36})`;
+      context.strokeStyle = `rgba(188,215,227,${alpha * .36})`;
       context.beginPath();
       context.moveTo(x, drop.y + r * .9);
       context.quadraticCurveTo(x + sway * .08, drop.y + drop.trail * .5, x + sway * .12, drop.y + drop.trail);
