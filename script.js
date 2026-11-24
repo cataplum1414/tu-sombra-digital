@@ -1,6 +1,6 @@
 import { justify } from './assets/justif/dist/index.js';
 import { hyphenateEs } from './assets/justif/dist/hyphenate/es.js';
-import { getLanguage, setLanguage, text as localized, t } from './language.js?v=master-current-20261124';
+import { getLanguage, setLanguage, text as localized, t } from './language.js?v=readable-ending-copy-20261124';
 
 const opening = document.querySelector('.opening');
 const story = document.querySelector('.story');
@@ -35,7 +35,7 @@ let textLayoutController;
 function applyTextLayout() {
   textLayoutController?.destroy();
   const paragraphs = [...document.querySelectorAll('.copy-justify')]
-    .filter((paragraph) => paragraph.getClientRects().length > 0);
+    .filter((paragraph) => paragraph.getClientRects().length > 0 && !paragraph.closest('.campaign-ending'));
   textLayoutController = paragraphs.length
     ? justify(paragraphs, { hyphenate: hyphenateEs })
     : undefined;
@@ -652,7 +652,7 @@ function renderEnding({ languageRefresh = false } = {}) {
       : riskScore === 0
         ? localized('Quitaste la ubicaci\u00f3n en directo, no compartiste tu rutina y pediste apoyo. Diste menos pistas. Todas las personas tienen derecho a la intimidad.', 'You removed live location, kept your routine private and asked for support. You shared fewer clues. Everyone has a right to privacy.')
         : choseSupport
-          ? localized('Cambiaste de rumbo y buscaste compa\u00f1\u00eda. Publicar una foto no da permiso para seguirte. La responsabilidad es de quien lo hace.', 'You changed course and found company. Posting a photo does not give anyone permission to follow you. The person doing it is responsible.')
+          ? localized('Cambiaste de rumbo y buscaste compa\u00f1\u00eda. Publicar una foto no justifica que alguien te siga. La responsabilidad es de quien lo hace.', 'You changed course and found company. Posting a photo does not justify anyone following you. The person doing it is responsible.')
           : localized('El Cart\u00f3grafo junt\u00f3 la hora, el lugar y tus publicaciones para deducir tu recorrido. Esta historia es inventada. Compartir una imagen nunca da permiso para seguirte.', 'The Cartographer combined the time, place and your posts to work out your route. This story is fictional. Sharing an image never gives anyone permission to follow you.');
   const answerLabels = {
     'live-location': copy('publiqu\u00e9 con mi ubicaci\u00f3n en directo', 'posted with my live location'),

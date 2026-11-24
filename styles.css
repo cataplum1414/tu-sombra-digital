@@ -1470,3 +1470,6 @@ body.is-heavy-rain .story__rain { opacity: .9; }
 @media (prefers-reduced-motion:reduce) {
   .campaign-opening .opening__fluorescent { opacity:.28; animation:none; }
 }
+
+/* Ending copy stays browser-native: the custom justification could collapse spaces. */
+.campaign-ending .copy-justify { text-align:left; hyphens:none; -webkit-hyphens:none; }

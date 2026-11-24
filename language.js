@@ -16,7 +16,7 @@ const copy = {
   exploreScene: ['Toca un objeto para ver una pista', 'Tap an object to see a clue'],
   tapScene: ['Toca una parte de la foto para descubrir una pista. La verás debajo.', 'Tap part of the photo to reveal a clue. It will appear below.'],
   fictionNote: ['Historia inventada. No usamos tu cámara ni tu ubicación.', 'Fictional story. We do not use your camera or location.'],
-  endingFiction: ['Esta historia ocurre en Alcalá, pero es inventada. Publicar una foto no da permiso a nadie para seguirte.', 'This story is set in Alcalá, but it is fictional. Posting a photo does not give anyone permission to follow you.'],
+  endingFiction: ['Esta historia transcurre en Alcalá, pero es ficticia. Publicar una foto no da derecho a nadie a seguirte.', 'This story takes place in Alcalá, but it is fictional. Posting a photo does not give anyone the right to follow you.'],
   articleKicker: ['ARTÍCULO 12 · DECLARACIÓN UNIVERSAL DE LOS DERECHOS HUMANOS', 'ARTICLE 12 · UNIVERSAL DECLARATION OF HUMAN RIGHTS'],
   articleTitle: ['Tu vida privada merece protección.', 'Your private life deserves protection.'],
   articleSummary: ['El artículo 12 protege tu vida privada, tu familia, tu casa y tus mensajes. Nadie puede meterse en ellos sin una razón legal.', 'Article 12 protects your private life, family, home and messages. No one may interfere with them without a legal reason.'],
