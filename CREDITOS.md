@@ -3,8 +3,8 @@
 ## Música y efectos
 
 - La ambientación cambia de la calle mojada al café con gente. Una base suave de [Forest Mist Whispers, de Alejandro Magaña (A. M.)](https://mixkit.co/free-stock-music/mood/calm/) gana presencia cuando las decisiones reducen el riesgo; una capa de tonos graves generada con Web Audio añade tensión cuando aumenta.
-- Cada efecto coincide con algo visible: obturador al hacer la foto; vibración del móvil al recibir un mensaje; risa o respiración del Cartógrafo; zumbido y parpadeo de la farola en la Plaza de Cervantes y junto a la Puerta de Madrid; pasos sobre el pavimento mojado; campanilla y taza al entrar y sentarte con Paula. La mezcla baja la música y el ambiente durante cada efecto.
-- Los efectos al tocar siguen activos aunque se apague la música. Las fuentes y las licencias están en [`assets/audio/FUENTES.md`](assets/audio/FUENTES.md).
+- Cada objeto tiene una respuesta propia: obturador y enfoque en la Casa de Cervantes; vibración, reflejo desfasado y risa bajo los soportales; campanilla, mensaje y fallo eléctrico en la Plaza; taza y pasos en la ruta del café; resonancia de piedra y respiración bajo el arco. La lluvia dibuja ondas distintas al tocar cada punto y la imagen responde con movimientos ligados a esa acción.
+- El botón de música activa o silencia también los efectos y las vibraciones. La escena sigue reaccionando visualmente si el sonido está apagado. Las fuentes y las licencias están en [`assets/audio/FUENTES.md`](assets/audio/FUENTES.md).
 
 ## Escenas fotográficas
 

@@ -6,6 +6,7 @@ const opening = document.querySelector('.opening');
 const story = document.querySelector('.story');
 const reveal = document.querySelector('.reveal');
 const sceneImage = document.querySelector('#scene-image');
+const sceneReflection = document.querySelector('#scene-reflection');
 const sceneImageWrap = document.querySelector('#scene-image-wrap');
 const sceneReaction = document.querySelector('#scene-reaction');
 const sceneKicker = document.querySelector('#scene-kicker');
@@ -404,11 +405,8 @@ function scheduleSceneAudio(index) {
   // The long texture stays underneath the licensed music without cutting it.
   if (index === 0) {
     queueSceneAudio(index, 8800, 'suspenseAmbience', 0.1);
-  } else if (index === 1) {
-    queueSceneAudio(index, 4700, 'suspenseAmbience', 0.13);
   } else if (index === 2) {
     if (riskScore > 0) {
-      queueSceneAudio(index, 3600, 'suspenseAmbience', 0.15);
       queueSceneAudio(index, 9800, 'distantThunder', Math.min(0.24, 0.14 + tensionLevel * 0.03));
     }
   }
@@ -479,6 +477,13 @@ function showLampFailure() {
   sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-lamp-failure'), 8600);
 }
 
+function markCartographerGone() {
+  const cafeWindow = currentScene === 3 && decisions.includes('go-cafe');
+  sceneImageWrap.style.setProperty('--vanish-x', cafeWindow ? '86%' : '80%');
+  sceneImageWrap.style.setProperty('--vanish-y', cafeWindow ? '40%' : '49%');
+  sceneImageWrap.classList.add('is-cartographer-gone');
+}
+
 function scheduleSceneInterruption(index) {
   const interruption = [
     {
@@ -499,15 +504,15 @@ function scheduleSceneInterruption(index) {
       delay: 2200,
       title: copy('PASOS DETRÁS DE TI', 'FOOTSTEPS BEHIND YOU'),
       message: copy('La lluvia tapa el ruido de la calle.', 'The rain swallows the sounds of the street.'),
-      effect: 'rain',
+      effect: 'shadow-pass',
       sound: 'footsteps'
     } : null,
     decisions.includes('take-shortcut') ? {
       delay: 1800,
-      title: copy('LA FAROLA FALLA', 'THE STREETLIGHT FALTERS'),
-      message: copy('La farola se apaga. Una sombra roja cruza el arco.', 'The lamppost goes dark. A red shadow crosses the arch.'),
-      effect: 'lamp',
-      sound: 'lamp'
+      title: copy('ALGO RESPIRA BAJO EL ARCO', 'SOMETHING BREATHES UNDER THE ARCH'),
+      message: copy('Tus pasos dejan de sonar. Una respiración llega desde el otro lado.', 'Your footsteps stop. A breath comes from the other side.'),
+      effect: 'shadow',
+      sound: 'breath'
     } : null
   ][index];
 
@@ -537,11 +542,19 @@ function scheduleSceneInterruption(index) {
       if (ambientOn) navigator.vibrate?.([65, 35, 110]);
       sceneImageWrap.classList.add('is-reflection-slip');
       sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-reflection-slip'), 2600);
-    } else if (interruption.effect === 'rain') {
-      story.classList.add('is-raining');
+    } else if (interruption.effect === 'shadow-pass') {
+      sceneImageWrap.classList.add('is-shadow-pass');
+      sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-shadow-pass'), 2600);
     } else if (interruption.effect === 'lamp') {
       showLampFailure();
       if (ambientOn) navigator.vibrate?.([24, 38, 24]);
+    } else if (interruption.effect === 'shadow') {
+      sceneImageWrap.classList.add('is-arch-breath');
+      sceneHotspots.classList.add('is-disturbed');
+      if (ambientOn) {
+        duckSoundscapeFor(1500);
+        navigator.vibrate?.([22, 48, 22]);
+      }
     }
 
     if (ambientOn) {
@@ -549,7 +562,7 @@ function scheduleSceneInterruption(index) {
       else if (interruption.sound === 'phone') playPhoneVibration();
       else if (interruption.sound === 'footsteps') playFootsteps(0.42);
       else if (interruption.sound === 'lamp') playLampFlicker();
-      else if (interruption.sound === 'breath') playCartographerBreath();
+      else if (interruption.sound === 'breath') queueSceneAudio(index, 650, 'cartographerBreath', 0.42);
     }
 
     sceneInterruptionHideTimer = window.setTimeout(() => {
@@ -576,12 +589,14 @@ function renderScene(index, { languageRefresh = false } = {}) {
   const scene = scenes[index];
   currentScene = index;
   story.dataset.scene = String(index + 1);
+  story.dataset.route = index === 3 ? (decisions.includes('go-cafe') ? 'cafe' : 'portal') : '';
   clearSceneInterruption();
   story.classList.add('is-raining');
   story.classList.toggle('is-heavy-rain', riskScore >= 2);
   const hotspots = sceneValue(scene.hotspots);
   const sceneChoices = sceneValue(scene.choices);
   sceneImage.src = sceneValue(scene.image);
+  sceneReflection.src = sceneImage.src;
   setAmbientTrack(sceneValue(scene.ambience) || 'street');
   sceneKicker.textContent = sceneValue(scene.kicker);
   scenePlace.textContent = sceneValue(scene.place);
@@ -590,7 +605,7 @@ function renderScene(index, { languageRefresh = false } = {}) {
   sceneBody.textContent = sceneValue(scene.body);
   sceneClue.hidden = true;
   sceneClue.textContent = '';
-  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash', 'is-lamp-failure', 'is-cartographer-gone', 'is-reflection-slip', 'is-object-reaction', 'is-reaction-phone', 'is-reaction-threat', 'is-reaction-gate', 'is-reaction-protagonist', 'is-reaction-friend', 'is-reaction-cafe', 'is-reaction-landmark');
+  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash', 'is-lamp-failure', 'is-cartographer-gone', 'is-reflection-slip', 'is-gate-rumble', 'is-shadow-pass', 'is-arch-breath', 'is-object-reaction', 'is-reaction-phone', 'is-reaction-threat', 'is-reaction-gate', 'is-reaction-protagonist', 'is-reaction-friend', 'is-reaction-cafe', 'is-reaction-landmark');
   if (activeBeatClass) sceneImageWrap.classList.remove(activeBeatClass);
   window.clearTimeout(activeBeatResetTimer);
   activeBeatResetTimer = 0;
@@ -786,23 +801,33 @@ sceneHotspots.addEventListener('click', (event) => {
     sceneHotspots.classList.add('is-door-touched');
   }
   if (isThreat) {
-    navigator.vibrate?.([20, 28, 42]);
-    if (currentScene === 0) playFootsteps(0.46);
+    if (ambientOn) navigator.vibrate?.([20, 28, 42]);
+    if (currentScene === 0) playCartographerLaugh();
     else if (currentScene === 1) playCartographerLaugh();
     else if (currentScene === 2) {
-      sceneImageWrap.classList.add('is-cartographer-gone');
+      markCartographerGone();
       showLampFailure();
       playLampFlicker();
+    } else if (currentScene === 3 && decisions.includes('go-cafe')) {
+      markCartographerGone();
+      playFootsteps(0.46);
     }
-    else if (currentScene === 3 && !decisions.includes('go-cafe')) playCartographerBreath();
+    else if (currentScene === 3 && !decisions.includes('go-cafe')) {
+      sceneImageWrap.classList.add('is-arch-breath');
+      duckSoundscapeFor(2100);
+      playCartographerBreath();
+    }
     else if (currentScene === 3) playFootsteps(0.46);
   } else if (hotspot.id === 'gate') {
-    showLampFailure();
-    navigator.vibrate?.([24, 38, 24]);
-    playLampFlicker();
+    if (ambientOn) navigator.vibrate?.([24, 38, 24]);
+    sceneImageWrap.classList.add('is-door-touched');
+    sceneImageWrap.classList.add('is-gate-rumble');
+    window.clearTimeout(sceneInterruptionEffectTimer);
+    sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-gate-rumble'), 2600);
+    playStoneResonance();
   } else if (hotspot.id === 'protagonist') {
     if (currentScene === 0) {
-      navigator.vibrate?.(18);
+      if (ambientOn) navigator.vibrate?.(18);
       sceneImageWrap.classList.remove('is-camera-flash');
       void sceneImageWrap.offsetWidth;
       sceneImageWrap.classList.add('is-camera-flash');
@@ -811,27 +836,38 @@ sceneHotspots.addEventListener('click', (event) => {
       sceneImageWrap.classList.add('is-reflection-slip');
       window.clearTimeout(sceneInterruptionEffectTimer);
       sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-reflection-slip'), 2600);
+      playGlassTap();
     } else {
-      navigator.vibrate?.(18);
+      if (ambientOn) navigator.vibrate?.(18);
       playFootsteps(0.58);
     }
   } else if (hotspot.id === 'phone') {
     if (currentScene === 1) {
-      navigator.vibrate?.([65, 35, 110]);
+      if (ambientOn) navigator.vibrate?.([65, 35, 110]);
       playPhoneVibration();
-    } else {
+    } else if (currentScene === 2) {
       playSoundEffect('messageAlert', 0.52);
+      if (ambientOn) navigator.vibrate?.([35, 28, 35]);
+    } else if (currentScene === 3 && decisions.includes('go-cafe')) {
+      playCameraFlash(0.34);
+      if (ambientOn) navigator.vibrate?.(18);
+    } else {
+      playPhoneVibration();
     }
   } else if (hotspot.id === 'landmark') {
-    navigator.vibrate?.(14);
+    if (ambientOn) navigator.vibrate?.(14);
+    if (currentScene === 0) playFocusLock();
   } else if (hotspot.id === 'friend') {
-    navigator.vibrate?.(14);
+    if (ambientOn) navigator.vibrate?.(14);
     playCoffeeCup();
   } else if (hotspot.id === 'cafe') {
-    navigator.vibrate?.(14);
+    if (ambientOn) navigator.vibrate?.(14);
     playCafeDoorbell();
     cafeEntranceRang = true;
   }
+  window.dispatchEvent(new CustomEvent('story:touch', {
+    detail: { x: touchX, y: touchY, scene: currentScene + 1, target: hotspot.id }
+  }));
   announce('hotspot', { id: hotspot.id, scene: currentScene + 1, threat: isThreat });
 });
 sceneImageWrap.addEventListener('click', (event) => {
@@ -867,7 +903,7 @@ choices.addEventListener('click', (event) => {
   continueButton.hidden = false;
   continueLabel.textContent = currentScene === scenes.length - 1 ? t('seeEnding') : t('continue');
   announce('choice', { choice: lastDecision, risk: riskScore, scene: currentScene + 1 });
-  navigator.vibrate?.(Number(button.dataset.risk) ? [35, 45, 70] : 24);
+  if (ambientOn) navigator.vibrate?.(Number(button.dataset.risk) ? [35, 45, 70] : 24);
   if (lastDecision === 'go-cafe' && !cafeEntranceRang) playCafeDoorbell();
   else if (lastDecision === 'live-location') playPhoneVibration();
   else if (['take-shortcut', 'return-light'].includes(lastDecision)) playFootsteps();
@@ -967,6 +1003,7 @@ function setAmbientTrack(name) {
 }
 
 function playSoundEffect(name, volume = 0.46, delay = 0, maxDuration = 0) {
+  if (!ambientOn) return;
   const source = soundEffects[name];
   if (!source) return;
   const play = () => {
@@ -1141,11 +1178,108 @@ function playFootsteps(volume = 0.62) {
   playSoundEffect('footsteps', volume);
 }
 
+function playFocusLock() {
+  if (!ambientOn) return;
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  try {
+    if (!phoneVibrationAudioContext) phoneVibrationAudioContext = new AudioContextClass();
+    const context = phoneVibrationAudioContext;
+    if (context.state === 'suspended') context.resume().catch(() => {});
+    const tone = context.createOscillator();
+    const envelope = context.createGain();
+    const start = context.currentTime + 0.01;
+    tone.type = 'sine';
+    tone.frequency.setValueAtTime(1040, start);
+    tone.frequency.exponentialRampToValueAtTime(720, start + .11);
+    envelope.gain.setValueAtTime(.0001, start);
+    envelope.gain.linearRampToValueAtTime(.065, start + .015);
+    envelope.gain.exponentialRampToValueAtTime(.0001, start + .14);
+    tone.connect(envelope);
+    envelope.connect(context.destination);
+    tone.start(start);
+    tone.stop(start + .15);
+    tone.addEventListener('ended', () => { tone.disconnect(); envelope.disconnect(); }, { once: true });
+  } catch { /* Visual focus still works if Web Audio is unavailable. */ }
+}
+
+function playGlassTap() {
+  if (!ambientOn) return;
+  duckSoundscapeFor(1900);
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  try {
+    if (!phoneVibrationAudioContext) phoneVibrationAudioContext = new AudioContextClass();
+    const context = phoneVibrationAudioContext;
+    if (context.state === 'suspended') context.resume().catch(() => {});
+    const start = context.currentTime + .015;
+    [0, .19, .47].forEach((offset, index) => {
+      const tone = context.createOscillator();
+      const filter = context.createBiquadFilter();
+      const envelope = context.createGain();
+      const at = start + offset;
+      tone.type = index === 1 ? 'triangle' : 'sine';
+      tone.frequency.setValueAtTime(index === 1 ? 1580 : 1120, at);
+      tone.frequency.exponentialRampToValueAtTime(index === 1 ? 920 : 680, at + .34);
+      filter.type = 'bandpass';
+      filter.frequency.value = 1250;
+      filter.Q.value = 2.6;
+      envelope.gain.setValueAtTime(.0001, at);
+      envelope.gain.linearRampToValueAtTime(index === 1 ? .035 : .052, at + .012);
+      envelope.gain.exponentialRampToValueAtTime(.0001, at + .38);
+      tone.connect(filter);
+      filter.connect(envelope);
+      envelope.connect(context.destination);
+      tone.start(at);
+      tone.stop(at + .4);
+      tone.addEventListener('ended', () => { tone.disconnect(); filter.disconnect(); envelope.disconnect(); }, { once: true });
+    });
+  } catch { /* The reflection animation still works without Web Audio. */ }
+}
+
+function playStoneResonance() {
+  if (!ambientOn) return;
+  duckSoundscapeFor(2300);
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  try {
+    if (!phoneVibrationAudioContext) phoneVibrationAudioContext = new AudioContextClass();
+    const context = phoneVibrationAudioContext;
+    if (context.state === 'suspended') context.resume().catch(() => {});
+    const start = context.currentTime + .02;
+    const master = context.createGain();
+    master.gain.setValueAtTime(.0001, start);
+    master.gain.linearRampToValueAtTime(.2, start + .18);
+    master.gain.exponentialRampToValueAtTime(.0001, start + 1.95);
+    master.connect(context.destination);
+    const low = context.createOscillator();
+    const overtone = context.createOscillator();
+    const filter = context.createBiquadFilter();
+    low.type = 'triangle';
+    low.frequency.setValueAtTime(78, start);
+    low.frequency.exponentialRampToValueAtTime(46, start + 1.7);
+    overtone.type = 'sine';
+    overtone.frequency.setValueAtTime(156, start);
+    overtone.frequency.exponentialRampToValueAtTime(92, start + 1.7);
+    filter.type = 'lowpass';
+    filter.frequency.value = 240;
+    low.connect(filter);
+    overtone.connect(filter);
+    filter.connect(master);
+    low.start(start);
+    overtone.start(start);
+    low.stop(start + 2);
+    overtone.stop(start + 2);
+    low.addEventListener('ended', () => { low.disconnect(); overtone.disconnect(); filter.disconnect(); master.disconnect(); }, { once: true });
+  } catch { playSoundEffect('distantThunder', 0.2, 0, 2200); }
+}
+
 function playDoorCreak() {
   playSoundEffect('doorCreak', 0.66);
 }
 
 function playLampFlicker() {
+  if (!ambientOn) return;
   window.clearTimeout(lampBuzzTimer);
   window.clearTimeout(lampBuzzStopTimer);
   playSoundEffect('lampSwitch', 0.46);
@@ -1179,6 +1313,7 @@ function playOpeningFluorescent() {
 }
 
 function playPhoneVibration() {
+  if (!ambientOn) return;
   duckSoundscapeFor(900);
   if (activeSoundEffect) {
     activeSoundEffect.pause();
@@ -1195,11 +1330,11 @@ function playPhoneVibration() {
     if (context.state === 'suspended') context.resume().catch(() => {});
 
     const output = context.createGain();
-    output.gain.value = 0.2;
+    output.gain.value = 0.18;
     output.connect(context.destination);
     const start = context.currentTime + 0.01;
 
-    [[0, 0.16], [0.27, 0.21]].forEach(([offset, duration]) => {
+    [[0, 0.2], [0.31, 0.28], [0.78, 0.18]].forEach(([offset, duration]) => {
       const pulseStart = start + offset;
       const pulseEnd = pulseStart + duration;
       const motor = context.createOscillator();
@@ -1228,7 +1363,7 @@ function playPhoneVibration() {
       rattle.stop(pulseEnd + 0.01);
     });
 
-    window.setTimeout(() => output.disconnect(), 850);
+    window.setTimeout(() => output.disconnect(), 1150);
   } catch {
     navigator.vibrate?.([65, 35, 110]);
   }

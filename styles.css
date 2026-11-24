@@ -1531,10 +1531,22 @@ body.is-heavy-rain .story__rain { opacity:1; }
 .story__image-wrap.is-beat-4-cartographer .story__reaction { background:radial-gradient(ellipse at var(--tap-x) var(--tap-y),rgba(172,0,12,.42),transparent 54%); animation:hood-breath 3s ease-in-out both; }
 .story__image-wrap.is-beat-4-protagonist .story__image { animation:turn-to-safety 2.4s ease-out both; }
 .story__vanish { position:absolute; z-index:2; inset:0; overflow:hidden; pointer-events:none; opacity:0; }
-.story__vanish::before { content:""; position:absolute; inset:0; background:radial-gradient(ellipse 12% 31% at 79% 48%,rgba(3,3,5,.98) 0 38%,rgba(4,3,5,.9) 61%,rgba(4,3,5,.48) 79%,transparent 100%); }
+.story__vanish::before { content:""; position:absolute; inset:0; background:radial-gradient(ellipse 12% 31% at var(--vanish-x,80%) var(--vanish-y,49%),rgba(3,3,5,.98) 0 38%,rgba(4,3,5,.9) 61%,rgba(4,3,5,.48) 79%,transparent 100%); }
 .story__vanish::after { content:""; position:absolute; inset:-10% -25%; opacity:0; background:linear-gradient(90deg,transparent 50%,rgba(139,0,12,.08) 65%,rgba(181,0,16,.58) 76%,rgba(94,0,8,.16) 81%,transparent 91%); filter:blur(11px); transform:translateX(24%); }
 .story__image-wrap.is-cartographer-gone .story__vanish { animation:cartographer-erases 2.8s ease-out both; }
 .story__image-wrap.is-cartographer-gone .story__vanish::after { animation:red-shadow-exit 1.8s ease-in-out both; }
+.story__reflection { position:absolute; z-index:1; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 48%; clip-path:polygon(73% 0,100% 0,100% 100%,73% 100%); opacity:0; pointer-events:none; filter:sepia(.8) saturate(2.5) hue-rotate(300deg) brightness(.68) contrast(1.2); mix-blend-mode:screen; }
+.story__image-wrap.is-beat-2-cartographer .story__reflection,
+.cinematic-story[data-route="cafe"] .story__image-wrap.is-beat-4-cartographer .story__reflection { animation:reflection-lag 2.7s steps(1,end) both; }
+.story__image-wrap.is-beat-1-landmark .story__reaction { background:linear-gradient(100deg,transparent 0,rgba(226,234,239,.03) 33%,rgba(242,226,194,.46) 49%,rgba(194,218,230,.16) 53%,transparent 67%); mix-blend-mode:screen; animation:facade-scan 1.7s ease-in-out both; }
+.story__image-wrap.is-beat-2-phone .story__image { animation:message-glance 1.9s ease-out both; }
+.story__image-wrap.is-beat-3-cafe .story__reaction { background:radial-gradient(ellipse at var(--tap-x) var(--tap-y),rgba(248,172,97,.48),rgba(196,93,45,.14) 26%,transparent 56%); mix-blend-mode:screen; animation:warm-doorway 2.6s ease-out both; }
+.story__image-wrap.is-beat-3-phone .story__reaction { background:radial-gradient(ellipse at var(--tap-x) var(--tap-y),rgba(200,222,249,.44),rgba(117,149,198,.1) 25%,transparent 52%); animation:message-glance 1.7s ease-out both; }
+.story__image-wrap.is-beat-4-friend .story__reaction { background:radial-gradient(ellipse at var(--tap-x) var(--tap-y),rgba(255,191,116,.42),rgba(219,133,73,.1) 31%,transparent 58%); mix-blend-mode:screen; animation:friend-warmth 2.8s ease-out both; }
+.story__image-wrap.is-beat-4-phone .story__reaction { background:radial-gradient(ellipse at var(--tap-x) var(--tap-y),rgba(255,244,226,.65),rgba(255,244,226,.15) 18%,transparent 38%); mix-blend-mode:screen; animation:evidence-capture 1.2s ease-out both; }
+.story__image-wrap.is-beat-4-gate::before { content:""; position:absolute; z-index:2; inset:0; pointer-events:none; background:radial-gradient(ellipse 42% 34% at 52% 38%,rgba(167,150,127,.2),transparent 76%); animation:stone-echo 2.5s ease-out both; }
+.story__image-wrap.is-shadow-pass::before { content:""; position:absolute; z-index:2; inset:-15% -30%; pointer-events:none; background:linear-gradient(96deg,transparent 32%,rgba(3,3,5,.68) 47%,rgba(5,3,4,.88) 52%,rgba(3,3,5,.44) 57%,transparent 72%); filter:blur(13px); animation:passing-shadow 2.4s ease-in-out both; }
+.story__image-wrap.is-arch-breath::before { content:""; position:absolute; z-index:2; inset:0; pointer-events:none; background:radial-gradient(ellipse 20% 34% at 58% 52%,rgba(160,0,12,.23),rgba(4,3,4,.05) 55%,transparent 76%); animation:arch-breath 3.2s ease-in-out both; }
 @keyframes hood-approach { 0%,100%{transform:scale(1.015);filter:brightness(.76) saturate(.92) contrast(1.08)} 46%{transform:scale(1.07) translate3d(-.3%,0,0);filter:brightness(.62) saturate(1.12) contrast(1.16)} 68%{transform:scale(1.055);filter:brightness(.8) saturate(1.08)} }
 @keyframes facade-reveal { 0%,100%{transform:scale(1.015);filter:brightness(.76) saturate(.92) contrast(1.08)} 42%{transform:scale(1.045);filter:brightness(.9) saturate(.82) contrast(1.16)} 60%{transform:scale(1.03);filter:brightness(.7) saturate(.8)} }
 @keyframes reflection-cross { 0%{opacity:0;transform:translateX(-45%)} 28%{opacity:.5} 58%{opacity:.36;transform:translateX(34%)} 100%{opacity:0;transform:translateX(65%)} }
@@ -1544,6 +1556,15 @@ body.is-heavy-rain .story__rain { opacity:1; }
 @keyframes turn-to-safety { 0%,100%{transform:scale(1.015);filter:brightness(.76) saturate(.92)} 55%{transform:scale(1.05) translate3d(.35%,0,0);filter:brightness(.88) saturate(1.02)} }
 @keyframes cartographer-erases { 0%,16%{opacity:0} 35%{opacity:.62} 58%,100%{opacity:1} }
 @keyframes red-shadow-exit { 0%{opacity:0;transform:translateX(24%)} 18%{opacity:.85} 72%{opacity:.56;transform:translateX(-20%)} 100%{opacity:0;transform:translateX(-38%)} }
+@keyframes reflection-lag { 0%,18%,100%{opacity:0;transform:translateX(0)} 29%{opacity:.62;transform:translateX(0)} 44%{opacity:.76;transform:translateX(-8px)} 58%{opacity:.42;transform:translateX(5px)} 76%{opacity:.58;transform:translateX(-3px)} 90%{opacity:0;transform:translateX(0)} }
+@keyframes facade-scan { 0%{opacity:0;transform:translateX(-38%)} 15%{opacity:.8} 80%{opacity:.62;transform:translateX(42%)} 100%{opacity:0;transform:translateX(55%)} }
+@keyframes message-glance { 0%,100%{transform:scale(1.015);filter:brightness(.76) saturate(.92) contrast(1.08)} 34%{transform:scale(1.045) translate3d(-.25%,.1%,0);filter:brightness(.9) saturate(.98) contrast(1.1)} 63%{transform:scale(1.025);filter:brightness(.68) saturate(.86) contrast(1.13)} }
+@keyframes warm-doorway { 0%{opacity:0} 26%{opacity:.68} 58%{opacity:.42} 100%{opacity:0} }
+@keyframes friend-warmth { 0%,100%{opacity:0} 24%{opacity:.68} 54%{opacity:.44} 78%{opacity:.2} }
+@keyframes evidence-capture { 0%{opacity:0} 14%{opacity:.9} 28%{opacity:.16} 44%{opacity:.58} 100%{opacity:0} }
+@keyframes stone-echo { 0%{opacity:0;transform:scale(.94)} 24%{opacity:.72} 55%{opacity:.3;transform:scale(1.04)} 100%{opacity:0;transform:scale(1.1)} }
+@keyframes passing-shadow { 0%{transform:translateX(30%);opacity:0} 24%{opacity:.72} 68%{opacity:.58;transform:translateX(-22%)} 100%{transform:translateX(-40%);opacity:0} }
+@keyframes arch-breath { 0%,100%{opacity:0} 30%{opacity:.68} 54%{opacity:.12} 78%{opacity:.5} }
 
 /* The lamp fault darkens and relights the complete photograph, not the hood. */
 .story__image-wrap.is-lamp-failure .story__image { animation:fluorescent-image-failure 8.6s steps(1,end) both !important; }
@@ -1586,4 +1607,16 @@ body.is-heavy-rain .story__rain { opacity:1; }
   .story__image-wrap.is-lamp-failure .story__image { animation:none !important; filter:brightness(.55) saturate(.78); }
   .story__image-wrap.is-cartographer-gone .story__vanish { animation:none; opacity:1; }
   .story__image-wrap.is-cartographer-gone .story__vanish::after { display:none; }
+  .story__image-wrap.is-beat-1-landmark .story__reaction,
+  .story__image-wrap.is-beat-2-cartographer .story__reflection,
+  .story__image-wrap.is-beat-3-cafe .story__reaction,
+  .story__image-wrap.is-beat-3-phone .story__reaction,
+  .story__image-wrap.is-beat-4-friend .story__reaction,
+  .story__image-wrap.is-beat-4-phone .story__reaction,
+  .story__image-wrap.is-shadow-pass::before,
+  .story__image-wrap.is-arch-breath::before,
+  .story__image-wrap.is-gate-rumble::before { animation:none; }
+  .story__image-wrap.is-beat-2-cartographer .story__reflection { opacity:.24; }
+  .story__image-wrap.is-shadow-pass::before,
+  .story__image-wrap.is-arch-breath::before { opacity:.18; }
 }

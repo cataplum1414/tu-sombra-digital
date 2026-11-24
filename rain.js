@@ -14,6 +14,7 @@
   let pixelRatio = 1;
   let streaks = [];
   let drops = [];
+  let touchRipples = [];
   let raf = 0;
   let active = false;
   let lastTime = 0;
@@ -112,6 +113,42 @@
       context.stroke();
     });
     drops.forEach((drop) => paintGlassDrop(drop, time, move));
+    paintTouchRipples(time);
+  }
+
+  function paintTouchRipples(time) {
+    touchRipples = touchRipples.filter((ripple) => time - ripple.started < 1550);
+    touchRipples.forEach((ripple) => {
+      const age = Math.max(0, (time - ripple.started) / 1000);
+      const [red, green, blue] = ripple.color;
+      const ringCount = ripple.target === 'phone' ? 2 : 1;
+      for (let ring = 0; ring < ringCount; ring += 1) {
+        const offset = ring * .16;
+        if (age < offset) continue;
+        const progress = Math.max(0, Math.min(1, (age - offset) / 1.35));
+        const radius = 12 + progress * (ripple.target === 'cartographer' ? 92 : 68);
+        context.beginPath();
+        context.ellipse(ripple.x, ripple.y, radius, radius * .58, -.16, 0, Math.PI * 2);
+        context.strokeStyle = `rgba(${red},${green},${blue},${(1 - progress) * (ripple.target === 'cartographer' ? .42 : .3)})`;
+        context.lineWidth = Math.max(.65, 1.7 * (1 - progress));
+        context.stroke();
+      }
+    });
+  }
+
+  function onStoryTouch(event) {
+    if (!active) return;
+    const { x, y, target } = event.detail || {};
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    const color = target === 'cartographer'
+      ? [184, 19, 33]
+      : ['cafe', 'friend'].includes(target)
+        ? [255, 192, 132]
+        : target === 'phone'
+          ? [190, 218, 248]
+          : [224, 237, 243];
+    touchRipples.push({ x, y, target, color, started: performance.now() });
+    if (reduceMotion.matches) draw(performance.now(), false);
   }
 
   function animate(time) {
@@ -154,12 +191,14 @@
     cancelAnimationFrame(raf);
     raf = 0;
     context.clearRect(0, 0, width, height);
+    touchRipples = [];
   }
 
   const observer = new MutationObserver(syncExperience);
   observer.observe(story, { attributes: true, attributeFilter: ['hidden', 'class'] });
   observer.observe(opening, { attributes: true, attributeFilter: ['hidden', 'class'] });
   window.addEventListener('resize', resize, { passive: true });
+  window.addEventListener('story:touch', onStoryTouch);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       cancelAnimationFrame(raf);
