@@ -103,7 +103,7 @@ const scenes = [
     ]
   },
   {
-    image: 'assets/story/alcala-plaza-exterior.webp',
+    image: 'assets/story/alcala-plaza-exterior.webp?v=wardrobe-rain-20261124',
     ambience: 'street',
     place: copy('PLAZA DE CERVANTES · CAFÉ ABIERTO', 'CERVANTES SQUARE · CAFÉ OPEN'),
     kicker: copy('PLAZA DE CERVANTES · 23:32', 'CERVANTES SQUARE · 11:32 P.M.'),
@@ -126,7 +126,7 @@ const scenes = [
     ]
   },
   {
-    image: () => decisions.includes('go-cafe') ? 'assets/story/alcala-cafe.webp' : 'assets/story/alcala-portal.webp',
+    image: () => decisions.includes('go-cafe') ? 'assets/story/alcala-cafe.webp' : 'assets/story/alcala-portal.webp?v=wardrobe-rain-20261124',
     ambience: () => decisions.includes('go-cafe') ? 'cafe' : 'street',
     place: () => localized(decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES · CAFÉ' : 'CALLE CARDENAL SANDOVAL Y ROJAS · PORTAL', decisions.includes('go-cafe') ? 'CERVANTES SQUARE · CAFÉ' : 'CARDENAL SANDOVAL Y ROJAS · DOORWAY'),
     kicker: () => localized(decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES · 23:38' : 'SANDOVAL Y ROJAS · 23:41', decisions.includes('go-cafe') ? 'CERVANTES SQUARE · 11:38 P.M.' : 'SANDOVAL Y ROJAS · 11:41 P.M.'),
@@ -451,6 +451,7 @@ function clearSceneInterruption() {
   sceneInterruption.classList.remove('is-visible', 'is-leaving');
   sceneInterruption.replaceChildren();
   story.classList.remove('is-raining');
+  story.classList.remove('is-heavy-rain');
   sceneImageWrap.classList.remove('is-camera-flash', 'is-lamp-failure', 'is-reflection-slip');
 }
 
@@ -552,6 +553,8 @@ function renderScene(index, { languageRefresh = false } = {}) {
   currentScene = index;
   story.dataset.scene = String(index + 1);
   clearSceneInterruption();
+  story.classList.add('is-raining');
+  story.classList.toggle('is-heavy-rain', riskScore >= 2);
   const hotspots = sceneValue(scene.hotspots);
   const sceneChoices = sceneValue(scene.choices);
   sceneImage.src = sceneValue(scene.image);
@@ -606,7 +609,7 @@ function renderEnding({ languageRefresh = false } = {}) {
   textLayoutController = undefined;
   const endedInCafe = ['share-private', 'post-cafe', 'return-light'].includes(lastDecision);
   const choseSupport = ['share-private', 'return-light'].includes(lastDecision);
-  const finalImage = endedInCafe ? 'assets/story/alcala-cafe.webp' : 'assets/story/alcala-portal.webp';
+  const finalImage = endedInCafe ? 'assets/story/alcala-cafe.webp' : 'assets/story/alcala-portal.webp?v=wardrobe-rain-20261124';
   if (!languageRefresh) setAmbientTrack(endedInCafe ? 'cafe' : 'street');
   endingBackdrop.style.backgroundImage = `url("${finalImage}")`;
   endingKicker.textContent = localized(endedInCafe ? 'PLAZA DE CERVANTES · CAFÉ · 23:48' : 'CARDENAL SANDOVAL Y ROJAS · 23:48', endedInCafe ? 'CERVANTES SQUARE · CAFÉ · 11:48 P.M.' : 'CARDENAL SANDOVAL Y ROJAS · 11:48 P.M.');

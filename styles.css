@@ -1292,3 +1292,44 @@ body:is(.view-immersive) .cinematic-story .story__hotspots { transition-duration
   .story__image-wrap.is-lamp-failure::before { animation: none; opacity: .16; }
   .story__image-wrap.is-reflection-slip .story__image { animation: none; }
 }
+.story__rain {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+.story.is-raining .story__rain { opacity: .38; }
+.story.is-heavy-rain .story__rain { opacity: .58; }
+.story__rain i {
+  position: absolute;
+  inset: -80% -35%;
+  display: block;
+  background-image: repeating-linear-gradient(106deg, transparent 0 25px, rgba(224,239,245,.48) 26px, transparent 27px 53px);
+  background-size: 107px 139px;
+  transform: translate3d(0,-12%,0);
+  animation: screen-rain-fall .78s linear infinite;
+  will-change: transform;
+}
+.story__rain i:nth-child(2) {
+  opacity: .58;
+  background-size: 151px 191px;
+  background-position: 41px 13px;
+  animation-duration: 1.12s;
+  animation-delay: -.43s;
+}
+.story__rain i:nth-child(3) {
+  opacity: .36;
+  background-size: 73px 113px;
+  background-position: 19px 37px;
+  animation-duration: .62s;
+  animation-delay: -.27s;
+}
+.story.is-heavy-rain .story__rain i { animation-duration: .58s; }
+@keyframes screen-rain-fall { to { transform: translate3d(-12%,24%,0); } }
+@media (prefers-reduced-motion: reduce) {
+  .story__rain { opacity: .2; }
+  .story__rain i { animation: none; transform: none; }
+}
