@@ -1329,7 +1329,41 @@ body:is(.view-immersive) .cinematic-story .story__hotspots { transition-duration
 }
 .story.is-heavy-rain .story__rain i { animation-duration: .58s; }
 @keyframes screen-rain-fall { to { transform: translate3d(-12%,24%,0); } }
+.story__reaction {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at var(--tap-x,50%) var(--tap-y,50%), var(--tap-glow,rgba(255,230,207,.6)) 0, transparent 25%);
+  mix-blend-mode: screen;
+}
+.story__reaction.is-visible { animation: object-glint 1.05s ease-out both; }
+.story__image-wrap.is-lamp-failure::before { background: radial-gradient(ellipse at var(--lamp-x,76%) var(--lamp-y,37%), rgba(255,205,133,.62), rgba(255,174,86,.16) 13%, transparent 39%); }
+@media (prefers-reduced-motion: no-preference) {
+  .story__image-wrap.is-object-reaction .story__image { transform-origin: var(--tap-x,50%) var(--tap-y,50%); animation: object-response 1.05s cubic-bezier(.18,.72,.2,1) both; }
+  .story__image-wrap.is-disturbed.is-object-reaction .story__image { animation: cartographer-lunge 1.05s cubic-bezier(.18,.8,.2,1) both; }
+  .story__image-wrap.is-lamp-failure.is-object-reaction .story__image { animation: lamp-failure 6.8s ease-out both; }
+  .story__image-wrap.is-door-touched .story__image { animation: door-response-image 1.15s ease-out both; }
+}
+@keyframes object-glint {
+  0% { opacity: 0; }
+  18% { opacity: .82; }
+  42% { opacity: .34; }
+  100% { opacity: 0; }
+}
+@keyframes object-response {
+  0%,100% { transform: scale(1.015); filter: brightness(.68) saturate(.76); }
+  24% { transform: scale(1.075); filter: brightness(.9) saturate(.88); }
+  38% { transform: scale(1.05); filter: brightness(.58) saturate(.72); }
+  65% { transform: scale(1.055); filter: brightness(.8) saturate(.82); }
+}
 @media (prefers-reduced-motion: reduce) {
   .story__rain { opacity: .2; }
   .story__rain i { animation: none; transform: none; }
+  .story__reaction.is-visible { animation: none; opacity: .18; }
+  .story__image-wrap.is-object-reaction .story__image,
+  .story__image-wrap.is-disturbed .story__image,
+  .story__image-wrap.is-door-touched .story__image,
+  .story__image-wrap.is-lamp-failure .story__image { animation: none !important; transform: none; }
 }

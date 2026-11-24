@@ -7,6 +7,7 @@ const story = document.querySelector('.story');
 const reveal = document.querySelector('.reveal');
 const sceneImage = document.querySelector('#scene-image');
 const sceneImageWrap = document.querySelector('#scene-image-wrap');
+const sceneReaction = document.querySelector('#scene-reaction');
 const sceneKicker = document.querySelector('#scene-kicker');
 const scenePlace = document.querySelector('#scene-place');
 const sceneTitle = document.querySelector('#story-title');
@@ -452,7 +453,41 @@ function clearSceneInterruption() {
   sceneInterruption.replaceChildren();
   story.classList.remove('is-raining');
   story.classList.remove('is-heavy-rain');
-  sceneImageWrap.classList.remove('is-camera-flash', 'is-lamp-failure', 'is-reflection-slip');
+  sceneImageWrap.classList.remove('is-camera-flash', 'is-lamp-failure', 'is-reflection-slip', 'is-object-reaction');
+  sceneReaction.classList.remove('is-visible');
+}
+
+function triggerPhotoReaction(button, hotspot) {
+  const stage = sceneImageWrap.getBoundingClientRect();
+  const target = button.getBoundingClientRect();
+  const x = Math.max(0, Math.min(100, ((target.left + target.width / 2 - stage.left) / stage.width) * 100));
+  const y = Math.max(0, Math.min(100, ((target.top + target.height / 2 - stage.top) / stage.height) * 100));
+  const glow = hotspot.id === 'phone'
+    ? 'rgba(190, 222, 255, .7)'
+    : ['cafe', 'friend', 'landmark'].includes(hotspot.id)
+      ? 'rgba(255, 193, 118, .65)'
+      : hotspot.id === 'cartographer'
+        ? 'rgba(227, 33, 39, .7)'
+        : 'rgba(244, 226, 207, .55)';
+
+  sceneImageWrap.style.setProperty('--tap-x', `${x}%`);
+  sceneImageWrap.style.setProperty('--tap-y', `${y}%`);
+  sceneReaction.style.setProperty('--tap-glow', glow);
+  sceneImageWrap.classList.remove('is-object-reaction');
+  sceneReaction.classList.remove('is-visible');
+  void sceneImageWrap.offsetWidth;
+  sceneImageWrap.classList.add('is-object-reaction');
+  sceneReaction.classList.add('is-visible');
+}
+
+function showLampFailure() {
+  window.clearTimeout(sceneInterruptionEffectTimer);
+  sceneImageWrap.style.setProperty('--lamp-x', '76%');
+  sceneImageWrap.style.setProperty('--lamp-y', '37%');
+  sceneImageWrap.classList.remove('is-lamp-failure');
+  void sceneImageWrap.offsetWidth;
+  sceneImageWrap.classList.add('is-lamp-failure');
+  sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-lamp-failure'), 6800);
 }
 
 function scheduleSceneInterruption(index) {
@@ -515,8 +550,7 @@ function scheduleSceneInterruption(index) {
     } else if (interruption.effect === 'rain') {
       story.classList.add('is-raining');
     } else if (interruption.effect === 'lamp') {
-      sceneImageWrap.classList.add('is-lamp-failure');
-      sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-lamp-failure'), 6800);
+      showLampFailure();
       if (ambientOn) navigator.vibrate?.([24, 38, 24]);
     }
 
@@ -566,7 +600,8 @@ function renderScene(index, { languageRefresh = false } = {}) {
   sceneBody.textContent = sceneValue(scene.body);
   sceneClue.hidden = true;
   sceneClue.textContent = '';
-  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash', 'is-lamp-failure', 'is-reflection-slip');
+  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash', 'is-lamp-failure', 'is-reflection-slip', 'is-object-reaction');
+  sceneReaction.classList.remove('is-visible');
   sceneHotspots.classList.remove('is-disturbed', 'is-door-touched');
   sceneHotspots.innerHTML = hotspots.map((hotspot) => `
     <button class="story__hotspot story__hotspot--${hotspot.id}" type="button" data-hotspot="${hotspot.id}" aria-pressed="false" style="left:${hotspot.x}%;top:${hotspot.y}%" aria-controls="scene-clue" aria-label="${t('sceneA11y')}${sceneValue(hotspot.label)}"></button>`).join('');
@@ -730,6 +765,7 @@ sceneHotspots.addEventListener('click', (event) => {
   aimPerspective(story, touchX, touchY, hotspot.id === 'cartographer' ? 3.7 : 2.8, sceneImageWrap);
   releasePerspective(story, hotspot.id === 'cartographer' ? 1150 : 780);
   activeHotspotId = hotspot.id;
+  triggerPhotoReaction(button, hotspot);
   sceneHotspots.querySelectorAll('[data-hotspot]').forEach((target) => {
     target.setAttribute('aria-pressed', String(target === button));
   });
@@ -754,6 +790,11 @@ sceneHotspots.addEventListener('click', (event) => {
   if (isThreat) {
     navigator.vibrate?.([20, 28, 42]);
     if (currentScene <= 1) playCartographerLaugh();
+    else if (currentScene === 2) {
+      showLampFailure();
+      if (ambientOn) navigator.vibrate?.([24, 38, 24]);
+      playLampFlicker();
+    }
     else if (currentScene === 3 && !decisions.includes('go-cafe')) playCartographerBreath();
     else if (currentScene !== 3 || decisions.includes('go-cafe')) playFootsteps(0.58);
   } else if (hotspot.id === 'door') {
@@ -774,7 +815,7 @@ sceneHotspots.addEventListener('click', (event) => {
     playPhoneVibration();
   } else if (hotspot.id === 'landmark') {
     navigator.vibrate?.(14);
-    playFootsteps(0.58);
+    playCameraFlash(0.32);
   } else if (hotspot.id === 'friend') {
     navigator.vibrate?.(14);
     playCoffeeCup();
