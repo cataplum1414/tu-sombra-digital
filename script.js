@@ -361,16 +361,29 @@ let sceneInterruptionTimer = 0;
 let sceneInterruptionHideTimer = 0;
 let sceneInterruptionRemoveTimer = 0;
 let sceneInterruptionEffectTimer = 0;
+let lampBuzzTimer = 0;
+let lampBuzzStopTimer = 0;
+let activeLampBuzz = null;
 
 function clearSceneInterruption() {
   window.clearTimeout(sceneInterruptionTimer);
   window.clearTimeout(sceneInterruptionHideTimer);
   window.clearTimeout(sceneInterruptionRemoveTimer);
   window.clearTimeout(sceneInterruptionEffectTimer);
+  window.clearTimeout(lampBuzzTimer);
+  window.clearTimeout(lampBuzzStopTimer);
   sceneInterruptionTimer = 0;
   sceneInterruptionHideTimer = 0;
   sceneInterruptionRemoveTimer = 0;
   sceneInterruptionEffectTimer = 0;
+  lampBuzzTimer = 0;
+  lampBuzzStopTimer = 0;
+  if (activeLampBuzz) {
+    activeLampBuzz.pause();
+    activeLampBuzz.currentTime = 0;
+    if (activeSoundEffect === activeLampBuzz) activeSoundEffect = null;
+    activeLampBuzz = null;
+  }
   sceneInterruption.hidden = true;
   sceneInterruption.classList.remove('is-visible', 'is-leaving');
   sceneInterruption.replaceChildren();
@@ -406,7 +419,7 @@ function scheduleSceneInterruption(index) {
       title: copy('LA FAROLA FALLA', 'THE STREETLIGHT FALTERS'),
       message: copy('Algo se mueve al otro lado del portal.', 'Something moves across the doorway.'),
       effect: 'lamp',
-      sound: 'breath'
+      sound: 'lamp'
     } : null
   ][index];
 
@@ -445,6 +458,7 @@ function scheduleSceneInterruption(index) {
       if (interruption.sound === 'camera') playCameraFlash(0.42);
       else if (interruption.sound === 'phone') playPhoneVibration();
       else if (interruption.sound === 'footsteps') playFootsteps(0.42);
+      else if (interruption.sound === 'lamp') playLampFlicker();
       else if (interruption.sound === 'breath') playCartographerBreath();
     }
 
@@ -812,7 +826,9 @@ const soundEffects = {
   cafeDoorbell: 'assets/audio/cafe-doorbell.mp3',
   coffeeCup: 'assets/audio/coffee-cup-setdown.mp3',
   cartographerLaugh: 'assets/audio/cartographer-laugh.mp3',
-  cartographerBreath: 'assets/audio/cartographer-breath.mp3'
+  cartographerBreath: 'assets/audio/cartographer-breath.mp3',
+  lampSwitch: 'assets/audio/lamp-switch.mp3',
+  lampBuzz: 'assets/audio/lamp-electric-buzz.mp3'
 };
 
 function setAmbientTrack(name) {
@@ -986,6 +1002,32 @@ function playFootsteps(volume = 0.62) {
 
 function playDoorCreak() {
   playSoundEffect('doorCreak', 0.66);
+}
+
+function playLampFlicker() {
+  playSoundEffect('lampSwitch', 0.46);
+  duckSoundscapeFor(1700);
+  lampBuzzTimer = window.setTimeout(() => {
+    const buzz = new Audio(soundEffects.lampBuzz);
+    buzz.volume = 0.36;
+    activeLampBuzz = buzz;
+    activeSoundEffect = buzz;
+    buzz.addEventListener('ended', () => {
+      if (activeSoundEffect === buzz) activeSoundEffect = null;
+      if (activeLampBuzz === buzz) activeLampBuzz = null;
+    }, { once: true });
+    buzz.play().catch(() => {
+      if (activeSoundEffect === buzz) activeSoundEffect = null;
+      if (activeLampBuzz === buzz) activeLampBuzz = null;
+    });
+    lampBuzzStopTimer = window.setTimeout(() => {
+      if (activeSoundEffect !== buzz) return;
+      buzz.pause();
+      buzz.currentTime = 0;
+      activeSoundEffect = null;
+      activeLampBuzz = null;
+    }, 1250);
+  }, 110);
 }
 
 function playPhoneVibration() {
