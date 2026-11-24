@@ -117,7 +117,7 @@ const scenes = [
     hotspots: [
       { id: 'cafe', label: copy('El caf\u00e9', 'The caf\u00e9'), x: 22, y: 59, align: 'right', response: copy('La puerta se abre y suena la campanilla. Hay clientes y personal dentro. Puedes esperar ah\u00ed a Paula.', 'The door opens and its bell rings. Customers and staff are inside. You can wait there for Paula.') },
       { id: 'phone', label: copy('Tu m\u00f3vil', 'Your phone'), x: 35, y: 62, align: 'left', response: copy('Paula confirma que est\u00e1 a cinco minutos. Puedes compartir tu ubicaci\u00f3n solo con ella mientras llega.', 'Paula says she is five minutes away. You can share your location with her only while she gets here.') },
-      { id: 'cartographer', label: copy('El Cart\u00f3grafo', 'The Cartographer'), x: 78, y: 47, align: 'left', response: copy('Una rama se mueve delante de la farola. Al mirar de nuevo, el Cart\u00f3grafo ya cruz\u00f3 la plaza.', 'A branch moves in front of the lamppost. When you look again, the Cartographer has crossed the square.') }
+      { id: 'cartographer', label: copy('La farola', 'The lamppost'), x: 78, y: 47, align: 'left', response: copy('La farola parpadea y se apaga. Cuando vuelve la luz, el Cart\u00f3grafo ya no est\u00e1 junto al poste.', 'The lamppost flickers and goes dark. When the light returns, the Cartographer is no longer beside it.') }
     ],
     choices: [
       { id: 'go-cafe', risk: 0, label: copy('Entrar al caf\u00e9 y esperar a Paula', 'Go into the caf\u00e9 and wait for Paula') },
@@ -590,7 +590,7 @@ function renderScene(index, { languageRefresh = false } = {}) {
   sceneBody.textContent = sceneValue(scene.body);
   sceneClue.hidden = true;
   sceneClue.textContent = '';
-  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash', 'is-lamp-failure', 'is-reflection-slip', 'is-object-reaction', 'is-reaction-phone', 'is-reaction-threat', 'is-reaction-gate', 'is-reaction-protagonist', 'is-reaction-friend', 'is-reaction-cafe', 'is-reaction-landmark');
+  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash', 'is-lamp-failure', 'is-cartographer-gone', 'is-reflection-slip', 'is-object-reaction', 'is-reaction-phone', 'is-reaction-threat', 'is-reaction-gate', 'is-reaction-protagonist', 'is-reaction-friend', 'is-reaction-cafe', 'is-reaction-landmark');
   if (activeBeatClass) sceneImageWrap.classList.remove(activeBeatClass);
   window.clearTimeout(activeBeatResetTimer);
   activeBeatResetTimer = 0;
@@ -789,7 +789,11 @@ sceneHotspots.addEventListener('click', (event) => {
     navigator.vibrate?.([20, 28, 42]);
     if (currentScene === 0) playFootsteps(0.46);
     else if (currentScene === 1) playCartographerLaugh();
-    else if (currentScene === 2) playSoundEffect('distantThunder', 0.2, 0, 3600);
+    else if (currentScene === 2) {
+      sceneImageWrap.classList.add('is-cartographer-gone');
+      showLampFailure();
+      playLampFlicker();
+    }
     else if (currentScene === 3 && !decisions.includes('go-cafe')) playCartographerBreath();
     else if (currentScene === 3) playFootsteps(0.46);
   } else if (hotspot.id === 'gate') {
