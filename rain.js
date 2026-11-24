@@ -22,25 +22,25 @@
   const random = (min, max) => min + Math.random() * (max - min);
 
   function seedRain() {
-    const density = Math.max(64, Math.min(150, Math.round(width / 7)));
+    const density = Math.max(42, Math.min(96, Math.round(width / 11)));
     streaks = Array.from({ length: density }, () => ({
       x: random(-40, width + 40),
       y: random(-height, height),
       length: random(12, 38),
       speed: random(2.2, 6.3),
       drift: random(-1.35, -.3),
-      alpha: random(.1, .26),
+      alpha: random(.045, .14),
       line: random(.65, 1.35)
     }));
 
-    const count = Math.max(28, Math.min(64, Math.round(width / 12)));
+    const count = Math.max(14, Math.min(30, Math.round(width / 34)));
     drops = Array.from({ length: count }, () => ({
       x: random(0, width),
       y: random(0, height),
-      radius: random(2.3, 8.5),
+      radius: random(2.3, 7.2),
       speed: random(.06, .42),
       slide: random(-.13, .13),
-      alpha: random(.12, .3),
+      alpha: random(.055, .16),
       phase: random(0, Math.PI * 2),
       trail: random(9, 32)
     }));

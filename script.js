@@ -7,6 +7,7 @@ const story = document.querySelector('.story');
 const reveal = document.querySelector('.reveal');
 const sceneImage = document.querySelector('#scene-image');
 const sceneReflection = document.querySelector('#scene-reflection');
+const wetGlassCanvas = document.querySelector('#wet-glass-canvas');
 const sceneImageWrap = document.querySelector('#scene-image-wrap');
 const sceneReaction = document.querySelector('#scene-reaction');
 const sceneKicker = document.querySelector('#scene-kicker');
@@ -32,6 +33,13 @@ const languageToggle = document.querySelector('#language-toggle');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const scrollBehavior = reduceMotion ? 'auto' : 'smooth';
 let textLayoutController;
+let wetGlassFx;
+let wetGlassModulePromise;
+let wetGlassSource = '';
+let wetGlassGeneration = 0;
+let wetGlassRisk = 0;
+let wetGlassTouchTimer = 0;
+let wetGlassTouchTarget = '';
 
 function applyTextLayout() {
   textLayoutController?.destroy();
@@ -575,10 +583,154 @@ function scheduleSceneInterruption(index) {
   }, interruption.delay);
 }
 
+function wetGlassSize() {
+  const rect = sceneImageWrap.getBoundingClientRect();
+  if (!rect.width || !rect.height) return undefined;
+  const maxSide = Math.max(rect.width, rect.height);
+  const scale = Math.min(window.devicePixelRatio || 1, 1.2, 1280 / maxSide);
+  return { width: Math.max(1, Math.round(rect.width * scale)), height: Math.max(1, Math.round(rect.height * scale)) };
+}
+
+function updateWetGlassMood() {
+  if (!wetGlassFx) return;
+  const options = wetGlassFx.options;
+  const risk = Math.max(0, Math.min(3, wetGlassRisk));
+  const touch = wetGlassTouchTimer ? 1 : 0;
+  const touchedTarget = wetGlassTouchTarget;
+  const targetWeight = touchedTarget === 'cartographer' ? 1
+    : touchedTarget === 'phone' ? .82
+      : touchedTarget === 'gate' ? .72
+        : ['cafe', 'friend'].includes(touchedTarget) ? -.45
+          : touchedTarget === 'lamp' ? .56 : 0;
+  const tension = Math.max(0, Math.min(1, risk / 3 + targetWeight * touch));
+  options.spawnLimit = Math.round(250 + tension * 300);
+  options.dropletsPerSeconds = 34 + tension * 85;
+  options.slipRate = .16 + tension * .54;
+  options.refractBase = .24 + tension * .22;
+  options.refractScale = .34 + tension * .43;
+  options.mistTime = Math.max(5, 17 - tension * 9);
+  options.mistColor = touchedTarget === 'cafe' || touchedTarget === 'friend'
+    ? [.035, .026, .022, .12 + tension * .1]
+    : [.008, .01, .016, .2 + tension * .22];
+  options.motionInterval = tension > .68 ? [.28, .8] : [.5, 1.35];
+}
+
+async function syncWetGlassScene() {
+  if (reduceMotion || currentScene < 0 || story.hidden || !wetGlassCanvas) return;
+  const generation = ++wetGlassGeneration;
+  const source = sceneImage.currentSrc || sceneImage.src;
+  try {
+    if (!sceneImage.complete) await new Promise((resolve) => {
+      sceneImage.addEventListener('load', resolve, { once: true });
+      sceneImage.addEventListener('error', resolve, { once: true });
+    });
+    if (sceneImage.decode) await sceneImage.decode().catch(() => {});
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    if (generation !== wetGlassGeneration || currentScene < 0 || story.hidden) return;
+    const size = wetGlassSize();
+    if (!size) return;
+    wetGlassCanvas.width = size.width;
+    wetGlassCanvas.height = size.height;
+    if (!wetGlassModulePromise) {
+      wetGlassModulePromise = import('./assets/vendor/raindrop-fx.mjs?v=raindrop-fx-20261124')
+        .then((module) => module.default);
+    }
+    const RaindropFX = await wetGlassModulePromise;
+    if (generation !== wetGlassGeneration || currentScene < 0 || story.hidden) return;
+    if (!wetGlassFx) {
+      wetGlassFx = new RaindropFX({
+        canvas: wetGlassCanvas,
+        width: size.width,
+        height: size.height,
+        background: source,
+        spawnInterval: [.2, .55],
+        spawnSize: [32, 88],
+        spawnLimit: 280,
+        slipRate: .22,
+        motionInterval: [.45, 1.2],
+        colliderSize: .86,
+        trailDropDensity: .18,
+        trailDistance: [18, 31],
+        trailDropSize: [.3, .5],
+        trailSpread: .52,
+        initialSpread: .48,
+        shrinkRate: .014,
+        velocitySpread: .29,
+        evaporate: 18,
+        xShifting: [0, .045],
+        backgroundBlurSteps: 2,
+        backgroundWrapMode: 'clamp',
+        mist: true,
+        mistColor: [.008, .01, .016, .32],
+        mistBlurStep: 3,
+        mistTime: 14,
+        dropletsPerSeconds: 45,
+        dropletSize: [12, 25],
+        smoothRaindrop: [.965, .995],
+        refractBase: .3,
+        refractScale: .42,
+        raindropCompose: 'smoother',
+        raindropLightPos: [-1, 1, 2, 0],
+        raindropDiffuseLight: [.22, .24, .28],
+        raindropShadowOffset: .58,
+        raindropEraserSize: [.93, 1],
+        raindropSpecularLight: [.22, .25, .29],
+        raindropSpecularShininess: 180,
+        raindropLightBump: .86
+      });
+      await wetGlassFx.start();
+      wetGlassSource = source;
+    } else if (source !== wetGlassSource) {
+      await wetGlassFx.setBackground(source);
+      wetGlassSource = source;
+    }
+    if (generation !== wetGlassGeneration || currentScene < 0 || story.hidden) return;
+    updateWetGlassMood();
+    sceneImageWrap.classList.add('is-wet-glass-ready');
+  } catch {
+    sceneImageWrap.classList.remove('is-wet-glass-ready');
+    wetGlassFx?.stop();
+  }
+}
+
+function resizeWetGlass() {
+  if (!wetGlassFx || currentScene < 0 || story.hidden) return;
+  const size = wetGlassSize();
+  if (!size || (size.width === wetGlassCanvas.width && size.height === wetGlassCanvas.height)) return;
+  wetGlassCanvas.width = size.width;
+  wetGlassCanvas.height = size.height;
+  wetGlassFx.resize(size.width, size.height);
+}
+
+wetGlassCanvas?.addEventListener('webglcontextlost', (event) => {
+  event.preventDefault();
+  sceneImageWrap.classList.remove('is-wet-glass-ready');
+  wetGlassFx?.stop();
+});
+window.addEventListener('story:touch', (event) => {
+  const target = event.detail?.target;
+  wetGlassTouchTarget = event.detail?.scene === 3 && target === 'cartographer' ? 'lamp' : target || '';
+  wetGlassTouchTimer = 1;
+  updateWetGlassMood();
+  window.clearTimeout(wetGlassTouchTimerId);
+  wetGlassTouchTimerId = window.setTimeout(() => {
+    wetGlassTouchTimer = 0;
+    wetGlassTouchTarget = '';
+    updateWetGlassMood();
+  }, ['cartographer', 'gate', 'lamp'].includes(target) ? 3400 : target === 'phone' ? 2700 : 1900);
+}, { passive: true });
+window.addEventListener('story:choice', (event) => {
+  wetGlassRisk = Number(event.detail?.risk) || 0;
+  updateWetGlassMood();
+}, { passive: true });
+let wetGlassTouchTimerId = 0;
 sceneImage.addEventListener('load', positionSceneHotspots);
+sceneImage.addEventListener('load', syncWetGlassScene);
 window.addEventListener('resize', positionSceneHotspots, { passive: true });
 window.addEventListener('orientationchange', positionSceneHotspots, { passive: true });
 window.visualViewport?.addEventListener('resize', positionSceneHotspots, { passive: true });
+window.addEventListener('resize', resizeWetGlass, { passive: true });
+window.addEventListener('orientationchange', resizeWetGlass, { passive: true });
 
 function renderScene(index, { languageRefresh = false } = {}) {
   const hotspotToRestore = languageRefresh ? activeHotspotId : '';
@@ -595,8 +747,10 @@ function renderScene(index, { languageRefresh = false } = {}) {
   story.classList.toggle('is-heavy-rain', riskScore >= 2);
   const hotspots = sceneValue(scene.hotspots);
   const sceneChoices = sceneValue(scene.choices);
+  sceneImageWrap.classList.remove('is-wet-glass-ready');
   sceneImage.src = sceneValue(scene.image);
   sceneReflection.src = sceneImage.src;
+  syncWetGlassScene();
   setAmbientTrack(sceneValue(scene.ambience) || 'street');
   sceneKicker.textContent = sceneValue(scene.kicker);
   scenePlace.textContent = sceneValue(scene.place);

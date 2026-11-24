@@ -12,6 +12,7 @@ El enlace también puede utilizarse en el código QR del cartel. La página est�
 
 - **Una historia ramificada:** cuatro escenas y decisiones que cambian el recorrido y el desenlace. La ruta pasa por la Casa Natal de Cervantes, la Plaza de Cervantes y, según lo que elijas, una cafetería o un portal de la calle Cardenal Sandoval y Rojas.
 - **Escenas que puedes explorar:** toca personajes y objetos de las imágenes para descubrir pistas, activar efectos de sonido y, si el dispositivo lo permite, una vibración breve. Desliza lateralmente sobre la imagen para inclinar la perspectiva 3D y desplazar sus planos. Las zonas interactivas no añaden iconos sobre la escena.
+- **Lluvia sobre el cristal:** las escenas usan [raindrop-fx](https://github.com/SardineFish/raindrop-fx), una biblioteca WebGL2 con licencia MIT, para simular gotas que se deslizan y refractan la fotografía. La lluvia cambia con los riesgos y con los objetos que tocas. En navegadores sin WebGL2 se conserva la imagen y funciona una capa Canvas más ligera.
 - **Ambiente que responde a tus decisiones:** la música y la tensión sonora cambian según el rumbo de la historia. El sonido es opcional y se controla desde la cabecera.
 - **Una experiencia adaptable:** puedes recorrerla en vertical o girar el móvil para una vista horizontal. Las animaciones respetan la preferencia del dispositivo por reducir el movimiento.
 - **Español e inglés:** cambia el idioma desde el control ES/EN.
@@ -45,6 +46,7 @@ También puedes descargar el repositorio como ZIP y ejecutar el servidor desde s
 | `visit-counter.js` | Integración opcional del contador; permanece desactivada mientras no se configure su servicio. |
 | `assets/story/` | Imágenes de las escenas. |
 | `assets/audio/` | Música y efectos de sonido. |
+| `assets/vendor/` | Biblioteca local de gotas WebGL2 y licencias MIT. |
 | `CREDITOS.md` | Créditos, licencias y referencias de diseño. |
 
 Para consultar las fuentes de audio, abre [`assets/audio/FUENTES.md`](assets/audio/FUENTES.md). La atribución y licencia del recurso de justificación de texto se encuentran en [`assets/justif/README.md`](assets/justif/README.md).
