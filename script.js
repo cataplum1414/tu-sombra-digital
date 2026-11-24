@@ -14,6 +14,7 @@ const sceneBody = document.querySelector('#scene-body');
 const sceneExploreHint = document.querySelector('#scene-explore-hint');
 const sceneHotspots = document.querySelector('#scene-hotspots');
 const sceneClue = document.querySelector('#scene-clue');
+const sceneInterruption = document.querySelector('#scene-interruption');
 const choicePrompt = document.querySelector('#choice-prompt');
 const choices = document.querySelector('#choices');
 const continueButton = document.querySelector('#continue-story');
@@ -356,6 +357,107 @@ function showHotspotClue(hotspot) {
   sceneClue.hidden = false;
 }
 
+let sceneInterruptionTimer = 0;
+let sceneInterruptionHideTimer = 0;
+let sceneInterruptionRemoveTimer = 0;
+let sceneInterruptionEffectTimer = 0;
+
+function clearSceneInterruption() {
+  window.clearTimeout(sceneInterruptionTimer);
+  window.clearTimeout(sceneInterruptionHideTimer);
+  window.clearTimeout(sceneInterruptionRemoveTimer);
+  window.clearTimeout(sceneInterruptionEffectTimer);
+  sceneInterruptionTimer = 0;
+  sceneInterruptionHideTimer = 0;
+  sceneInterruptionRemoveTimer = 0;
+  sceneInterruptionEffectTimer = 0;
+  sceneInterruption.hidden = true;
+  sceneInterruption.classList.remove('is-visible', 'is-leaving');
+  sceneInterruption.replaceChildren();
+  story.classList.remove('is-raining');
+  sceneImageWrap.classList.remove('is-camera-flash', 'is-lamp-failure');
+}
+
+function scheduleSceneInterruption(index) {
+  const interruption = [
+    {
+      delay: 2600,
+      title: copy('FLASH AL OTRO LADO DE LA CALLE', 'A FLASH ACROSS THE STREET'),
+      message: copy('El Cartógrafo acaba de hacerte una foto.', 'The Cartographer has just taken your picture.'),
+      effect: 'flash',
+      sound: 'camera'
+    },
+    {
+      delay: 1900,
+      title: copy('MENSAJE · NÚMERO DESCONOCIDO', 'MESSAGE · UNKNOWN NUMBER'),
+      message: copy('«Sé a qué hora vuelves».', '“I know what time you come home.”'),
+      effect: 'phone',
+      sound: 'phone'
+    },
+    riskScore >= 2 ? {
+      delay: 2200,
+      title: copy('PASOS DETRÁS DE TI', 'FOOTSTEPS BEHIND YOU'),
+      message: copy('La lluvia tapa el ruido de la calle.', 'The rain swallows the sounds of the street.'),
+      effect: 'rain',
+      sound: 'footsteps'
+    } : null,
+    decisions.includes('take-shortcut') ? {
+      delay: 1800,
+      title: copy('LA FAROLA FALLA', 'THE STREETLIGHT FALTERS'),
+      message: copy('Algo se mueve al otro lado del portal.', 'Something moves across the doorway.'),
+      effect: 'lamp',
+      sound: 'breath'
+    } : null
+  ][index];
+
+  if (!interruption) return;
+  sceneInterruptionTimer = window.setTimeout(() => {
+    if (story.hidden || document.hidden || currentScene !== index) return;
+    if ((index === 0 && activeHotspotId === 'protagonist')
+      || (index === 1 && activeHotspotId === 'phone')
+      || (index === 3 && activeHotspotId === 'cartographer')) return;
+
+    const label = document.createElement('span');
+    label.className = 'scene-interruption__label';
+    label.textContent = sceneValue(interruption.title);
+    const message = document.createElement('span');
+    message.className = 'scene-interruption__message';
+    message.textContent = sceneValue(interruption.message);
+    sceneInterruption.replaceChildren(label, message);
+    sceneInterruption.hidden = false;
+    requestAnimationFrame(() => sceneInterruption.classList.add('is-visible'));
+
+    if (interruption.effect === 'flash') {
+      sceneImageWrap.classList.remove('is-camera-flash');
+      void sceneImageWrap.offsetWidth;
+      sceneImageWrap.classList.add('is-camera-flash');
+    } else if (interruption.effect === 'phone') {
+      if (ambientOn) navigator.vibrate?.([65, 35, 110]);
+    } else if (interruption.effect === 'rain') {
+      story.classList.add('is-raining');
+    } else if (interruption.effect === 'lamp') {
+      sceneImageWrap.classList.add('is-lamp-failure');
+      sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-lamp-failure'), 1500);
+      if (ambientOn) navigator.vibrate?.([24, 38, 24]);
+    }
+
+    if (ambientOn) {
+      if (interruption.sound === 'camera') playCameraFlash(0.42);
+      else if (interruption.sound === 'phone') playPhoneVibration();
+      else if (interruption.sound === 'footsteps') playFootsteps(0.42);
+      else if (interruption.sound === 'breath') playCartographerBreath();
+    }
+
+    sceneInterruptionHideTimer = window.setTimeout(() => {
+      sceneInterruption.classList.add('is-leaving');
+      sceneInterruptionRemoveTimer = window.setTimeout(() => {
+        sceneInterruption.hidden = true;
+        sceneInterruption.classList.remove('is-visible', 'is-leaving');
+      }, 360);
+    }, 3900);
+  }, interruption.delay);
+}
+
 sceneImage.addEventListener('load', positionSceneHotspots);
 window.addEventListener('resize', positionSceneHotspots, { passive: true });
 window.addEventListener('orientationchange', positionSceneHotspots, { passive: true });
@@ -369,6 +471,7 @@ function renderScene(index, { languageRefresh = false } = {}) {
   textLayoutController = undefined;
   const scene = scenes[index];
   currentScene = index;
+  clearSceneInterruption();
   const hotspots = sceneValue(scene.hotspots);
   const sceneChoices = sceneValue(scene.choices);
   sceneImage.src = sceneValue(scene.image);
@@ -411,11 +514,13 @@ function renderScene(index, { languageRefresh = false } = {}) {
   if (!languageRefresh) {
     window.scrollTo({ top: 0, behavior: scrollBehavior });
     announce(index === 0 ? 'start' : 'scene', { scene: index + 1, risk: riskScore, decision: lastDecision });
+    scheduleSceneInterruption(index);
     sceneTitle.focus({ preventScroll: true });
   }
 }
 
 function renderEnding({ languageRefresh = false } = {}) {
+  clearSceneInterruption();
   textLayoutController?.destroy();
   textLayoutController = undefined;
   const endedInCafe = ['share-private', 'post-cafe', 'return-light'].includes(lastDecision);
@@ -499,6 +604,7 @@ function showNextScene() {
 }
 
 function restart() {
+  clearSceneInterruption();
   reveal.hidden = true;
   story.hidden = true;
   opening.hidden = false;
