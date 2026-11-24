@@ -2,16 +2,16 @@
 
 ## Música y efectos
 
-- La ambientación cambia de una calle urbana mojada a un café con gente según la escena. Una base suave de [Forest Mist Whispers, de Alejandro Magaña (A. M.)](https://mixkit.co/free-stock-music/mood/calm/) suena con mayor claridad cuando las decisiones reducen el riesgo; una capa de tonos graves generada con Web Audio añade tensión cuando aumenta.
-- Cada efecto sigue la acción: obturador al capturar una imagen, pasos sobre calle mojada al avanzar o seguir a la protagonista, risa del Cartógrafo cuando aparece o se acerca en los primeros encuentros, campanilla y voces al entrar en el café, taza en la mesa junto a Paula y puerta al tocar el picaporte. La mezcla baja la música y el ambiente durante cada efecto.
-- Los efectos al tocar siguen activos aunque se apague la música. Las fuentes y los términos de la licencia están en [`assets/audio/FUENTES.md`](assets/audio/FUENTES.md).
+- La ambientación cambia de la calle mojada al café con gente. Una base suave de [Forest Mist Whispers, de Alejandro Magaña (A. M.)](https://mixkit.co/free-stock-music/mood/calm/) gana presencia cuando las decisiones reducen el riesgo; una capa de tonos graves generada con Web Audio añade tensión cuando aumenta.
+- Cada efecto coincide con algo visible: obturador al hacer la foto; vibración del móvil al recibir un mensaje; risa o respiración del Cartógrafo; zumbido y parpadeo de la farola en la Plaza de Cervantes y junto a la Puerta de Madrid; pasos sobre el pavimento mojado; campanilla y taza al entrar y sentarte con Paula. La mezcla baja la música y el ambiente durante cada efecto.
+- Los efectos al tocar siguen activos aunque se apague la música. Las fuentes y las licencias están en [`assets/audio/FUENTES.md`](assets/audio/FUENTES.md).
 
 ## Escenas fotográficas
 
-- `assets/story/cartografo-portada.webp`, `cartografo-horizontal.webp`, `alcala-night.webp`, `alcala-reflection.webp`, `alcala-plaza-exterior.webp`, `alcala-portal.webp` y `alcala-cafe.webp` son imágenes creadas con ImageGen para esta ficción interactiva. La tercera escena muestra la plaza y la entrada de la cafetería desde fuera; al entrar, la historia pasa al interior.
-- En la portada, un movimiento lento de cámara y dos pequeños tirones de imagen sugieren una presencia que observa; se desactivan si el dispositivo solicita movimiento reducido.
-- Son recreaciones visuales ambientadas en Alcalá de Henares; no son fotografías documentales ni representan hechos o personas reales. La página lo indica junto a la historia.
-- Las imágenes se guardan en el propio repositorio para cargar desde GitHub Pages sin depender de un servicio externo.
+- `assets/story/cartografo-portada.webp`, `cartografo-horizontal.webp`, `alcala-night.webp`, `alcala-reflection.webp`, `alcala-plaza-exterior.webp`, `alcala-portal.webp` y `alcala-cafe.webp` son recreaciones generadas para esta ficción. Se usaron capturas aportadas por el autor y referencias de ubicación como guía visual. La primera escena muestra la fachada de la Casa Natal de Cervantes y las figuras de bronce; la segunda, los soportales de Calle Mayor; la tercera, la plaza abierta con árboles, soportales y farola. En la ruta del café, Paula está sentada con la protagonista y el Cartógrafo se ve fuera, tras el cristal. La otra ruta continúa por el Paseo de Cardenal Sandoval y Rojas hasta el arco real de la Puerta de Madrid.
+- Son imágenes de ficción ambientadas en Alcalá de Henares, no fotografías documentales ni hechos o personas reales. La página lo indica junto a la historia. La protagonista no tiene nombre; Paula es su amiga.
+- En la portada, un movimiento lento de cámara y dos pequeños tirones sugieren una presencia que observa; se desactivan si el dispositivo solicita movimiento reducido.
+- Las imágenes están en el repositorio para que GitHub Pages no dependa de servicios externos.
 - Referencias de ubicación: [Museo Casa Natal de Cervantes, Calle Mayor 48](https://www.turismoalcala.es/turismo/museo-casa-natal-de-cervantes/) y [Puerta de Madrid y recinto amurallado](https://www.turismoalcala.es/turismo/puerta-de-madrid-alcala-de-henares-y-recinto-amurallado/), según Turismo de Alcalá.
 
 ## Referencias de interacción revisadas en GitHub
