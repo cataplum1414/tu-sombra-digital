@@ -14,9 +14,11 @@
 - Las imágenes están en el repositorio para que GitHub Pages no dependa de servicios externos.
 - Referencias de ubicación: [Museo Casa Natal de Cervantes, Calle Mayor 48](https://www.turismoalcala.es/turismo/museo-casa-natal-de-cervantes/) y [Puerta de Madrid y recinto amurallado](https://www.turismoalcala.es/turismo/puerta-de-madrid-alcala-de-henares-y-recinto-amurallado/), según Turismo de Alcalá.
 
-## Luz de la portada
+## Lluvia y luz fluorescente
 
-- El destello frío e irregular que revela al Cartógrafo toma como referencia visual el parpadeo de [un tubo de neón en una escena de terror](https://youtu.be/VTWng8ZMz4U) y [luces fluorescentes que se encienden a cámara lenta](https://youtu.be/zLxbwZ0avUo). El efecto está recreado en CSS; no se incorpora el vídeo ni su audio.
+- La lluvia sobre el cristal es una capa Canvas propia: funciona en la portada y durante el recorrido, con gotas adheridas y trazos de lluvia. No accede a la cámara ni recoge datos.
+- El parpadeo fluorescente cubre la escena completa. Su clic de interruptor y zumbido proceden de los efectos Mixkit indicados en [`assets/audio/FUENTES.md`](assets/audio/FUENTES.md); la luz y los apagones se sincronizan con la animación CSS. La referencia visual es [el parpadeo de un tubo fluorescente en una escena de terror](https://youtu.be/VTWng8ZMz4U) y [luces que se encienden a cámara lenta](https://youtu.be/zLxbwZ0avUo). No se incorpora ninguno de esos vídeos ni su audio.
+- Los toques producen respuestas distintas según el objeto y la escena; no se reutiliza el parpadeo como reacción universal.
 
 ## Referencias de interacción revisadas en GitHub
 

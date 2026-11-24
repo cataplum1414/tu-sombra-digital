@@ -1,6 +1,6 @@
 import { justify } from './assets/justif/dist/index.js';
 import { hyphenateEs } from './assets/justif/dist/hyphenate/es.js';
-import { getLanguage, setLanguage, text as localized, t } from './language.js?v=readable-ending-copy-20261124';
+import { getLanguage, setLanguage, text as localized, t } from './language.js?v=fluorescent-rain-beats-20261124';
 
 const opening = document.querySelector('.opening');
 const story = document.querySelector('.story');
@@ -60,6 +60,8 @@ let cafeEntranceRang = false;
 let soundOptedOut = false;
 const decisions = [];
 let activeHotspotId = '';
+let activeBeatClass = '';
+let activeBeatResetTimer = 0;
 const copy = (es, en) => () => localized(es, en);
 
 const scenes = [
@@ -115,7 +117,7 @@ const scenes = [
     hotspots: [
       { id: 'cafe', label: copy('El caf\u00e9', 'The caf\u00e9'), x: 22, y: 59, align: 'right', response: copy('La puerta se abre y suena la campanilla. Hay clientes y personal dentro. Puedes esperar ah\u00ed a Paula.', 'The door opens and its bell rings. Customers and staff are inside. You can wait there for Paula.') },
       { id: 'phone', label: copy('Tu m\u00f3vil', 'Your phone'), x: 35, y: 62, align: 'left', response: copy('Paula confirma que est\u00e1 a cinco minutos. Puedes compartir tu ubicaci\u00f3n solo con ella mientras llega.', 'Paula says she is five minutes away. You can share your location with her only while she gets here.') },
-      { id: 'cartographer', label: copy('La farola', 'The lamppost'), x: 78, y: 47, align: 'left', response: copy('La bombilla parpadea y zumba. Cuando la luz vuelve, el Cart\u00f3grafo ya no est\u00e1 junto a la farola.', 'The bulb flickers and buzzes. When the light returns, the Cartographer is no longer beside the lamppost.') }
+      { id: 'cartographer', label: copy('El Cart\u00f3grafo', 'The Cartographer'), x: 78, y: 47, align: 'left', response: copy('Una rama se mueve delante de la farola. Al mirar de nuevo, el Cart\u00f3grafo ya cruz\u00f3 la plaza.', 'A branch moves in front of the lamppost. When you look again, the Cartographer has crossed the square.') }
     ],
     choices: [
       { id: 'go-cafe', risk: 0, label: copy('Entrar al caf\u00e9 y esperar a Paula', 'Go into the caf\u00e9 and wait for Paula') },
@@ -401,25 +403,14 @@ function scheduleSceneAudio(index) {
   // Each passage has a small sound arc: a location cue, then a consequence.
   // The long texture stays underneath the licensed music without cutting it.
   if (index === 0) {
-    queueSceneAudio(index, 5600, 'footsteps', 0.2);
     queueSceneAudio(index, 8800, 'suspenseAmbience', 0.1);
   } else if (index === 1) {
     queueSceneAudio(index, 4700, 'suspenseAmbience', 0.13);
-    queueSceneAudio(index, 7600, 'footsteps', 0.24);
   } else if (index === 2) {
     if (riskScore > 0) {
       queueSceneAudio(index, 3600, 'suspenseAmbience', 0.15);
       queueSceneAudio(index, 9800, 'distantThunder', Math.min(0.24, 0.14 + tensionLevel * 0.03));
-      queueSceneAudio(index, 16800, 'footsteps', 0.28);
-    } else {
-      queueSceneAudio(index, 6800, 'footsteps', 0.16);
     }
-  } else if (index === 3 && decisions.includes('go-cafe')) {
-    queueSceneAudio(index, 2400, 'coffeeCup', 0.34);
-  } else if (index === 3) {
-    queueSceneAudio(index, 1200, 'suspenseAmbience', 0.17);
-    queueSceneAudio(index, 6500, 'cartographerBreath', 0.36);
-    queueSceneAudio(index, 12400, 'footsteps', 0.32);
   }
 }
 
@@ -464,10 +455,19 @@ function triggerPhotoReaction(button, hotspot) {
   sceneReaction.style.setProperty('--tap-x', `${x}%`);
   sceneReaction.style.setProperty('--tap-y', `${y}%`);
   sceneImageWrap.classList.remove(...reactionClasses);
+  window.clearTimeout(activeBeatResetTimer);
+  if (activeBeatClass) sceneImageWrap.classList.remove(activeBeatClass);
   sceneReaction.classList.remove('is-visible', ...reactionClasses);
   void sceneImageWrap.offsetWidth;
   sceneImageWrap.classList.add(reactionClass);
+  activeBeatClass = `is-beat-${currentScene + 1}-${hotspot.id}`;
+  sceneImageWrap.classList.add(activeBeatClass);
   sceneReaction.classList.add(reactionClass, 'is-visible');
+  activeBeatResetTimer = window.setTimeout(() => {
+    sceneImageWrap.classList.remove(reactionClass, activeBeatClass);
+    sceneReaction.classList.remove('is-visible', reactionClass);
+    activeBeatClass = '';
+  }, 3400);
 }
 function showLampFailure() {
   window.clearTimeout(sceneInterruptionEffectTimer);
@@ -476,7 +476,7 @@ function showLampFailure() {
   sceneImageWrap.classList.remove('is-lamp-failure');
   void sceneImageWrap.offsetWidth;
   sceneImageWrap.classList.add('is-lamp-failure');
-  sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-lamp-failure'), 6800);
+  sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-lamp-failure'), 8600);
 }
 
 function scheduleSceneInterruption(index) {
@@ -591,6 +591,10 @@ function renderScene(index, { languageRefresh = false } = {}) {
   sceneClue.hidden = true;
   sceneClue.textContent = '';
   sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash', 'is-lamp-failure', 'is-reflection-slip', 'is-object-reaction', 'is-reaction-phone', 'is-reaction-threat', 'is-reaction-gate', 'is-reaction-protagonist', 'is-reaction-friend', 'is-reaction-cafe', 'is-reaction-landmark');
+  if (activeBeatClass) sceneImageWrap.classList.remove(activeBeatClass);
+  window.clearTimeout(activeBeatResetTimer);
+  activeBeatResetTimer = 0;
+  activeBeatClass = '';
   sceneReaction.classList.remove('is-visible', 'is-reaction-phone', 'is-reaction-threat', 'is-reaction-gate', 'is-reaction-protagonist', 'is-reaction-friend', 'is-reaction-cafe', 'is-reaction-landmark');
   sceneHotspots.classList.remove('is-disturbed', 'is-door-touched');
   sceneHotspots.innerHTML = hotspots.map((hotspot) => `
@@ -736,7 +740,10 @@ function restart() {
 }
 
 document.querySelector('#start-story').addEventListener('click', () => {
-  if (!ambientOn && !soundOptedOut) turnSoundOn();
+  if (!ambientOn && !soundOptedOut) {
+    turnSoundOn();
+    playOpeningFluorescent();
+  }
   goToStory();
 });
 sceneHotspots.addEventListener('click', (event) => {
@@ -780,31 +787,37 @@ sceneHotspots.addEventListener('click', (event) => {
   }
   if (isThreat) {
     navigator.vibrate?.([20, 28, 42]);
-    if (currentScene <= 1) playCartographerLaugh();
-    else if (currentScene === 2) {
-      showLampFailure();
-      if (ambientOn) navigator.vibrate?.([24, 38, 24]);
-      playLampFlicker();
-    }
+    if (currentScene === 0) playFootsteps(0.46);
+    else if (currentScene === 1) playCartographerLaugh();
+    else if (currentScene === 2) playSoundEffect('distantThunder', 0.2, 0, 3600);
     else if (currentScene === 3 && !decisions.includes('go-cafe')) playCartographerBreath();
-    else if (currentScene !== 3 || decisions.includes('go-cafe')) playFootsteps(0.58);
+    else if (currentScene === 3) playFootsteps(0.46);
   } else if (hotspot.id === 'gate') {
     showLampFailure();
     navigator.vibrate?.([24, 38, 24]);
     playLampFlicker();
   } else if (hotspot.id === 'protagonist') {
-    navigator.vibrate?.(18);
-    if (currentScene < 2) {
+    if (currentScene === 0) {
+      navigator.vibrate?.(18);
       sceneImageWrap.classList.remove('is-camera-flash');
       void sceneImageWrap.offsetWidth;
       sceneImageWrap.classList.add('is-camera-flash');
       playCameraFlash();
+    } else if (currentScene === 1) {
+      sceneImageWrap.classList.add('is-reflection-slip');
+      window.clearTimeout(sceneInterruptionEffectTimer);
+      sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-reflection-slip'), 2600);
     } else {
+      navigator.vibrate?.(18);
       playFootsteps(0.58);
     }
   } else if (hotspot.id === 'phone') {
-    navigator.vibrate?.([65, 35, 110]);
-    playPhoneVibration();
+    if (currentScene === 1) {
+      navigator.vibrate?.([65, 35, 110]);
+      playPhoneVibration();
+    } else {
+      playSoundEffect('messageAlert', 0.52);
+    }
   } else if (hotspot.id === 'landmark') {
     navigator.vibrate?.(14);
   } else if (hotspot.id === 'friend') {
@@ -923,6 +936,7 @@ const audioFadeFrames = new WeakMap();
 
 const soundEffects = {
   camera: 'assets/audio/camera-shutter.mp3',
+  messageAlert: 'assets/audio/message-alert.mp3',
   doorCreak: 'assets/audio/door-creak.mp3',
   footsteps: 'assets/audio/wet-pavement-steps.mp3',
   cafeDoorbell: 'assets/audio/cafe-doorbell.mp3',
@@ -1011,6 +1025,14 @@ function turnSoundOn() {
 
 function turnSoundOff() {
   window.clearTimeout(soundscapeDuckTimer);
+  window.clearTimeout(lampBuzzTimer);
+  window.clearTimeout(lampBuzzStopTimer);
+  if (activeLampBuzz) {
+    activeLampBuzz.pause();
+    activeLampBuzz.currentTime = 0;
+    if (activeSoundEffect === activeLampBuzz) activeSoundEffect = null;
+    activeLampBuzz = null;
+  }
   cancelAudioFade(licensedAmbience);
   licensedAmbience.pause();
   licensedAmbience.currentTime = 0;
@@ -1120,22 +1142,36 @@ function playDoorCreak() {
 }
 
 function playLampFlicker() {
+  window.clearTimeout(lampBuzzTimer);
+  window.clearTimeout(lampBuzzStopTimer);
   playSoundEffect('lampSwitch', 0.46);
-  duckSoundscapeFor(6600);
+  duckSoundscapeFor(8600);
   lampBuzzTimer = window.setTimeout(() => {
     const buzz = new Audio(soundEffects.lampBuzz);
-    buzz.volume = 0.36;
+    buzz.volume = 0.48;
+    buzz.loop = true;
     activeLampBuzz = buzz;
     activeSoundEffect = buzz;
-    buzz.addEventListener('ended', () => {
-      if (activeSoundEffect === buzz) activeSoundEffect = null;
-      if (activeLampBuzz === buzz) activeLampBuzz = null;
-    }, { once: true });
     buzz.play().catch(() => {
       if (activeSoundEffect === buzz) activeSoundEffect = null;
       if (activeLampBuzz === buzz) activeLampBuzz = null;
     });
-  }, 110);
+    lampBuzzStopTimer = window.setTimeout(() => {
+      buzz.pause();
+      buzz.currentTime = 0;
+      if (activeSoundEffect === buzz) activeSoundEffect = null;
+      if (activeLampBuzz === buzz) activeLampBuzz = null;
+    }, 8200);
+  }, 90);
+}
+
+function playOpeningFluorescent() {
+  if (opening.hidden) return;
+  opening.classList.remove('is-fluorescent-failure');
+  void opening.offsetWidth;
+  opening.classList.add('is-fluorescent-failure');
+  window.setTimeout(() => opening.classList.remove('is-fluorescent-failure'), 9200);
+  playLampFlicker();
 }
 
 function playPhoneVibration() {
@@ -1217,6 +1253,7 @@ function toggleSoundFromControl() {
   } else {
     soundOptedOut = false;
     turnSoundOn();
+    playOpeningFluorescent();
   }
 }
 

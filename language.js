@@ -12,7 +12,7 @@ const copy = {
   immersiveMode: ['Vista más inmersiva', 'More immersive'],
   rotatePhone: ['Gira el teléfono', 'Turn your phone'],
   enterStory: ['Entrar en la historia', 'Enter the story'],
-  openingNote: ['Historia inventada. Música opcional. No guardamos tus respuestas.', 'Fictional story. Music is optional. We do not save your choices.'],
+  openingNote: ['Activa el sonido: oirás el fluorescente y verás la lluvia sobre la pantalla. No guardamos tus respuestas.', 'Turn on sound to hear the fluorescent light and see rain on the screen. We do not save your choices.'],
   exploreScene: ['Toca un objeto para ver una pista', 'Tap an object to see a clue'],
   tapScene: ['Toca una parte de la foto para descubrir una pista. La verás debajo.', 'Tap part of the photo to reveal a clue. It will appear below.'],
   fictionNote: ['Historia inventada. No usamos tu cámara ni tu ubicación.', 'Fictional story. We do not use your camera or location.'],

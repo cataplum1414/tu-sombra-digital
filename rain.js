@@ -1,8 +1,9 @@
 (() => {
   const story = document.querySelector('.story');
+  const opening = document.querySelector('.campaign-opening');
   const canvas = document.querySelector('#rain-canvas');
   const context = canvas?.getContext('2d', { alpha: true });
-  if (!story || !canvas || !context) return;
+  if (!story || !opening || !canvas || !context) return;
 
   // Keep the glass effect viewport-sized even while the story uses 3D transforms.
   document.body.append(canvas);
@@ -20,27 +21,27 @@
   const random = (min, max) => min + Math.random() * (max - min);
 
   function seedRain() {
-    const density = Math.max(38, Math.min(82, Math.round(width / 11)));
+    const density = Math.max(64, Math.min(150, Math.round(width / 7)));
     streaks = Array.from({ length: density }, () => ({
       x: random(-40, width + 40),
       y: random(-height, height),
-      length: random(8, 28),
-      speed: random(2.1, 5.8),
-      drift: random(-1.15, -.35),
-      alpha: random(.035, .12),
-      line: random(.45, 1.15)
+      length: random(12, 38),
+      speed: random(2.2, 6.3),
+      drift: random(-1.35, -.3),
+      alpha: random(.1, .26),
+      line: random(.65, 1.35)
     }));
 
-    const count = Math.max(15, Math.min(28, Math.round(width / 24)));
+    const count = Math.max(28, Math.min(64, Math.round(width / 12)));
     drops = Array.from({ length: count }, () => ({
       x: random(0, width),
       y: random(0, height),
-      radius: random(1.5, 5.5),
-      speed: random(.04, .32),
-      slide: random(-.08, .08),
-      alpha: random(.045, .14),
+      radius: random(2.3, 8.5),
+      speed: random(.06, .42),
+      slide: random(-.13, .13),
+      alpha: random(.12, .3),
       phase: random(0, Math.PI * 2),
-      trail: random(5, 18)
+      trail: random(9, 32)
     }));
   }
 
@@ -77,8 +78,8 @@
     context.beginPath();
     context.ellipse(x, drop.y, r * .74, r * 1.18, -.12, 0, Math.PI * 2);
     context.fill();
-    context.strokeStyle = `rgba(226,239,245,${drop.alpha * .72})`;
-    context.lineWidth = .45;
+    context.strokeStyle = `rgba(226,239,245,${drop.alpha * .9})`;
+    context.lineWidth = .8;
     context.beginPath();
     context.arc(x - r * .14, drop.y - r * .12, r * .7, Math.PI * 1.1, Math.PI * 1.78);
     context.stroke();
@@ -93,7 +94,7 @@
 
   function draw(time, move) {
     context.clearRect(0, 0, width, height);
-    const heavy = story.classList.contains('is-heavy-rain');
+    const heavy = !story.hidden && story.classList.contains('is-heavy-rain');
     streaks.forEach((streak) => {
       if (move) {
         streak.y += streak.speed * (heavy ? 1.35 : 1);
@@ -122,6 +123,19 @@
     raf = requestAnimationFrame(animate);
   }
 
+  function isExperienceVisible() {
+    return !opening.hidden || !story.hidden;
+  }
+
+  function syncExperience() {
+    if (!isExperienceVisible()) {
+      stop();
+      return;
+    }
+    document.body.classList.toggle('is-heavy-rain', !story.hidden && story.classList.contains('is-heavy-rain'));
+    start();
+  }
+
   function start() {
     active = true;
     document.body.classList.add('is-raining');
@@ -142,14 +156,9 @@
     context.clearRect(0, 0, width, height);
   }
 
-  const observer = new MutationObserver(() => {
-    if (story.hidden) stop();
-    else {
-      document.body.classList.toggle('is-heavy-rain', story.classList.contains('is-heavy-rain'));
-      start();
-    }
-  });
+  const observer = new MutationObserver(syncExperience);
   observer.observe(story, { attributes: true, attributeFilter: ['hidden', 'class'] });
+  observer.observe(opening, { attributes: true, attributeFilter: ['hidden', 'class'] });
   window.addEventListener('resize', resize, { passive: true });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
@@ -164,9 +173,9 @@
     raf = 0;
     if (active) start();
   });
-  window.addEventListener('story:ending', stop);
-  window.addEventListener('story:reset', stop);
+  window.addEventListener('story:ending', syncExperience);
+  window.addEventListener('story:reset', syncExperience);
 
   resize();
-  if (!story.hidden) start();
+  syncExperience();
 })();
