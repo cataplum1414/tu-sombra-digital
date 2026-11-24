@@ -134,7 +134,7 @@ const scenes = [
     ]
   },
   {
-    image: () => decisions.includes('go-cafe') ? 'assets/story/alcala-cafe.webp?v=alcala-cafe-20261124' : 'assets/story/alcala-portal.webp?v=alcala-puerta-female-night-20261124',
+    image: () => decisions.includes('go-cafe') ? 'assets/story/alcala-cafe.webp?v=alcala-cafe-20261124' : 'assets/story/alcala-portal-v2.webp?v=cartografo-visible-20261124',
     ambience: () => decisions.includes('go-cafe') ? 'cafe' : 'street',
     place: () => localized(decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES \u00b7 CAF\u00c9' : 'PASEO CARDENAL SANDOVAL Y ROJAS \u00b7 PUERTA DE MADRID', decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES \u00b7 CAF\u00c9' : 'PASEO CARDENAL SANDOVAL Y ROJAS \u00b7 PUERTA DE MADRID'),
     kicker: () => localized(decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES \u00b7 23:38' : 'PUERTA DE MADRID \u00b7 23:41', decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES \u00b7 11:38 P.M.' : 'PUERTA DE MADRID \u00b7 11:41 P.M.'),
@@ -155,7 +155,7 @@ const scenes = [
     ] : [
       { id: 'protagonist', label: copy('T\u00fa', 'You'), x: 27, y: 68, align: 'right', response: copy('Gira hacia la plaza iluminada. Llama a Paula y vuelve por el paseo, donde hay m\u00e1s gente.', 'Turn back toward the lit square. Call Paula and return along the promenade, where more people are around.') },
       { id: 'gate', label: copy('Puerta de Madrid', 'Puerta de Madrid'), x: 52, y: 38, align: 'center', response: copy('El arco est\u00e1 abierto a la calle. La farola falla y una sombra roja cruza el otro lado. No tienes que seguir adelante.', 'The arch opens onto the street. The lamppost falters and a red shadow crosses the other side. You do not have to go on.') },
-      { id: 'cartographer', label: copy('El Cart\u00f3grafo', 'The Cartographer'), x: 60, y: 62, align: 'left', response: copy('Su respiraci\u00f3n llega desde el otro lado del arco. Bajo la capucha no hay un rostro visible. Retrocede hacia la plaza y llama a Paula.', 'You hear him breathe from the other side of the arch. His face is hidden under the hood. Step back toward the square and call Paula.') }
+      { id: 'cartographer', label: copy('El Cart\u00f3grafo', 'The Cartographer'), x: 57, y: 49, align: 'left', response: copy('Su respiraci\u00f3n llega desde el otro lado del arco. Bajo la capucha no hay un rostro visible. Retrocede hacia la plaza y llama a Paula.', 'You hear him breathe from the other side of the arch. His face is hidden under the hood. Step back toward the square and call Paula.') }
     ],
     choices: () => decisions.includes('go-cafe') ? [
       { id: 'share-private', risk: 0, label: copy('Guardar el mensaje y compartir mi ubicaci\u00f3n solo con Paula', 'Save the message and share my location with Paula only') },
@@ -807,7 +807,7 @@ function renderEnding({ languageRefresh = false } = {}) {
   textLayoutController = undefined;
   const endedInCafe = ['share-private', 'post-cafe', 'return-light'].includes(lastDecision);
   const choseSupport = ['share-private', 'return-light'].includes(lastDecision);
-  const finalImage = endedInCafe ? 'assets/story/alcala-cafe.webp?v=alcala-cafe-20261124' : 'assets/story/alcala-portal.webp?v=alcala-puerta-female-night-20261124';
+  const finalImage = endedInCafe ? 'assets/story/alcala-cafe.webp?v=alcala-cafe-20261124' : 'assets/story/alcala-portal-v2.webp?v=cartografo-visible-20261124';
   if (!languageRefresh) setAmbientTrack(endedInCafe ? 'cafe' : 'street');
   endingBackdrop.style.backgroundImage = `url("${finalImage}")`;
   endingKicker.textContent = localized(endedInCafe ? 'PLAZA DE CERVANTES \u00b7 CAF\u00c9 \u00b7 23:48' : 'PUERTA DE MADRID \u00b7 23:48', endedInCafe ? 'PLAZA DE CERVANTES \u00b7 CAF\u00c9 \u00b7 11:48 P.M.' : 'PUERTA DE MADRID \u00b7 11:48 P.M.');
