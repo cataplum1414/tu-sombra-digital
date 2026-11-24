@@ -364,6 +364,68 @@ let sceneInterruptionEffectTimer = 0;
 let lampBuzzTimer = 0;
 let lampBuzzStopTimer = 0;
 let activeLampBuzz = null;
+let sceneAudioCueTimers = [];
+let sceneAudioPlayers = new Set();
+const sceneAudioVolumes = new WeakMap();
+
+function clearSceneAudio() {
+  sceneAudioCueTimers.forEach((timer) => window.clearTimeout(timer));
+  sceneAudioCueTimers = [];
+  sceneAudioPlayers.forEach((player) => {
+    player.pause();
+    player.currentTime = 0;
+  });
+  sceneAudioPlayers.clear();
+}
+
+function playSceneAudio(name, volume = 0.32, { loop = false } = {}) {
+  const source = soundEffects[name];
+  if (!ambientOn || !source || currentScene < 0) return;
+  const layer = new Audio(source);
+  layer.volume = volume;
+  layer.loop = loop;
+  sceneAudioVolumes.set(layer, volume);
+  if (soundscapeDuckTimer) layer.volume *= 0.24;
+  sceneAudioPlayers.add(layer);
+  layer.addEventListener('ended', () => sceneAudioPlayers.delete(layer), { once: true });
+  layer.play().catch(() => sceneAudioPlayers.delete(layer));
+}
+
+function queueSceneAudio(index, delay, name, volume = 0.32, options) {
+  const timer = window.setTimeout(() => {
+    if (currentScene === index && !story.hidden && !document.hidden) playSceneAudio(name, volume, options);
+  }, delay);
+  sceneAudioCueTimers.push(timer);
+}
+
+function scheduleSceneAudio(index) {
+  if (!ambientOn) return;
+
+  // Each passage has a small sound arc: a location cue, then a consequence.
+  // The long texture stays underneath the licensed music without cutting it.
+  if (index === 0) {
+    queueSceneAudio(index, 5600, 'footsteps', 0.2);
+    queueSceneAudio(index, 8800, 'suspenseAmbience', 0.1);
+  } else if (index === 1) {
+    queueSceneAudio(index, 4700, 'suspenseAmbience', 0.13);
+    queueSceneAudio(index, 7600, 'footsteps', 0.24);
+  } else if (index === 2) {
+    if (riskScore > 0) {
+      queueSceneAudio(index, 3600, 'suspenseAmbience', 0.15);
+      queueSceneAudio(index, 9800, 'distantThunder', Math.min(0.24, 0.14 + tensionLevel * 0.03));
+      queueSceneAudio(index, 16800, 'footsteps', 0.28);
+    } else {
+      queueSceneAudio(index, 6800, 'footsteps', 0.16);
+    }
+  } else if (index === 3 && decisions.includes('go-cafe')) {
+    queueSceneAudio(index, 2400, 'coffeeCup', 0.34);
+  } else if (index === 3) {
+    queueSceneAudio(index, 1200, 'suspenseAmbience', 0.17);
+    queueSceneAudio(index, 3100, 'doorCreak', 0.28);
+    queueSceneAudio(index, 6500, 'cartographerBreath', 0.36);
+    queueSceneAudio(index, 12400, 'footsteps', 0.32);
+  }
+}
 
 function clearSceneInterruption() {
   window.clearTimeout(sceneInterruptionTimer);
@@ -376,6 +438,7 @@ function clearSceneInterruption() {
   sceneInterruptionHideTimer = 0;
   sceneInterruptionRemoveTimer = 0;
   sceneInterruptionEffectTimer = 0;
+  clearSceneAudio();
   lampBuzzTimer = 0;
   lampBuzzStopTimer = 0;
   if (activeLampBuzz) {
@@ -388,7 +451,7 @@ function clearSceneInterruption() {
   sceneInterruption.classList.remove('is-visible', 'is-leaving');
   sceneInterruption.replaceChildren();
   story.classList.remove('is-raining');
-  sceneImageWrap.classList.remove('is-camera-flash', 'is-lamp-failure');
+  sceneImageWrap.classList.remove('is-camera-flash', 'is-lamp-failure', 'is-reflection-slip');
 }
 
 function scheduleSceneInterruption(index) {
@@ -446,11 +509,13 @@ function scheduleSceneInterruption(index) {
       sceneImageWrap.classList.add('is-camera-flash');
     } else if (interruption.effect === 'phone') {
       if (ambientOn) navigator.vibrate?.([65, 35, 110]);
+      sceneImageWrap.classList.add('is-reflection-slip');
+      sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-reflection-slip'), 2600);
     } else if (interruption.effect === 'rain') {
       story.classList.add('is-raining');
     } else if (interruption.effect === 'lamp') {
       sceneImageWrap.classList.add('is-lamp-failure');
-      sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-lamp-failure'), 1500);
+      sceneInterruptionEffectTimer = window.setTimeout(() => sceneImageWrap.classList.remove('is-lamp-failure'), 6800);
       if (ambientOn) navigator.vibrate?.([24, 38, 24]);
     }
 
@@ -485,6 +550,7 @@ function renderScene(index, { languageRefresh = false } = {}) {
   textLayoutController = undefined;
   const scene = scenes[index];
   currentScene = index;
+  story.dataset.scene = String(index + 1);
   clearSceneInterruption();
   const hotspots = sceneValue(scene.hotspots);
   const sceneChoices = sceneValue(scene.choices);
@@ -497,7 +563,7 @@ function renderScene(index, { languageRefresh = false } = {}) {
   sceneBody.textContent = sceneValue(scene.body);
   sceneClue.hidden = true;
   sceneClue.textContent = '';
-  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash');
+  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash', 'is-lamp-failure', 'is-reflection-slip');
   sceneHotspots.classList.remove('is-disturbed', 'is-door-touched');
   sceneHotspots.innerHTML = hotspots.map((hotspot) => `
     <button class="story__hotspot story__hotspot--${hotspot.id}" type="button" data-hotspot="${hotspot.id}" aria-pressed="false" style="left:${hotspot.x}%;top:${hotspot.y}%" aria-controls="scene-clue" aria-label="${t('sceneA11y')}${sceneValue(hotspot.label)}"></button>`).join('');
@@ -529,6 +595,7 @@ function renderScene(index, { languageRefresh = false } = {}) {
     window.scrollTo({ top: 0, behavior: scrollBehavior });
     announce(index === 0 ? 'start' : 'scene', { scene: index + 1, risk: riskScore, decision: lastDecision });
     scheduleSceneInterruption(index);
+    scheduleSceneAudio(index);
     sceneTitle.focus({ preventScroll: true });
   }
 }
@@ -828,7 +895,9 @@ const soundEffects = {
   cartographerLaugh: 'assets/audio/cartographer-laugh.mp3',
   cartographerBreath: 'assets/audio/cartographer-breath.mp3',
   lampSwitch: 'assets/audio/lamp-switch.mp3',
-  lampBuzz: 'assets/audio/lamp-electric-buzz.mp3'
+  lampBuzz: 'assets/audio/lamp-electric-buzz.mp3',
+  suspenseAmbience: 'assets/audio/cinematic-suspense-ambience.mp3',
+  distantThunder: 'assets/audio/distant-thunder-rumble.mp3'
 };
 
 function setAmbientTrack(name) {
@@ -891,9 +960,13 @@ function turnSoundOn() {
   const playback = licensedAmbience.play();
   if (!playback?.then) {
     updateSoundControls(true, 'licensed-track');
+    if (currentScene >= 0 && !story.hidden) scheduleSceneAudio(currentScene);
     return;
   }
-  playback.then(() => updateSoundControls(true, 'licensed-track'))
+  playback.then(() => {
+    updateSoundControls(true, 'licensed-track');
+    if (currentScene >= 0 && !story.hidden) scheduleSceneAudio(currentScene);
+  })
     .catch(() => {
       soundLabel.textContent = t('retry');
       soundState.textContent = 'OFF';
@@ -907,6 +980,7 @@ function turnSoundOff() {
   licensedAmbience.pause();
   licensedAmbience.currentTime = 0;
   licensedAmbience.volume = ambienceTargetVolume;
+  clearSceneAudio();
   Object.values(scorePlayers).forEach((player) => {
     cancelAudioFade(player);
     player.pause();
@@ -983,11 +1057,17 @@ function duckSoundscapeFor(milliseconds = 900) {
   Object.values(scorePlayers).forEach((player) => {
     fadeAudioTo(player, player === storyMusic ? musicTargetVolume * 0.18 : 0, 80);
   });
+  sceneAudioPlayers.forEach((layer) => {
+    fadeAudioTo(layer, (sceneAudioVolumes.get(layer) || layer.volume) * 0.24, 80);
+  });
   window.clearTimeout(soundscapeDuckTimer);
   soundscapeDuckTimer = window.setTimeout(() => {
     if (!ambientOn) return;
     if (!licensedAmbience.paused) fadeAudioTo(licensedAmbience, ambienceTargetVolume, 600);
     if (!storyMusic.paused) fadeAudioTo(storyMusic, musicTargetVolume, 600);
+    sceneAudioPlayers.forEach((layer) => {
+      if (!layer.paused) fadeAudioTo(layer, sceneAudioVolumes.get(layer) || 0.2, 600);
+    });
     updateSoundtrackMood(tensionLevel);
   }, milliseconds);
 }
@@ -1006,7 +1086,7 @@ function playDoorCreak() {
 
 function playLampFlicker() {
   playSoundEffect('lampSwitch', 0.46);
-  duckSoundscapeFor(1700);
+  duckSoundscapeFor(6600);
   lampBuzzTimer = window.setTimeout(() => {
     const buzz = new Audio(soundEffects.lampBuzz);
     buzz.volume = 0.36;
@@ -1020,13 +1100,6 @@ function playLampFlicker() {
       if (activeSoundEffect === buzz) activeSoundEffect = null;
       if (activeLampBuzz === buzz) activeLampBuzz = null;
     });
-    lampBuzzStopTimer = window.setTimeout(() => {
-      if (activeSoundEffect !== buzz) return;
-      buzz.pause();
-      buzz.currentTime = 0;
-      activeSoundEffect = null;
-      activeLampBuzz = null;
-    }, 1250);
   }, 110);
 }
 

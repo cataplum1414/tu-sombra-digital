@@ -1231,3 +1231,64 @@ body:is(.view-immersive) .cinematic-story .story__hotspots { transition-duration
   .story.is-raining .story__film-grain::after { animation: none; opacity: .12; }
   .story__image-wrap.is-lamp-failure .story__image { animation: none; filter: brightness(.52) saturate(.72); }
 }
+
+/* Let the photographs breathe; sharper movement only happens at story beats. */
+@media (prefers-reduced-motion: no-preference) {
+  .cinematic-story .story__image { animation: photo-creep 24s ease-in-out infinite alternate; }
+  .cinematic-story[data-scene="2"] .story__image { transform-origin: 78% 47%; animation: reflection-watch 12s ease-in-out infinite; }
+  .story__image-wrap.is-reflection-slip .story__image { animation: reflection-slip 2.6s steps(1, end) both; }
+  .story__image-wrap.is-lamp-failure .story__image { animation: lamp-failure 6.8s ease-out both; }
+}
+.story__image-wrap.is-lamp-failure::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 76% 37%, rgba(255,205,133,.62), rgba(255,174,86,.16) 13%, transparent 39%);
+  mix-blend-mode: screen;
+  animation: lamp-spill 6.8s steps(1, end) both;
+}
+@keyframes photo-creep {
+  from { transform: scale(1.015) translate3d(0,0,0); }
+  to { transform: scale(1.055) translate3d(-.25%,-.2%,0); }
+}
+@keyframes reflection-watch {
+  0%,34%,39%,100% { transform: scale(1.015) translate3d(0,0,0); filter: brightness(.68) saturate(.76); }
+  35% { transform: scale(1.035) translate3d(-.25%,.12%,0); filter: brightness(.62) saturate(.72); }
+  37% { transform: scale(1.048) translate3d(.32%,-.14%,0); filter: brightness(.73) saturate(.8); }
+  38% { transform: scale(1.035) translate3d(.08%,.04%,0); }
+}
+@keyframes reflection-slip {
+  0%,100% { transform: scale(1.015) translate3d(0,0,0); filter: brightness(.68) saturate(.76); }
+  24% { transform: scale(1.036) translate3d(-.45%,.18%,0); filter: brightness(.48) saturate(.68); }
+  27% { transform: scale(1.023) translate3d(.22%,-.1%,0); }
+  54% { transform: scale(1.042) translate3d(.38%,.12%,0); filter: brightness(.78) saturate(.86); }
+  57% { transform: scale(1.03) translate3d(-.18%,0,0); }
+}
+@keyframes lamp-failure {
+  0%,100% { filter: brightness(.68) saturate(.76); }
+  12% { filter: brightness(.56) saturate(.7); }
+  18% { filter: brightness(.24) saturate(.62); }
+  25% { filter: brightness(.7) saturate(.78); }
+  41% { filter: brightness(.34) saturate(.67); }
+  47% { filter: brightness(.2) saturate(.58); }
+  57% { filter: brightness(.74) saturate(.82); }
+  72% { filter: brightness(.46) saturate(.7); }
+  79% { filter: brightness(.69) saturate(.76); }
+}
+@keyframes lamp-spill {
+  0%,100% { opacity: .08; }
+  12% { opacity: .48; }
+  18%,20% { opacity: .02; }
+  25% { opacity: .56; }
+  41%,47% { opacity: .01; }
+  57% { opacity: .62; }
+  72% { opacity: .06; }
+  79% { opacity: .4; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-story .story__image { animation: none; }
+  .story__image-wrap.is-lamp-failure::before { animation: none; opacity: .16; }
+  .story__image-wrap.is-reflection-slip .story__image { animation: none; }
+}
