@@ -691,6 +691,7 @@ body { background:#080606; color:#f2e8df; }
 .screen-mode-shortcut__icon { color:#e32127; }
 .campaign-opening { position:relative; isolation:isolate; min-height:100svh; overflow:hidden; display:flex; align-items:flex-end; padding:clamp(110px,20vh,205px) clamp(24px,8vw,112px) clamp(42px,8vh,86px); background:#080606; }
 .opening__visual { position:absolute; z-index:-2; inset:0; width:100%; height:100%; overflow:hidden; }
+.campaign-opening .opening__visual::after { content:""; position:absolute; z-index:1; inset:0; pointer-events:none; opacity:0; mix-blend-mode:screen; background:radial-gradient(ellipse 34% 38% at 72% 34%,rgba(255,231,184,.34),rgba(213,160,101,.1) 38%,transparent 74%); animation:fluorescent-strike 13s 2s infinite; }
 .opening__backdrop,.opening__vignette { position:absolute; z-index:-2; inset:0; width:100%; height:100%; }
 .opening__backdrop { object-fit:cover; object-position:62% 38%; transform-origin:72% 32%; animation:film-arrival 1.4s ease-out both,cartographer-watch 14s 1.4s ease-in-out infinite; will-change:transform; }
 .opening__vignette { z-index:-1; background:linear-gradient(90deg,rgba(6,4,4,.9),rgba(8,5,5,.58) 45%,rgba(5,4,4,.08) 80%),linear-gradient(0deg,rgba(5,3,3,.84),transparent 62%); }
@@ -843,6 +844,7 @@ body { background:#080606; color:#f2e8df; }
 .campaign-ending .button--light { background:#e32127; color:#fff; }
 
 @keyframes film-arrival { from { opacity:0; filter:brightness(.48) blur(4px); } to { opacity:1; filter:brightness(1) blur(0); } }
+@keyframes fluorescent-strike { 0%,22%,58%,100% { opacity:0; } 22.4% { opacity:.16; } 22.8% { opacity:.025; } 23.4% { opacity:.12; } 24.1% { opacity:.035; } 25% { opacity:.19; } 26.2% { opacity:0; } 58.4% { opacity:.08; } 58.8% { opacity:.015; } 59.5% { opacity:.13; } 60.8% { opacity:0; } }
 @keyframes copy-arrival { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 @keyframes hotspot-pulse { 0%,100% { transform:scale(1); box-shadow:0 0 0 3px rgba(225,33,39,.14),0 0 14px rgba(225,33,39,.42); } 50% { transform:scale(1.11); box-shadow:0 0 0 8px rgba(225,33,39,.05),0 0 24px rgba(225,33,39,.7); } }
 @keyframes story-contact { 0%,100% { transform:translateX(0); } 24% { transform:translateX(-8px); } 52% { transform:translateX(5px); } 76% { transform:translateX(-2px); } }
@@ -906,6 +908,7 @@ body { background:#080606; color:#f2e8df; }
 
 @media (prefers-reduced-motion:reduce) {
   .campaign-opening .opening__backdrop { animation:none; transform:none; will-change:auto; }
+  .campaign-opening .opening__visual::after { animation:none; opacity:0; }
   .campaign-opening > .opening__visual { transform:none !important; }
   .cinematic-story .story__image { transform:none; animation:none !important; }
   .story__image-wrap.is-camera-flash::after { animation:none; opacity:0; }
@@ -915,6 +918,7 @@ body { background:#080606; color:#f2e8df; }
 /* Put all tap targets inside a photo stage with a fixed size on phones.
    The copy below it can grow without moving the targets across the text. */
 @media (max-width:680px) {
+  .campaign-opening .opening__visual::after { background:radial-gradient(ellipse 42% 34% at 57% 35%,rgba(255,231,184,.3),rgba(213,160,101,.08) 38%,transparent 74%); }
   .cinematic-story {
     display:block;
     min-height:0;
