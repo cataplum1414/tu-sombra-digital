@@ -29,6 +29,7 @@ Se adaptaron ideas generales de interacción y ritmo narrativo. No se copiaron c
 | [Codrops Cinematic Scroll Animations](https://github.com/JosephASG/codrops-cinematic-scroll-animations) · MIT | Referencia de ritmo de cámara, escala y composición. No se usan las imágenes de demostración ni los recursos del tutorial. |
 | [smirk-dev/backrooms](https://github.com/smirk-dev/backrooms) | Referencia para usar espacio vacío y silencio como tensión antes del golpe en la puerta; no se copia su código. |
 | [LuminoDevelopment/3DHorror](https://github.com/LuminoDevelopment/3DHorror) · MIT | Referencia de impacto visual y sonoro. Su recorrido con teclado y perspectiva en primera persona no es adecuado para este QR móvil, así que no se integra como motor. |
+| [Rain-and-Lightning](https://github.com/DreAdeDcoRpSE/Rain-and-Lightning) y [raindrop-fx](https://github.com/SardineFish/raindrop-fx) | Referencias visuales para diferenciar lluvia en movimiento y gotas adheridas al cristal. El efecto de esta web está escrito para el proyecto, sin copiar el código de esos repositorios. |
 
 ## Bibliotecas
 

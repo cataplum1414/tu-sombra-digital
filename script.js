@@ -123,7 +123,7 @@ const scenes = [
     ]
   },
   {
-    image: () => decisions.includes('go-cafe') ? 'assets/story/alcala-cafe.webp?v=alcala-cafe-20261124' : 'assets/story/alcala-portal.webp?v=alcala-puerta-20261124',
+    image: () => decisions.includes('go-cafe') ? 'assets/story/alcala-cafe.webp?v=alcala-cafe-20261124' : 'assets/story/alcala-portal.webp?v=alcala-puerta-female-night-20261124',
     ambience: () => decisions.includes('go-cafe') ? 'cafe' : 'street',
     place: () => localized(decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES \u00b7 CAF\u00c9' : 'PASEO CARDENAL SANDOVAL Y ROJAS \u00b7 PUERTA DE MADRID', decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES \u00b7 CAF\u00c9' : 'PASEO CARDENAL SANDOVAL Y ROJAS \u00b7 PUERTA DE MADRID'),
     kicker: () => localized(decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES \u00b7 23:38' : 'PUERTA DE MADRID \u00b7 23:41', decisions.includes('go-cafe') ? 'PLAZA DE CERVANTES \u00b7 11:38 P.M.' : 'PUERTA DE MADRID \u00b7 11:41 P.M.'),
@@ -448,8 +448,8 @@ function clearSceneInterruption() {
   sceneInterruption.replaceChildren();
   story.classList.remove('is-raining');
   story.classList.remove('is-heavy-rain');
-  sceneImageWrap.classList.remove('is-camera-flash', 'is-lamp-failure', 'is-reflection-slip', 'is-object-reaction');
-  sceneReaction.classList.remove('is-visible');
+  sceneImageWrap.classList.remove('is-camera-flash', 'is-lamp-failure', 'is-reflection-slip', 'is-object-reaction', 'is-reaction-phone', 'is-reaction-threat', 'is-reaction-gate', 'is-reaction-protagonist', 'is-reaction-friend', 'is-reaction-cafe', 'is-reaction-landmark');
+  sceneReaction.classList.remove('is-visible', 'is-reaction-phone', 'is-reaction-threat', 'is-reaction-gate', 'is-reaction-protagonist', 'is-reaction-friend', 'is-reaction-cafe', 'is-reaction-landmark');
 }
 
 function triggerPhotoReaction(button, hotspot) {
@@ -457,24 +457,18 @@ function triggerPhotoReaction(button, hotspot) {
   const target = button.getBoundingClientRect();
   const x = Math.max(0, Math.min(100, ((target.left + target.width / 2 - stage.left) / stage.width) * 100));
   const y = Math.max(0, Math.min(100, ((target.top + target.height / 2 - stage.top) / stage.height) * 100));
-  const glow = hotspot.id === 'phone'
-    ? 'rgba(190, 222, 255, .7)'
-    : ['cafe', 'friend', 'landmark'].includes(hotspot.id)
-      ? 'rgba(255, 193, 118, .65)'
-      : hotspot.id === 'cartographer'
-        ? 'rgba(227, 33, 39, .7)'
-        : 'rgba(244, 226, 207, .55)';
-
+  const reactionClasses = ['is-reaction-phone', 'is-reaction-threat', 'is-reaction-gate', 'is-reaction-protagonist', 'is-reaction-friend', 'is-reaction-cafe', 'is-reaction-landmark'];
+  const reactionClass = `is-reaction-${hotspot.id === 'cartographer' ? 'threat' : hotspot.id}`;
   sceneImageWrap.style.setProperty('--tap-x', `${x}%`);
   sceneImageWrap.style.setProperty('--tap-y', `${y}%`);
-  sceneReaction.style.setProperty('--tap-glow', glow);
-  sceneImageWrap.classList.remove('is-object-reaction');
-  sceneReaction.classList.remove('is-visible');
+  sceneReaction.style.setProperty('--tap-x', `${x}%`);
+  sceneReaction.style.setProperty('--tap-y', `${y}%`);
+  sceneImageWrap.classList.remove(...reactionClasses);
+  sceneReaction.classList.remove('is-visible', ...reactionClasses);
   void sceneImageWrap.offsetWidth;
-  sceneImageWrap.classList.add('is-object-reaction');
-  sceneReaction.classList.add('is-visible');
+  sceneImageWrap.classList.add(reactionClass);
+  sceneReaction.classList.add(reactionClass, 'is-visible');
 }
-
 function showLampFailure() {
   window.clearTimeout(sceneInterruptionEffectTimer);
   sceneImageWrap.style.setProperty('--lamp-x', currentScene === 3 && !decisions.includes('go-cafe') ? '15%' : '79%');
@@ -596,8 +590,8 @@ function renderScene(index, { languageRefresh = false } = {}) {
   sceneBody.textContent = sceneValue(scene.body);
   sceneClue.hidden = true;
   sceneClue.textContent = '';
-  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash', 'is-lamp-failure', 'is-reflection-slip', 'is-object-reaction');
-  sceneReaction.classList.remove('is-visible');
+  sceneImageWrap.classList.remove('is-disturbed', 'is-door-touched', 'is-camera-flash', 'is-lamp-failure', 'is-reflection-slip', 'is-object-reaction', 'is-reaction-phone', 'is-reaction-threat', 'is-reaction-gate', 'is-reaction-protagonist', 'is-reaction-friend', 'is-reaction-cafe', 'is-reaction-landmark');
+  sceneReaction.classList.remove('is-visible', 'is-reaction-phone', 'is-reaction-threat', 'is-reaction-gate', 'is-reaction-protagonist', 'is-reaction-friend', 'is-reaction-cafe', 'is-reaction-landmark');
   sceneHotspots.classList.remove('is-disturbed', 'is-door-touched');
   sceneHotspots.innerHTML = hotspots.map((hotspot) => `
     <button class="story__hotspot story__hotspot--${hotspot.id}" type="button" data-hotspot="${hotspot.id}" aria-pressed="false" style="left:${hotspot.x}%;top:${hotspot.y}%" aria-controls="scene-clue" aria-label="${t('sceneA11y')}${sceneValue(hotspot.label)}"></button>`).join('');
@@ -640,7 +634,7 @@ function renderEnding({ languageRefresh = false } = {}) {
   textLayoutController = undefined;
   const endedInCafe = ['share-private', 'post-cafe', 'return-light'].includes(lastDecision);
   const choseSupport = ['share-private', 'return-light'].includes(lastDecision);
-  const finalImage = endedInCafe ? 'assets/story/alcala-cafe.webp?v=alcala-cafe-20261124' : 'assets/story/alcala-portal.webp?v=alcala-puerta-20261124';
+  const finalImage = endedInCafe ? 'assets/story/alcala-cafe.webp?v=alcala-cafe-20261124' : 'assets/story/alcala-portal.webp?v=alcala-puerta-female-night-20261124';
   if (!languageRefresh) setAmbientTrack(endedInCafe ? 'cafe' : 'street');
   endingBackdrop.style.backgroundImage = `url("${finalImage}")`;
   endingKicker.textContent = localized(endedInCafe ? 'PLAZA DE CERVANTES \u00b7 CAF\u00c9 \u00b7 23:48' : 'PUERTA DE MADRID \u00b7 23:48', endedInCafe ? 'PLAZA DE CERVANTES \u00b7 CAF\u00c9 \u00b7 11:48 P.M.' : 'PUERTA DE MADRID \u00b7 11:48 P.M.');

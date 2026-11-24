@@ -1296,6 +1296,7 @@ body:is(.view-immersive) .cinematic-story .story__hotspots { transition-duration
   .story__image-wrap.is-lamp-failure::before { animation: none; opacity: .16; }
   .story__image-wrap.is-reflection-slip .story__image { animation: none; }
 }
+
 .story__rain {
   position: absolute;
   z-index: 3;
@@ -1370,4 +1371,51 @@ body:is(.view-immersive) .cinematic-story .story__hotspots { transition-duration
   .story__image-wrap.is-disturbed .story__image,
   .story__image-wrap.is-door-touched .story__image,
   .story__image-wrap.is-lamp-failure .story__image { animation: none !important; transform: none; }
+}
+
+/* Nocturnal grade and irregular rain on the viewer's glass. */
+.story__image { filter: brightness(.76) saturate(.92) contrast(1.08); }
+.story__film-grain { opacity: 1; mix-blend-mode: multiply; background: radial-gradient(ellipse at 52% 38%, transparent 22%, rgba(0,0,0,.3) 100%), linear-gradient(0deg, rgba(3,2,2,.52), transparent 78%), linear-gradient(90deg, rgba(3,2,2,.26), transparent 82%); }
+.story__film-grain::after { display: none !important; }
+body .story__rain { position: fixed; z-index: 8; inset: 0; display: block; width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity .6s ease; }
+body.is-raining .story__rain { opacity: .74; }
+body.is-heavy-rain .story__rain { opacity: .9; }
+.story__rain i { display: none !important; }
+
+/* Each object gives a different visual response, without visible buttons or markers. */
+.story__image-wrap[class*="is-reaction-"] .story__image { animation-duration: 1.35s; }
+.story__reaction.is-visible { animation: none; opacity: 0; }
+.story__reaction.is-visible.is-reaction-phone { background: radial-gradient(ellipse at var(--tap-x) var(--tap-y), rgba(177,211,244,.46), rgba(157,191,226,.12) 12%, transparent 34%); animation: phone-pulse 1.7s ease-out both; }
+.story__reaction.is-visible.is-reaction-threat { background: radial-gradient(ellipse at var(--tap-x) var(--tap-y), rgba(195,14,23,.72), rgba(94,0,6,.16) 22%, transparent 48%); mix-blend-mode: screen; animation: threat-breath 2.4s ease-out both; }
+.story__reaction.is-visible.is-reaction-gate { background: radial-gradient(ellipse at var(--tap-x) var(--tap-y), rgba(255,184,108,.34), transparent 46%); animation: gate-dust 1.6s ease-out both; }
+.story__reaction.is-visible.is-reaction-protagonist { background: radial-gradient(ellipse at var(--tap-x) var(--tap-y), rgba(255,242,224,.22), transparent 32%); animation: protagonist-shiver 1.05s ease-out both; }
+.story__reaction.is-visible.is-reaction-friend { background: radial-gradient(ellipse at var(--tap-x) var(--tap-y), rgba(245,174,104,.32), transparent 35%); animation: warm-pulse 1.8s ease-out both; }
+.story__reaction.is-visible.is-reaction-cafe { background: linear-gradient(90deg, rgba(242,153,75,.26), transparent 58%); animation: cafe-spill 2.1s ease-out both; }
+.story__reaction.is-visible.is-reaction-landmark { background: radial-gradient(ellipse at var(--tap-x) var(--tap-y), rgba(205,204,194,.24), transparent 38%); animation: landmark-breathe 2s ease-out both; }
+.story__image-wrap.is-reaction-phone .story__image { animation: phone-jolt 1.35s ease-out both; }
+.story__image-wrap.is-reaction-threat .story__image { animation: threat-draw-near 1.8s cubic-bezier(.2,.7,.2,1) both; }
+.story__image-wrap.is-reaction-gate .story__image { animation: gate-shudder 1.25s ease-out both; }
+.story__image-wrap.is-reaction-protagonist .story__image { animation: protagonist-shiver 1.05s ease-out both; }
+.story__image-wrap.is-reaction-friend .story__image { animation: warm-shift 1.8s ease-out both; }
+.story__image-wrap.is-reaction-cafe .story__image { animation: cafe-shift 2.1s ease-out both; }
+.story__image-wrap.is-reaction-landmark .story__image { animation: landmark-focus 2s ease-out both; }
+@keyframes phone-jolt { 0%,100% { transform:scale(1.015); filter:brightness(.76) saturate(.92) contrast(1.08); } 18%,52% { transform:scale(1.02) translate3d(-.35%,.12%,0); filter:brightness(.82) saturate(.98) contrast(1.08); } 35%,68% { transform:scale(1.018) translate3d(.3%,-.1%,0); } }
+@keyframes phone-pulse { 0% { opacity:0; } 17% { opacity:.8; } 36% { opacity:.22; } 54% { opacity:.58; } 100% { opacity:0; } }
+@keyframes threat-draw-near { 0%,100% { transform:scale(1.015); filter:brightness(.76) saturate(.92) contrast(1.08); } 38% { transform:scale(1.065) translate3d(-.4%,0,0); filter:brightness(.64) saturate(1.04) contrast(1.15); } 63% { transform:scale(1.052) translate3d(.3%,0,0); filter:brightness(.79) saturate(1.08) contrast(1.12); } }
+@keyframes threat-breath { 0%,100% { opacity:0; } 22% { opacity:.72; } 50% { opacity:.08; } 72% { opacity:.44; } }
+@keyframes gate-shudder { 0%,100% { transform:scale(1.015); filter:brightness(.76) saturate(.92) contrast(1.08); } 24% { transform:scale(1.018) translate3d(.32%,0,0); } 35% { transform:scale(1.018) translate3d(-.3%,.12%,0); filter:brightness(.58) saturate(.84) contrast(1.12); } 48% { transform:scale(1.02) translate3d(.16%,0,0); } }
+@keyframes gate-dust { 0% { opacity:0; } 25% { opacity:.48; } 100% { opacity:0; } }
+@keyframes protagonist-shiver { 0%,100% { transform:scale(1.015); } 30% { transform:scale(1.025) translate3d(.18%,0,0); } 45% { transform:scale(1.022) translate3d(-.16%,.08%,0); } }
+@keyframes warm-pulse { 0%,100% { opacity:0; } 28% { opacity:.6; } 60% { opacity:.18; } }
+@keyframes warm-shift { 0%,100% { filter:brightness(.76) saturate(.92) contrast(1.08); } 45% { filter:brightness(.82) saturate(1) contrast(1.04); } }
+@keyframes cafe-spill { 0% { opacity:0; transform:translateX(-8%); } 35% { opacity:.55; } 100% { opacity:0; transform:translateX(5%); } }
+@keyframes cafe-shift { 0%,100% { transform:scale(1.015); filter:brightness(.76) saturate(.92) contrast(1.08); } 50% { transform:scale(1.04) translate3d(.4%,0,0); filter:brightness(.83) saturate(1) contrast(1.04); } }
+@keyframes landmark-breathe { 0%,100% { opacity:0; } 35% { opacity:.5; } }
+@keyframes landmark-focus { 0%,100% { transform:scale(1.015); filter:brightness(.76) saturate(.92) contrast(1.08); } 48% { transform:scale(1.045); filter:brightness(.66) saturate(.86) contrast(1.18); } }
+@keyframes lamp-failure { 0%,100% { filter:brightness(.62) saturate(.74) contrast(1.08); } 12% { filter:brightness(.48) saturate(.7); } 18% { filter:brightness(.18) saturate(.6); } 25% { filter:brightness(.66) saturate(.78); } 41% { filter:brightness(.26) saturate(.65); } 47% { filter:brightness(.14) saturate(.58); } 57% { filter:brightness(.7) saturate(.82); } 72% { filter:brightness(.36) saturate(.68); } 79% { filter:brightness(.62) saturate(.74); } }
+@media (prefers-reduced-motion: reduce) {
+  body.is-raining .story__rain { opacity:.48; }
+  body.is-heavy-rain .story__rain { opacity:.62; }
+  .story__image-wrap[class*="is-reaction-"] .story__image { animation:none; }
+  .story__reaction.is-visible { animation:none !important; opacity:.16; }
 }
