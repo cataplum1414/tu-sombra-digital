@@ -1,6 +1,6 @@
 import { justify } from './assets/justif/dist/index.js';
 import { hyphenateEs } from './assets/justif/dist/hyphenate/es.js';
-import { getLanguage, setLanguage, text as localized, t } from './language.js?v=hotspots-cover-fix-20261124';
+import { getLanguage, setLanguage, text as localized, t } from './language.js?v=master-current-20261124';
 
 const opening = document.querySelector('.opening');
 const story = document.querySelector('.story');

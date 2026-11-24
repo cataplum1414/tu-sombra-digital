@@ -14,6 +14,10 @@
 - Las imágenes están en el repositorio para que GitHub Pages no dependa de servicios externos.
 - Referencias de ubicación: [Museo Casa Natal de Cervantes, Calle Mayor 48](https://www.turismoalcala.es/turismo/museo-casa-natal-de-cervantes/) y [Puerta de Madrid y recinto amurallado](https://www.turismoalcala.es/turismo/puerta-de-madrid-alcala-de-henares-y-recinto-amurallado/), según Turismo de Alcalá.
 
+## Luz de la portada
+
+- El destello frío e irregular que revela al Cartógrafo toma como referencia visual el parpadeo de [un tubo de neón en una escena de terror](https://youtu.be/VTWng8ZMz4U) y [luces fluorescentes que se encienden a cámara lenta](https://youtu.be/zLxbwZ0avUo). El efecto está recreado en CSS; no se incorpora el vídeo ni su audio.
+
 ## Referencias de interacción revisadas en GitHub
 
 Se adaptaron ideas generales de interacción y ritmo narrativo. No se copiaron código, modelos ni medios de estos repositorios.

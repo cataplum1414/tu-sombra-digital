@@ -1419,3 +1419,54 @@ body.is-heavy-rain .story__rain { opacity: .9; }
   .story__image-wrap[class*="is-reaction-"] .story__image { animation:none; }
   .story__reaction.is-visible { animation:none !important; opacity:.16; }
 }
+
+/* Fluorescent ballast glow: it briefly finds the Cartographer in the cover photo. */
+.campaign-opening .opening__visual::after { display:none; }
+.campaign-opening .opening__fluorescent {
+  --fluoro-x: 68%;
+  --fluoro-y: 32%;
+  position:absolute;
+  z-index:0;
+  inset:0;
+  pointer-events:none;
+  opacity:.18;
+  mix-blend-mode:screen;
+  background:radial-gradient(ellipse 22% 28% at var(--fluoro-x) var(--fluoro-y),rgba(204,225,255,.48),rgba(169,198,237,.16) 43%,transparent 76%),linear-gradient(112deg,transparent 49%,rgba(215,232,255,.075) 60%,transparent 72%);
+  filter:blur(3px);
+  animation:fluorescent-ballast-pulse 8s .35s infinite;
+}
+.campaign-opening .opening__fluorescent::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse 20% 28% at var(--fluoro-x) var(--fluoro-y),rgba(226,28,40,.25),transparent 76%);
+  opacity:.72;
+}
+@keyframes fluorescent-ballast-pulse {
+  0%,100% { opacity:.18; }
+  4% { opacity:.23; }
+  4.7% { opacity:.76; }
+  5.3% { opacity:.12; }
+  6.1% { opacity:.72; }
+  7% { opacity:.18; }
+  8.4% { opacity:.62; }
+  9.6% { opacity:.2; }
+  14% { opacity:.3; }
+  34% { opacity:.17; }
+  35% { opacity:.56; }
+  36% { opacity:.11; }
+  37% { opacity:.23; }
+  63% { opacity:.2; }
+  64% { opacity:.78; }
+  64.8% { opacity:.1; }
+  66% { opacity:.27; }
+}
+@media (max-width:680px) {
+  .campaign-opening .opening__fluorescent { --fluoro-x:57%; --fluoro-y:31%; }
+}
+@media (orientation:landscape) and (min-width:681px) {
+  .campaign-opening .opening__fluorescent { --fluoro-x:75%; --fluoro-y:30%; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .campaign-opening .opening__fluorescent { opacity:.28; animation:none; }
+}

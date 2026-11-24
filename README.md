@@ -55,4 +55,4 @@ GitHub Pages publica el contenido de la rama `main` desde la raíz del repositor
 
 ## Autoría
 
-Proyecto realizado por **Jeisson Osorio Mesa**, estudiante del Máster Universitario en Protección Internacional de los Derechos Humanos de la Universidad de Alcalá. Es un trabajo independiente, sin afiliación institucional.
+Proyecto realizado por **Jeisson Osorio Mesa**, quien actualmente cursa el Máster Universitario en Protección Internacional de los Derechos Humanos de la Universidad de Alcalá. Es un trabajo independiente, sin afiliación institucional.
